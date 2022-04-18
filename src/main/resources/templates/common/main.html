@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <link href="../../static/css/mainpage.css" th:href="@{/css/mainpage.css}" rel="stylesheet" />
+    <link href="../../static/css/style.css" th:href="@{/css/style.css}" rel="stylesheet" />
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+    <title th:text="#{main.title}"></title>
+</head>
+<body>
+
+<div th:replace="/include/header :: header"></div>
+
+
+
+<div class="col-lg-2">
+
+</div>
+
+<div class="col-lg-8">
+    <div class="welcome-block col-lg-12">
+
+        <div class="col-lg-12">
+            <h3 class="headline" th:text="#{main.welcome}"></h3>
+            <div class="info">
+                <h4 th:text="#{main.info.hall}"></h4>
+                <h4 th:text="#{main.info.seances}"></h4>
+                <h4 th:text="#{main.info.location}"></h4>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-12">
+        <div class="map">
+            <h3 class="headline" th:text="#{main.location}"></h3>
+            <iframe class="col-lg-12" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d924.6607713392696!2d30.533993712897498!3d50.443296761019965!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40d4cfab7596cae9%3A0xd3c25d8b062ea0!2z0YPQuy4g0JvQuNC_0YHQutCw0Y8sIDE1LzE3LCDQmtC40LXQsiwgMDIwMDA!5e0!3m2!1sru!2sua!4v1644432633374!5m2!1sru!2sua"
+                    height="450px" style="border:0;" allowfullscreen="" ></iframe>
+        </div>
+    </div>
+</div>
+
+<div class="col-lg-2">
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,170 @@
+.cardWrap {
+    width: 27em;
+    margin: 3em auto;
+    color: #fff;
+    font-family: sans-serif;
+}
+
+.card {
+    background: linear-gradient(to bottom, #000000 0%, #000000 26%, #ecedef 26%, #ecedef 100%);
+    height: 11em;
+    float: left;
+    position: relative;
+    padding: 1em;
+    margin-top: 100px;
+}
+
+.cardLeft {
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+    width: 16em;
+}
+
+.cardRight {
+    width: 6.5em;
+    border-left: .18em dashed #fff;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+.cardRight:before,
+.cardRight:after {
+     content: "";
+     position: absolute;
+     display: block;
+     width: .9em;
+     height: .9em;
+     background: #fff;
+     border-radius: 50%;
+     left: -.5em;
+ }
+.cardRight:before {
+     top: -.4em;
+ }
+.cardRight:after {
+     bottom: -.4em;
+ }
+
+
+h1 {
+    font-size: 1.1em;
+    margin-top: 0;
+}
+span {
+    font-weight: normal;
+}
+
+
+.title, .name, .seat, .time {
+    text-transform: uppercase;
+    font-weight: normal;
+}
+h2 {
+    font-size: .9em;
+    color: #525252;
+    margin: 0;
+}
+span {
+    font-size: .7em;
+    color: #a2aeae;
+}
+
+
+.title {
+    margin: 2em 0 0 0;
+}
+
+.name, .seat {
+    margin: .7em 0 0 0;
+}
+
+.time {
+    margin: .7em 0 0 1em;
+}
+
+.seat, .time {
+    margin-left: 0px;
+    float: left;
+}
+
+.eye {
+    position: relative;
+    width: 2em;
+    height: 1.5em;
+    background: #fff;
+    margin: 0 auto;
+    border-radius: 1em/0.6em;
+    z-index: 1;
+}
+.eye:before, .eye:after {
+               content:"";
+               display: block;
+               position: absolute;
+               border-radius: 50%;
+}
+.eye:before {
+     width: 1em;
+     height: 1em;
+     background: #000000;
+     z-index: 2;
+     left: 8px;
+     top: 4px;
+ }
+.eye:after {
+     width: .5em;
+     height: .5em;
+     background: #fff;
+     z-index: 3;
+     left: 12px;
+     top: 8px;
+ }
+
+
+.number {
+    margin-top: 25px;
+    text-align: center;
+    text-transform: uppercase;
+}
+h3 {
+    margin:5px;
+    color: #000000;
+    font-size: 2.2em;
+
+}
+span {
+    display: block;
+    color: #a2aeae;
+}
+
+a {
+    color: #525252;
+    text-decoration: none;
+}
+
+.action-button {
+    text-align: center;
+    margin-top: 20px;
+    background-color: #ecedef;
+    width: 210px;
+    height: 40px;
+    border-radius: 6px;
+    transition: 0.15s;
+}
+
+.action-button h4 {
+    margin-bottom: 0px;
+    margin-top: 13px;
+}
+
+.action-button:hover {
+    background-color: #d9d9d9;
+}
+
+.submit-button {
+    float: left;
+}
+.decline-button {
+    float: right;
+    margin-right: 5px;
+}
+
+

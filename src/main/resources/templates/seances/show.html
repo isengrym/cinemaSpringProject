@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title th:text="#{seances.title}"></title>
+    </head>
+    <body>
+        <div th:replace="/include/header :: header"></div>
+        <p th:text="'Here you will see page for seance with id: ' + ${id}"></p>
+    </body>
+</html>

@@ -1,0 +1,35 @@
+.navbar {
+    z-index: 10;
+}
+ul li .log-out-li {
+    display: block;
+}
+ul li .log-out-input {
+    color: #777;
+    margin-top: 13px;
+    padding-left: 15px;
+    border: none;
+    background-color: transparent;
+}
+ul li .log-out-input:hover {
+    color: #333;
+}
+
+@media screen and (min-width:768px){
+    .navbar-brand-centered {
+        position: absolute;
+        left: 50%;
+        display: block;
+        width: 160px;
+        text-align: center;
+        background-color: #eee;
+    }
+    .navbar-collapse ul li {
+        margin: 0 auto;
+        text-align: center;
+    }
+    .navbar>.container .navbar-brand-centered,
+    .navbar>.container-fluid .navbar-brand-centered {
+        margin-left: -80px;
+    }
+}

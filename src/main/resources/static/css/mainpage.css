@@ -1,0 +1,21 @@
+.map {
+    margin: 0 auto;
+    text-align: center;
+}
+.welcome-block .headline {
+    text-align: center;
+}
+
+.welcome-block {
+    padding-bottom: 50px;
+}
+
+.welcome-block .info {
+    text-align: center;
+    margin-top: 50px;
+}
+
+.welcome-block .info h4{
+    font-size: 20px;
+    color: black
+}

@@ -1,0 +1,87 @@
+body {
+    font-family: "Lato", sans-serif;
+}
+/*DISTINCT_FILM_PAGE*/
+
+.film-body {
+    margin-top: 60px;
+}
+.film-body img {
+    height: 200px;
+}
+
+.film-body .movie-title {
+    margin-top: 10px;
+    font-size: 28px;
+    font-weight: 900;
+}
+
+.film-body .movie-info span {
+    margin-top: 0px;
+    font-size: 17px;
+    font-weight: 400;
+    color: rgba(10, 10, 10, 0.36);
+}
+.film-body .movie-info {
+    font-size: 19px;
+    font-weight: 400;
+    margin-top: 0px;
+    margin-bottom: 10px;
+}
+
+.hall-body {
+    text-align: center;
+}
+.hall-body h3 {
+    color: rgba(28, 31, 35, 0.15);
+    font-weight: bold;
+}
+.hall-body a {
+    text-decoration: none;
+}
+.hall-body a:hover {
+    text-decoration: none;
+}
+
+.hall-body .seat-object {
+
+    color: rgba(0, 0, 0, 0.76);
+    background-color: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(28, 31, 35, 0.63);
+    /*background-color: rgba(28, 31, 35, 0.04);*/
+    min-width: 30px;
+    min-height: 30px;
+    text-align: center;
+    font-weight: 700;
+    transition: 0.15s;
+    border-radius: 5px;
+    display: inline-block;
+    margin: 3px;
+}
+.hall-body .seat-object p{
+    margin-top: 6px;
+}
+
+
+
+.row h5{
+    display: inline-block;
+    margin-right: 20px;
+}
+
+.hall-body .seat-object-disabled {
+    background-color: #000000;
+    color: white;
+}
+
+.hall-body .seat-object-active:hover {
+    text-decoration: none;
+    background-color: rgba(175, 175, 175, 0.4);
+}
+
+.hall-body .row {
+    margin-top: 10px;
+}
+
+
+

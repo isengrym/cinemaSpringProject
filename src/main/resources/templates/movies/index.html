@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+        <link href="../../static/css/movies.css" th:href="@{/css/movies.css}" rel="stylesheet" />
+        <title th:text="#{movies.title}"></title>
+    </head>
+    <body>
+        <div th:replace="/include/header :: header"></div>
+
+        <div th:each="movie : ${movies}">
+            <a th:href="@{/movies/{id}(id=${movie.getId()})}">
+                <div class = "film_item col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                    <div class="poster">
+                        <img th:src="${movie.getImagePath()}" alt="" width="218" height="322">
+                    </div>
+                    <div class="film_item_body">
+                        <h5 th:text="${movie.getTitle()}"></h5>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </body>
+</html>

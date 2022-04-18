@@ -1,0 +1,179 @@
+body {
+    font-family: "Lato", sans-serif;
+}
+/*DISTINCT_FILM_PAGE*/
+
+.film-body img {
+    height: 600px;
+}
+
+
+.left-half .movie-title {
+    margin-top: 0px;
+    font-size: 35px;
+    font-weight: 900;
+}
+
+.film-body .right-half .about-line {
+    margin-top: 20px;
+    font-size: 35px;
+    font-weight: 900;
+}
+.film-body .right-half h4 span {
+    margin-top: 0px;
+    font-size: 17px;
+    font-weight: 400;
+    color: rgba(10, 10, 10, 0.36);
+}
+.film-body .right-half h4 {
+    font-size: 19px;
+    font-weight: 400;
+    margin-top: 0px;
+    margin-bottom: 10px;
+}
+
+.bottom-block h2 {
+    margin-top: 0px;
+    font-size: 35px;
+    font-weight: 200;
+}
+
+.bottom-block .day-item {
+    background-color: transparent;
+    transition: 0.15s;
+    margin-right: 5px;
+}
+
+.bottom-block .day-item a {
+    text-decoration: none;
+    color: black;
+}
+
+.bottom-block .seances-headline {
+    margin-top: 0px;
+    font-size: 35px;
+    font-weight: 900;
+}
+
+.bottom-block .day-item button {
+    transition: 0.15s;
+    color: #414141;
+}
+.bottom-block .day-item {
+    background-color: #f5f5f5;
+    padding: 20px;
+    margin-top: 10px;
+    font-size: 16px;
+    color: #414141;
+}
+.bottom-block .day-item h5 {
+    margin-top: 10px;
+    font-size: 19px;
+}
+
+.right-half a {
+    text-decoration: none;
+    color: black;
+}
+.right-half a:hover {
+    color: black;
+    transition: 0.75s;
+    background-color: green;
+}
+
+.right-half button {
+    margin-top: 20px;
+    border-radius: 4px;
+    border: none;
+    text-align: center;
+    transition: 0.15s;
+    font-size: 16px;
+    width: 190px;
+    height: 43px;
+    background-color: black;
+    color: white;
+    float: left;
+}
+
+.right-half button:hover {
+    transform: scale(1.04);
+}
+
+.reviews-block {
+    margin-left: 15px;
+}
+
+.reviews-block .review-item {
+    background-color: #f5f5f5;
+    padding: 20px;
+    padding-top: 10px;
+    padding-right: 50px;
+    margin-left: 15px;
+    margin-top: 10px;
+    color: #414141;
+}
+.reviews-block .review-item h5 {
+    font-size: 18px;
+}
+.reviews-block .review-item h4 {
+    font-weight: 800;
+    font-size: 22px;
+    margin-bottom: 10px;
+}
+.reviews-block span {
+    color: rgba(10, 10, 10, 0.36);
+    font-size: 15px;
+    font-weight: 200;
+}
+
+.reviews-block .review-headline {
+    margin-left: 15px;
+    margin-bottom: 10px;
+}
+
+.reviews-block form {
+    margin-left:-15px;
+}
+.reviews-block form textarea {
+    text-align: start;
+    width: 400px;
+    height: 100px;
+    padding-left: 5px;
+    padding-top: 5px;
+}
+
+
+.reviews-block button {
+    margin-top: 20px;
+    border-radius: 4px;
+    border: none;
+    text-align: center;
+    transition: 0.15s;
+    font-size: 16px;
+    width: 190px;
+    height: 43px;
+    background-color: black;
+    color: white;
+    float: left;
+}
+.reviews-block .admin-delete-button {
+    margin-top: 25px;
+    background-color: #a9a9a9;
+    width: 80px;
+    border-right: 1px;
+}
+
+
+.reviews-block .delete-button {
+    margin-bottom: 20px;
+    margin-left: -15px;
+}
+
+.reviews-block button:hover {
+    background-color: black;
+    color: white;
+    text-decoration: none;
+    transform: scale(1.03);
+}
+
+
