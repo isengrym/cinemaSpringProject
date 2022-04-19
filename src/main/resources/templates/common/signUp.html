@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <link href="../../static/css/signUpSignIn.css" th:href="@{/css/signUpSignIn.css}" rel="stylesheet" />
+    <title th:text="#{signUp.title}">Title</title>
+</head>
+<body>
+<div th:replace="/include/header :: header"></div>
+
+<div class="sidenav">
+    <div class="login-main-text">
+        <h2 th:text="#{signUp.label}"></h2>
+        <p th:text="#{signUp.description}"></p>
+    </div>
+</div>
+
+<div class="main">
+    <div class="col-md-6 col-sm-12">
+        <div class="login-form">
+            <form th:method="POST" th:action="@{/signUp}" th:object="${user}" class="form-signup" >
+                <div class="form-group">
+                    <label for="name" th:text="#{signUp.name}"></label>
+                    <input name="name" id="name" type="text" required class="form-control" placeholder="John">
+                    <div style="color:red" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+                </div>
+                <div class="form-group">
+                    <label for="surname" th:text="#{signUp.surname}"></label>
+                    <input name="surname" id="surname" type="text" required class="form-control" placeholder="Marston">
+                    <div style="color:red" th:if="${#fields.hasErrors('surname')}" th:errors="*{surname}"></div>
+                </div>
+                <div class="form-group">
+                    <label for="email" th:text="#{signUp.email}"></label>
+                    <input name="email" id="email" type="email" required class="form-control" placeholder="johnmarston@gmail.com">
+                    <div style="color:red" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+                    <div style="margin-top: 5px; color:red" th:if="${userAlreadyExists}" th:text="#{error.userExists}"></div>
+                </div>
+                <div class="form-group">
+                    <label for="password" th:text="#{signUp.password}"></label>
+                    <input name="password" id="password" type="password" required class="form-control" placeholder="********">
+                    <div style="color:red" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+                </div>
+
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                <button type="submit" class="btn btn-black" th:text="#{signUp.action}"></button>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<br/>
+</body>
+</html>

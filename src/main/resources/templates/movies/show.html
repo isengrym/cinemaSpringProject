@@ -3,10 +3,42 @@
     <head>
         <meta charset="UTF-8">
         <title th:text="#{movies.title}"></title>
+
+        <link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+        <link href="../../static/css/movie.css" th:href="@{/css/movie.css}" rel="stylesheet" />
+        <link href="../../static/css/style.css" th:href="@{/css/style.css}" rel="stylesheet" />
     </head>
     <body>
         <div th:replace="/include/header :: header"></div>
-        <img th:src="${movie.getImagePath()}" alt="">
-        <div th:text="${'Title: ' + movie.getTitle() + ', Director: ' + movie.getDirector()}"></div>
+
+        <div class="col-sm-0 col-md-0 col-lg-1">
+
+        </div>
+
+        <div class="col-sm-12 col-md-12 col-lg-11">
+            <div class="film-body">
+
+                <div class="left-half">
+                    <div class="col-sm-12 col-md-6 col-lg-5">
+                        <h3 th:text="${movie.title}" class="movie-title"></h3>
+                        <img th:src="${movie.imagePath}" alt="">
+                    </div>
+                </div>
+
+                <div class="right-half">
+
+                    <div class="col-sm-12 col-md-4 col-lg-12">
+                        <h3 th:text="#{movieItem.about}" class = "about-line"></h3>
+                        <h4><span th:text="#{movieItem.year}"></span> <br th:text="${movie.productionYear}"></h4>
+                        <h4><span th:text="#{movieItem.director}"></span> <br th:text="${movie.director}"></h4>
+                        <h4><span th:text="#{movieItem.genre}"></span> <br th:text="${movie.genre.name}"></h4>
+                        <h4><span th:text="#{movieItem.age}"></span> <br th:text="${movie.ageRestriction} + '+'"></h4>
+                        <h4><span th:text="#{movieItem.duration}"></span> <br th:text="${movie.duration} + ' ' + #{movieItem.minutes}"></h4>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </body>
 </html>

@@ -1,6 +1,7 @@
 package ua.klieshchunov.spring.cinemaSpringProject.model.entity;
 
 import org.hibernate.validator.constraints.Length;
+import ua.klieshchunov.spring.cinemaSpringProject.config.security.ApplicationUserRole;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -15,27 +16,31 @@ public class User implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @Column(name="name")
+    @Pattern(regexp = "^[a-zA-Zа-яА-Яєїё']+$", message = "Name should contain only letters")
+    @Length(min = 1, max = 45, message = "Name should be no longer than 45 letters," +
+            "no shorter than 1 letter")
+    private String name;
+
+    @Column(name="surname")
+    @Pattern(regexp = "^[a-zA-Zа-яА-Яєїё']+$", message = "Surname should contain only letters")
+    @Length(min = 1, max = 45, message = "Surname should be no longer than 45 letters," +
+            "no shorter than 1 letter")
+    private String surname;
+
     @Column(name="email")
     @Email(message = "It doesn't look like email")
     @Length(min = 1, max = 100)
     private String email;
 
-    @Column(name="name")
-    @Pattern(regexp = "(a-zA-Zа-яА-Я`'єї)+", message = "It doesn't look like a name")
-    @Length(min = 1, max = 45)
-    private String name;
-
-    @Column(name="surname")
-    @Pattern(regexp = "(a-zA-Zа-яА-Я`'єї)+", message = "It doesn't look like a surname")
-    @Length(min = 1, max = 45)
-    private String surname;
-
     @Column(name="password")
+    @Pattern(regexp = "^(?=.*?[0-9]).{8,}$", message = "Password should be at least 8 symbols long " +
+            "and contain at least one digit")
     private String password;
 
     @Column(name="role")
     @Enumerated(EnumType.STRING)
-    private Role role;
+    private ApplicationUserRole role;
 
     public int getId() {
         return id;
@@ -77,11 +82,11 @@ public class User implements Serializable {
         this.password = password;
     }
 
-    public Role getRole() {
+    public ApplicationUserRole getRole() {
         return role;
     }
 
-    public void setRole(Role role) {
+    public void setRole(ApplicationUserRole role) {
         this.role = role;
     }
 }
