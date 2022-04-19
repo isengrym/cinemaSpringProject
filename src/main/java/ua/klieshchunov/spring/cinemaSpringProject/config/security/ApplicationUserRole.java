@@ -1,13 +1,4 @@
-package ua.klieshchunov.spring.cinemaSpringProject.config;
-
-import com.google.common.collect.Sets;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import static ua.klieshchunov.spring.cinemaSpringProject.config.ApplicationUserPermission.*;
+package ua.klieshchunov.spring.cinemaSpringProject.config.security;
 
 public enum ApplicationUserRole {
     USER, ADMIN, MANAGER

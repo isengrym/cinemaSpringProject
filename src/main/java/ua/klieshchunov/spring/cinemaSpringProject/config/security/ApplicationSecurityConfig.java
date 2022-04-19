@@ -1,30 +1,34 @@
-package ua.klieshchunov.spring.cinemaSpringProject.config;
+package ua.klieshchunov.spring.cinemaSpringProject.config.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+
 import java.util.concurrent.TimeUnit;
 
-import static ua.klieshchunov.spring.cinemaSpringProject.config.ApplicationUserRole.*;
+import static ua.klieshchunov.spring.cinemaSpringProject.config.security.ApplicationUserRole.*;
 
 @Configuration
 @EnableWebSecurity
 public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
     private final PasswordEncoder passwordEncoder;
+    private final UserDetailsService userDetailsService;
 
     @Autowired
-    public ApplicationSecurityConfig(PasswordEncoder passwordEncoder) {
+    public ApplicationSecurityConfig(PasswordEncoder passwordEncoder,
+                                     UserDetailsService userDetailsService) {
         this.passwordEncoder = passwordEncoder;
+        this.userDetailsService = userDetailsService;
     }
 
     @Override
@@ -47,11 +51,13 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                     .defaultSuccessUrl("/", true)
                     .passwordParameter("password")
                     .usernameParameter("email")
+                .failureUrl("/login?error=true")
                 .and()
                 .rememberMe()
                     .tokenValiditySeconds((int)TimeUnit.DAYS.toSeconds(30))
 //                    .key("g32klsal@")
                     .rememberMeParameter("remember-me")
+                    .userDetailsService(userDetailsService)
                 .and()
                 .logout()
                     .logoutUrl("/logout")
@@ -61,32 +67,16 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.authenticationProvider(daoAuthenticationProvider());
+    }
+
     @Bean
-    protected UserDetailsService userDetailsService() {
-        UserDetails userAlexey = User.builder()
-                .username("alexey1@gmail.com")
-                .password(passwordEncoder.encode("alexey1@gmail.com"))
-                .roles(USER.name())
-//                .authorities(USER.getGrantedAuthority())
-                .build();
-
-        UserDetails userEgor = User.builder()
-                .username("egor")
-                .password(passwordEncoder.encode("egor"))
-                .roles(ADMIN.name())
-//                .authorities(ADMIN.getGrantedAuthority())
-                .build();
-
-        UserDetails userDmitriy = User.builder()
-                .username("dima")
-                .password(passwordEncoder.encode("dima"))
-                .roles(MANAGER.name())
-//                .authorities(MANAGER.getGrantedAuthority())
-                .build();
-
-        return new InMemoryUserDetailsManager(
-                userAlexey, userEgor, userDmitriy
-        );
+    public DaoAuthenticationProvider daoAuthenticationProvider() {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setPasswordEncoder(passwordEncoder);
+        provider.setUserDetailsService(userDetailsService);
+        return provider;
     }
 
 }

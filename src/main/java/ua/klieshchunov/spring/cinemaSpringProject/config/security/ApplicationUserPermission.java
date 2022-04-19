@@ -1,4 +1,4 @@
-package ua.klieshchunov.spring.cinemaSpringProject.config;
+package ua.klieshchunov.spring.cinemaSpringProject.config.security;
 
 public enum ApplicationUserPermission {
     USER_READ("user:read"),
