@@ -3,9 +3,60 @@
     <head>
         <meta charset="UTF-8">
         <title th:text="#{seances.title}"></title>
+        <link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+        <link href="../../static/css/seances.css" th:href="@{/css/seances.css}" rel="stylesheet" />
     </head>
     <body>
         <div th:replace="/include/header :: header"></div>
-        Here u will see all of the seances
+
+        <div class="col-lg-2">
+
+        </div>
+
+        <div class="col-lg-8">
+
+            <div th:if="${#lists.isEmpty(seances)}" class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <h2 class="headline" th:text="#{movie.noSeances}"></h2>
+            </div>
+
+            <div th:each="seance : ${seances}">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <a th:href="@{/movies/{id}(id=${seance.movie.id})}">
+                        <div class="seance-item row">
+                            <div class="left-side col-lg-3">
+                                <img th:src="${seance.movie.getImagePath()}" alt="" width="170" height="257">
+                            </div>
+                            <div class="right-side col-lg-8">
+                                <h3 th:text="${seance.movie.title}"></h3>
+                                <h5>
+                                    <span th:text="#{movieItem.startTime}"></span>
+                                    <br th:text="${seance.getStartDateTime().toString()}">
+                                </h5>
+                                <h5>
+                                    <span th:text="#{movieItem.endTime}"></span>
+                                    <br th:text="${seance.getEndDateTime().toString()}">
+                                </h5>
+                                <h5>
+                                    <span th:text="#{movieItem.freePlaces}"></span>
+                                    <br th:text="${seance.freePlaces}">
+                                </h5>
+                                <a href="#">
+                                    <button th:href="@{/seances/{id}(id=${seance.id})}" th:text="#{ticket.buy}" class="action-button">
+                                    </button>
+                                </a>
+                            </div>
+
+                        </div>
+                    </a>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-2">
+
+        </div>
+
     </body>
 </html>
