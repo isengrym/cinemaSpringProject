@@ -30,11 +30,13 @@
                                 <h3 th:text="${seance.movie.title}"></h3>
                                 <h5>
                                     <span th:text="#{movieItem.startTime}"></span>
-                                    <br th:text="${seance.getStartDateTime().toString()}">
+                                    <br th:text="${seance.getStartDateTime().toLocalDate()
+                                    + ' ' + seance.getStartDateTime().toLocalTime()}">
                                 </h5>
                                 <h5>
                                     <span th:text="#{movieItem.endTime}"></span>
-                                    <br th:text="${seance.getEndDateTime().toString()}">
+                                    <br th:text="${seance.getEndDateTime().toLocalDate()
+                                    + ' ' + seance.getEndDateTime().toLocalTime()}">
                                 </h5>
                                 <h5>
                                     <span th:text="#{movieItem.freePlaces}"></span>

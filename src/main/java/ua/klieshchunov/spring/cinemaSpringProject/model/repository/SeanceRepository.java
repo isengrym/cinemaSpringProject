@@ -11,4 +11,5 @@ import java.util.List;
 public interface SeanceRepository extends CrudRepository<Seance, Integer> {
     Seance findById(@Param("id") int id);
     List<Seance> findAll();
+    List<Seance> findAllByMovie(@Param("movie") Movie movie);
 }
