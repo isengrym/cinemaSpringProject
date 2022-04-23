@@ -10,4 +10,5 @@ public interface MovieService {
     List<Movie> findAll();
     Page<Movie> findAllPaginatedSorted(Integer pageNumber, Integer pageSize);
     Movie findById(int id);
+
 }

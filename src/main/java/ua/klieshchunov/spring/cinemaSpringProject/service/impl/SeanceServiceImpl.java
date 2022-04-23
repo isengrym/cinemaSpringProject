@@ -28,16 +28,28 @@ public class SeanceServiceImpl implements SeanceService {
         this.seanceRepository = seanceRepository;
     }
 
+    /**
+     * Method is beign used to get list of dates, which is than used to form
+     * map Map<LocalDate,List<Seance>>
+     * @param seances list of seances
+     * @return list of dates where there are seances
+     */
     @Override
     public List<LocalDate> collectDatesOfSeances(List<Seance> seances) {
         List<LocalDate> dates = new LinkedList<>();
-        for (Seance seance : seances) {
+        for (Seance seance : filterPastSeances(seances)) {
             LocalDate date = seance.getStartDateTime().toLocalDate();
             if (!dates.contains(date)) dates.add(date);
         }
         return dates;
     }
 
+    /**
+     * Method is being used to group seances by dates (e.g. days)
+     * @param dates list of dates, for which there are seances
+     * @param seances full list of seances
+     * @return map where date corresponds to the list of seances
+     */
     @Override
     public Map<LocalDate,List<Seance>> collectSeancesByDate(List<LocalDate> dates, List<Seance> seances) {
         Map<LocalDate,List<Seance>> map = new LinkedHashMap<>();
@@ -54,18 +66,37 @@ public class SeanceServiceImpl implements SeanceService {
     }
 
 
-
+    /**
+     * Method is being used all seances (filterPastSeances() method is being called
+     * to return only future ones)
+     * @return list of Seance objects
+     */
     @Override
     public List<Seance> findAll() {
-        long currentTime = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
-        return seanceRepository.findAll();
+        List<Seance> seances = seanceRepository.findAll();
+        return filterPastSeances(seances);
     }
 
+    /**
+     * Method is being used to get seances for movie.
+     * @param movie movie for which seances are going to be searched
+     * @return list of seances for particular Movie object, which is given
+     * as a parameter
+     */
     @Override
     public List<Seance> findAllByMovie(Movie movie) {
-        long currentTime = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
-        return seanceRepository.findAllByMovie(movie);
+        List<Seance> seances = seanceRepository.findAllByMovie(movie);
+        return filterPastSeances(seances);
     }
+
+    /**
+     * Method is the version of findAll() method with pagination and sorting
+     * @param pageNumber number of page
+     * @param pageSize number of elements on each page
+     * @param sortBy by which field will be sorted by
+     * @param sortDirection direction of the sorting (descending, ascending)
+     * @return Page object which contains limited list of seances
+     */
 
     @Override
     public Page<Seance> findAllPaginatedSorted(Integer pageNumber, Integer pageSize,
@@ -79,9 +110,29 @@ public class SeanceServiceImpl implements SeanceService {
         return pagedResult;
     }
 
+    /**
+     * Method is being used to get Seance object by id.
+     * @param id id of seance
+     * @return Seance-object filled from DB
+     */
     @Override
     public Seance findById(int id) {
         return seanceRepository.findById(id);
+    }
+
+    /**
+     * Method is being used to filter list of seances and return only seances, that
+     * are going to be in the future
+     * @param seances non filtered seances
+     * @return a list without seances, which start date has already passed
+     */
+    private List<Seance> filterPastSeances(List<Seance> seances) {
+        long currentTime = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
+
+        return seances
+                .stream()
+                .filter(seance -> seance.getStartDateTime().toEpochSecond(ZoneOffset.UTC) > currentTime)
+                .collect(Collectors.toList());
     }
 
 

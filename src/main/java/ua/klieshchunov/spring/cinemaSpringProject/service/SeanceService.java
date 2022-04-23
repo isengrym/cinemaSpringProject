@@ -15,4 +15,5 @@ public interface SeanceService {
     Page<Seance> findAllPaginatedSorted(Integer pageNumber, Integer pageSize, String sortBy, String sortDirection);
     Seance findById(int id);
 
+
 }
