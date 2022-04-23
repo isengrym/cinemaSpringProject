@@ -2,6 +2,10 @@ package ua.klieshchunov.spring.cinemaSpringProject.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ua.klieshchunov.spring.cinemaSpringProject.model.entity.Movie;
 import ua.klieshchunov.spring.cinemaSpringProject.model.entity.Seance;
@@ -10,10 +14,8 @@ import ua.klieshchunov.spring.cinemaSpringProject.service.SeanceService;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.time.ZoneOffset;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -51,12 +53,30 @@ public class SeanceServiceImpl implements SeanceService {
         return map;
     }
 
-    @Override
-    public List<Seance> findAllByMovie(Movie movie) { return seanceRepository.findAllByMovie(movie); }
+
 
     @Override
     public List<Seance> findAll() {
+        long currentTime = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
         return seanceRepository.findAll();
+    }
+
+    @Override
+    public List<Seance> findAllByMovie(Movie movie) {
+        long currentTime = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
+        return seanceRepository.findAllByMovie(movie);
+    }
+
+    @Override
+    public Page<Seance> findAllPaginatedSorted(Integer pageNumber, Integer pageSize,
+                                               String sortBy, String sortDirection) {
+        Sort sort = sortDirection.equalsIgnoreCase("ASC")
+                ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+
+        Pageable paging = PageRequest.of(pageNumber, pageSize, sort);
+        Page<Seance> pagedResult = seanceRepository.findAll(paging);
+
+        return pagedResult;
     }
 
     @Override

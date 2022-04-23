@@ -3,9 +3,59 @@
     <head>
         <meta charset="UTF-8">
         <title th:text="#{seances.title}"></title>
+        <link th:href="@{/css/ticketChoice.css}" rel="stylesheet" />
     </head>
     <body>
         <div th:replace="/include/header :: header"></div>
-        <p th:text="'Here you will see page for seance with id: ' + ${id}"></p>
+
+
+        <div class="col-xs-12 col-sm-8 col-md-6 col-lg-6 hall-body">
+            <h3 class="movie-title" th:text="#{ticket.screen}"></h3>
+            <div class="row" th:each="row : ${#numbers.sequence(1,7)}">
+
+                <h5 th:text="${row}"></h5>
+
+                <div th:each="place : ${#numbers.sequence(1,11)}" th:remove="tag" th:with="hallIndex = ${(row - 1) * 11 + place}">
+                        <a th:if="${hallMap.get(hallIndex) == null}" th:href="@{/seances/{id}/ticket?rowId={row}&placeId={place}(id=${seance.id}, row=${row}, place=${place})}">
+                            <div class="seat-object seat-object-active" th:row-id="${row}" th:seat-id="${place}">
+                                <p th:text="${place}"></p>
+                            </div>
+                        </a>
+
+                        <div class="seat-object seat-object-disabled" th:if="${hallMap.get(hallIndex) != null}" th:row-id="${row}" th:seat-id="${place}">
+                            <p th:text="${place}"></p>
+                        </div>
+                </div>
+            </div>
+            <h3 class="movie-title" th:text="#{ticket.chooseClick}"></h3>
+        </div>
+
+
+        <div class="col-xs-12 col-sm-4 col-md-6 col-lg-6">
+            <div class="film-body">
+                <a th:href="@{/movies/{id}(id=${seance.id})}">
+                    <img th:src="${seance.movie.imagePath}" alt="">
+                </a>
+                <h3 class="movie-title" th:text="${seance.movie.title}"></h3>
+
+                <h4 class="movie-info">
+                    <span th:text="#{movieItem.startDate}"></span>
+                    <br th:text="${seance.getStartDateTime().toLocalDate()}">
+                </h4>
+                <h4 class="movie-info">
+                    <span th:text="#{movieItem.startTime}"></span>
+                    <br th:text="${seance.getStartDateTime().toLocalTime()}">
+                </h4>
+                <h4 class="movie-info">
+                    <span th:text="#{movieItem.endTime}"></span>
+                    <br th:text="${seance.getEndDateTime().toLocalTime()}">
+                </h4>
+                <h4 class="movie-info">
+                    <span th:text="#{movieItem.price}"></span>
+                    <br th:text="${seance.ticketPrice + '₴'}">
+                </h4>
+            </div>
+        </div>
+
     </body>
 </html>

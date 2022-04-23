@@ -2,20 +2,18 @@ package ua.klieshchunov.spring.cinemaSpringProject.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import ua.klieshchunov.spring.cinemaSpringProject.model.entity.Movie;
 import ua.klieshchunov.spring.cinemaSpringProject.model.entity.Seance;
 import ua.klieshchunov.spring.cinemaSpringProject.service.MovieService;
 import ua.klieshchunov.spring.cinemaSpringProject.service.SeanceService;
-
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -33,9 +31,18 @@ public class MovieController {
     }
 
     @GetMapping
-    public String getAllMovies(Model model) {
-        model.addAttribute("movies",
-                movieService.findAll());
+    public String getAllMovies(@RequestParam(defaultValue = "0") Integer pageNum,
+                               @RequestParam(defaultValue = "6") Integer pageSize,
+                               Model model) {
+
+        Page<Movie> page = movieService
+                .findAllPaginatedSorted(pageNum, pageSize);
+        List<Movie> moviesPaginated = page.getContent();
+
+        model.addAttribute("totalPages", page.getTotalPages());
+        model.addAttribute("totalItems", page.getTotalElements());
+        model.addAttribute("currentPage", pageNum);
+        model.addAttribute("movies", moviesPaginated);
         return "movies/index";
     }
 

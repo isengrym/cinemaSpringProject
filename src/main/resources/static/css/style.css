@@ -22,4 +22,9 @@ body {
     transform: scale(1.03);
     text-decoration: none;
 }
+.page-number-block .page-number-item {
+    font-size: 15px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
 

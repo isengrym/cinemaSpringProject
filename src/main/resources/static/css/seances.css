@@ -12,6 +12,7 @@
 
 .seance-page-title {
     float: left;
+    margin-left: -15px;
     color: black;
 }
 .seance-item .right-side a {
