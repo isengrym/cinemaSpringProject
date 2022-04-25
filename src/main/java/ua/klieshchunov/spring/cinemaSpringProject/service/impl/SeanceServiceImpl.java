@@ -28,7 +28,19 @@ public class SeanceServiceImpl implements SeanceService {
     }
 
     @Override
-    public List<LocalDate> collectDatesOfSeances(List<Seance> seances) {
+    public Map<LocalDate,List<Seance>> collectSeancesByDate(List<Seance> seances) {
+        List<LocalDate> dates = collectDatesOfSeances(seances);
+        Map<LocalDate,List<Seance>> seancesByDaysMap = new LinkedHashMap<>();
+
+        for(LocalDate date : dates) {
+            List<Seance> seancesOnGivenDay = groupSeancesByGivenDay(seances, date);
+            seancesByDaysMap.put(date,seancesOnGivenDay);
+        }
+
+        return seancesByDaysMap;
+    }
+
+    private List<LocalDate> collectDatesOfSeances(List<Seance> seances) {
         List<LocalDate> dates = new LinkedList<>();
         List<Seance> onlyFutureSeances = filterPastSeances(seances);
         for (Seance seance : onlyFutureSeances) {
@@ -37,18 +49,6 @@ public class SeanceServiceImpl implements SeanceService {
                 dates.add(date);
         }
         return dates;
-    }
-
-    @Override
-    public Map<LocalDate,List<Seance>> collectSeancesByDate(List<LocalDate> dates, List<Seance> seances) {
-        Map<LocalDate,List<Seance>> seancesByDaysMap = new LinkedHashMap<>();
-
-        for(LocalDate date : dates) {
-            List<Seance> seancesOnGivenDay = groupSeancesByGivenDay(seances, date);
-            seancesByDaysMap.put(date,seancesOnGivenDay);
-        }
-        return seancesByDaysMap;
-
     }
 
     private List<Seance> groupSeancesByGivenDay(List<Seance> seances, LocalDate date) {
@@ -60,22 +60,22 @@ public class SeanceServiceImpl implements SeanceService {
     }
 
     @Override
-    public List<Seance> findAll() {
+    public List<Seance> findAllSeances() {
         List<Seance> seances = seanceRepository.findAll();
         return filterPastSeances(seances);
     }
 
     @Override
-    public List<Seance> findAllByMovie(Movie movie) {
+    public List<Seance> findAllSeancesForMovie(Movie movie) {
         List<Seance> seances = seanceRepository.findAllByMovie(movie);
         return filterPastSeances(seances);
     }
 
 
     @Override
-    public Page<Seance> findAllPaginatedSorted(Integer pageNumber, Integer pageSize,
-                                               String sortBy, String sortDirection) {
-        Pageable customizedPageable = formPageable(pageNumber, pageSize, sortBy, sortDirection);
+    public Page<Seance> findAllSeancesPaginatedAndSorted(Integer pageNumber, Integer pageSize,
+                                                         String sortBy, String sortOrder) {
+        Pageable customizedPageable = formPageable(pageNumber, pageSize, sortBy, sortOrder);
         Page<Seance> pageWithSeances = seanceRepository.findAll(customizedPageable);
 
         return pageWithSeances;
@@ -89,7 +89,7 @@ public class SeanceServiceImpl implements SeanceService {
     }
 
     @Override
-    public Seance findById(int id) {
+    public Seance findSeanceById(int id) {
         return seanceRepository.findById(id);
     }
 

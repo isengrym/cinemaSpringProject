@@ -48,13 +48,11 @@ public class MovieController {
 
     @GetMapping("/{id}")
     public String getSpecificMovie(@PathVariable("id") int id, Model model) {
-        List<Seance> seances = seanceService.findAllByMovie(movieService.findMovieById(id));
-        List<LocalDate> dates = seanceService.collectDatesOfSeances(seances);
+        Movie movie = movieService.findMovieById(id);
+        List<Seance> seances = seanceService.findAllSeancesForMovie(movie);
+        Map<LocalDate, List<Seance>> seancesByDates = seanceService.collectSeancesByDate(seances);
 
-        Map<LocalDate, List<Seance>> seancesByDates =
-                seanceService.collectSeancesByDate(dates, seances);
-
-        model.addAttribute("movie", movieService.findMovieById(id));
+        model.addAttribute("movie", movie);
         model.addAttribute("seancesByDates", seancesByDates);
         return "movies/show";
     }

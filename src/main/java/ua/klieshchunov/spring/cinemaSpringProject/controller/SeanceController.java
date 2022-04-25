@@ -10,7 +10,6 @@ import ua.klieshchunov.spring.cinemaSpringProject.model.entity.Ticket;
 import ua.klieshchunov.spring.cinemaSpringProject.service.SeanceService;
 import ua.klieshchunov.spring.cinemaSpringProject.service.TicketService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -32,7 +31,7 @@ public class SeanceController {
                                 @RequestParam(defaultValue = "DSC") String sortDirection,
                                 Model model) {
         Page<Seance> page = seanceService
-                .findAllPaginatedSorted(pageNum, pageSize, sortBy, sortDirection);
+                .findAllSeancesPaginatedAndSorted(pageNum, pageSize, sortBy, sortDirection);
         List<Seance> seancesPaginated = page.getContent();
 
         model.addAttribute("totalPages", page.getTotalPages());
@@ -45,11 +44,11 @@ public class SeanceController {
     }
     @GetMapping("/{id}")
     public String getSpecificSeance(@PathVariable("id") int id, Model model) {
-        List<Ticket> tickets = ticketService.findAllBySeance(seanceService.findById(id));
+        List<Ticket> tickets = ticketService.findAllTicketsForSeance(seanceService.findSeanceById(id));
 
         model.addAttribute("tickets", tickets);
         model.addAttribute("hallMap", ticketService.formHallMap(tickets));
-        model.addAttribute("seance", seanceService.findById(id));
+        model.addAttribute("seance", seanceService.findSeanceById(id));
         return "seances/show";
     }
 

@@ -24,13 +24,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean existsByEmail(String email) {
+    public boolean userWithSuchEmailExists(String email) {
         return userRepository.existsByEmail(email);
     }
 
     @Override
     @Transactional
-    public boolean create(User user) {
+    public boolean createUser(User user) {
         user.setRole(ApplicationUserRole.USER);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);

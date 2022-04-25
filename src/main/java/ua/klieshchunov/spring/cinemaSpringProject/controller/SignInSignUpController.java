@@ -30,13 +30,13 @@ public class SignInSignUpController {
                          BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) return "common/signUp";
 
-        if (userService.existsByEmail(user.getEmail())) {
+        if (userService.userWithSuchEmailExists(user.getEmail())) {
             model.addAttribute("userAlreadyExists",true);
             return "common/signUp";
         }
 
         model.addAttribute("userAlreadyExists",false);
-        userService.create(user);
+        userService.createUser(user);
         return "redirect:/";
     }
 }

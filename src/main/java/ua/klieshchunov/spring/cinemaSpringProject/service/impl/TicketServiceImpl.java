@@ -21,7 +21,7 @@ public class TicketServiceImpl implements TicketService{
     }
 
     @Override
-    public List<Ticket> findAllBySeance(Seance seance) {
+    public List<Ticket> findAllTicketsForSeance(Seance seance) {
         return ticketRepository.findAllBySeance(seance);
     }
 
@@ -36,7 +36,7 @@ public class TicketServiceImpl implements TicketService{
 
             for(int place=1; place<placesInRow; place++) {
                 placeAlreadyFilledIn = false;
-                int absolutePlaceNumber = calculateAbsolutePlaceNumber(row,placesInRow,place);
+                int absolutePlaceNumber = calculateAbsolutePlaceNumber(row, place, placesInRow);
 
                 for(Ticket existingTicket : ticketsForSeance) {
                     if (row == existingTicket.getRowNumber() && place == existingTicket.getPlaceNumber()) {
@@ -52,7 +52,7 @@ public class TicketServiceImpl implements TicketService{
         return hallMap;
     }
 
-    private int calculateAbsolutePlaceNumber(int row, int totalPlacesInRow, int placeInRow) {
+    private int calculateAbsolutePlaceNumber(int row, int placeInRow, int totalPlacesInRow) {
         return (row - 1) * totalPlacesInRow + placeInRow;
     }
 }

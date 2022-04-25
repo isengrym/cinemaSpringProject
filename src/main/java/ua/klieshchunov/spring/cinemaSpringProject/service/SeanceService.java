@@ -8,12 +8,12 @@ import java.util.List;
 import java.util.Map;
 
 public interface SeanceService {
-    List<LocalDate> collectDatesOfSeances(List<Seance> seances);
-    Map<LocalDate,List<Seance>> collectSeancesByDate(List<LocalDate> dates, List<Seance> seances);
-    List<Seance> findAll();
-    List<Seance> findAllByMovie(Movie movie);
-    Page<Seance> findAllPaginatedSorted(Integer pageNumber, Integer pageSize, String sortBy, String sortDirection);
-    Seance findById(int id);
+    Map<LocalDate,List<Seance>> collectSeancesByDate(List<Seance> seances);
+    List<Seance> findAllSeances();
+    List<Seance> findAllSeancesForMovie(Movie movie);
+    Page<Seance> findAllSeancesPaginatedAndSorted
+            (Integer pageNumber, Integer pageSize, String sortBy, String sortOrder);
+    Seance findSeanceById(int seanceId);
 
 
 }
