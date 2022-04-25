@@ -25,15 +25,17 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userDetailsRepository.getUserByEmail(username);
-        if (user == null) {
+        if (user == null)
             throw new UsernameNotFoundException(username);
-        }
 
-        Set<SimpleGrantedAuthority> grantedAuthorities = new HashSet<>();
-        grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_" + user.getRole().name()));
-
-        UserDetails userDetails = new UserDetailsImpl(user,grantedAuthorities);
+        UserDetails userDetails = formUserDetailsForUser(user);
 
         return userDetails;
+    }
+
+    private UserDetails formUserDetailsForUser(User user) {
+        Set<SimpleGrantedAuthority> grantedAuthorities = new HashSet<>();
+        grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_" + user.getRole().name()));
+        return new UserDetailsImpl(user,grantedAuthorities);
     }
 }

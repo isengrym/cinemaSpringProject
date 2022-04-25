@@ -33,24 +33,26 @@ public class TicketServiceImpl implements TicketService{
 
         Map<Integer,Ticket> hallMap = new HashMap<>();
         for(int row=1; row<=rows; row++) {
+
             for(int place=1; place<placesInRow; place++) {
                 placeAlreadyFilledIn = false;
+                int absolutePlaceNumber = calculateAbsolutePlaceNumber(row,placesInRow,place);
 
                 for(Ticket existingTicket : ticketsForSeance) {
                     if (row == existingTicket.getRowNumber() && place == existingTicket.getPlaceNumber()) {
-                        hallMap.put((calculateAbsolutePlaceNumber(row,placesInRow,place)), existingTicket);
+                        hallMap.put(absolutePlaceNumber, existingTicket);
                         placeAlreadyFilledIn = true;
                         break;
                     }
                 }
-                if (!placeAlreadyFilledIn) hallMap.put((calculateAbsolutePlaceNumber(row,placesInRow,place)), null);
+                if (!placeAlreadyFilledIn)
+                    hallMap.put(absolutePlaceNumber, null);
             }
         }
-
         return hallMap;
     }
 
     private int calculateAbsolutePlaceNumber(int row, int totalPlacesInRow, int placeInRow) {
-        return (row-1)*totalPlacesInRow + placeInRow;
+        return (row - 1) * totalPlacesInRow + placeInRow;
     }
 }

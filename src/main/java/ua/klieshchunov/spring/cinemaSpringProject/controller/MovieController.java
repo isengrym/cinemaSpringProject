@@ -36,7 +36,7 @@ public class MovieController {
                                Model model) {
 
         Page<Movie> page = movieService
-                .findAllPaginatedSorted(pageNum, pageSize);
+                .findAllMoviesPaginatedAndSorted(pageNum, pageSize);
         List<Movie> moviesPaginated = page.getContent();
 
         model.addAttribute("totalPages", page.getTotalPages());
@@ -48,13 +48,13 @@ public class MovieController {
 
     @GetMapping("/{id}")
     public String getSpecificMovie(@PathVariable("id") int id, Model model) {
-        List<Seance> seances = seanceService.findAllByMovie(movieService.findById(id));
+        List<Seance> seances = seanceService.findAllByMovie(movieService.findMovieById(id));
         List<LocalDate> dates = seanceService.collectDatesOfSeances(seances);
 
         Map<LocalDate, List<Seance>> seancesByDates =
                 seanceService.collectSeancesByDate(dates, seances);
 
-        model.addAttribute("movie", movieService.findById(id));
+        model.addAttribute("movie", movieService.findMovieById(id));
         model.addAttribute("seancesByDates", seancesByDates);
         return "movies/show";
     }
