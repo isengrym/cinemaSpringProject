@@ -5,8 +5,12 @@ import org.springframework.stereotype.Service;
 import ua.klieshchunov.spring.cinemaSpringProject.model.entity.Seance;
 import ua.klieshchunov.spring.cinemaSpringProject.model.entity.Ticket;
 import ua.klieshchunov.spring.cinemaSpringProject.model.repository.TicketRepository;
+import ua.klieshchunov.spring.cinemaSpringProject.service.SeanceService;
 import ua.klieshchunov.spring.cinemaSpringProject.service.TicketService;
+import ua.klieshchunov.spring.cinemaSpringProject.service.exceptions.NoFreePlacesException;
+import ua.klieshchunov.spring.cinemaSpringProject.service.exceptions.TicketAlreadyExistsException;
 
+import javax.transaction.Transactional;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,41 +18,54 @@ import java.util.Map;
 @Service
 public class TicketServiceImpl implements TicketService{
     private final TicketRepository ticketRepository;
+    private final SeanceService seanceService;
 
     @Autowired
-    public TicketServiceImpl(TicketRepository ticketRepository) {
+    public TicketServiceImpl(TicketRepository ticketRepository, SeanceService seanceService) {
         this.ticketRepository = ticketRepository;
+        this.seanceService = seanceService;
     }
 
     @Override
     public List<Ticket> findAllTicketsForSeance(Seance seance) {
-        return ticketRepository.findAllBySeance(seance);
+        return ticketRepository.findAllTicketsBySeance(seance);
+    }
+
+    @Override
+    @Transactional
+    public void createTicketAndDecrementFreePlaces(Ticket ticket) throws
+            TicketAlreadyExistsException, NoFreePlacesException{
+            createTicketIfNotExists(ticket);
+            seanceService.decrementFreePlacesQuantity(ticket.getSeance());
+    }
+
+    private void createTicketIfNotExists(Ticket ticket) throws TicketAlreadyExistsException {
+        if (!ticketAlreadyExists(ticket)) {
+            ticketRepository.save(ticket);
+        }
+        else
+            throw new TicketAlreadyExistsException("Ticket already exists in DB");
+    }
+
+    private boolean ticketAlreadyExists(Ticket ticket) {
+        return ticketRepository.existsTicketBySeanceAndPlaceAndRow(
+                ticket.getSeance(), ticket.getPlace(), ticket.getRow());
     }
 
     @Override
     public Map<Integer, Ticket> formHallMap(List<Ticket> ticketsForSeance) {
-        final int rows = 7;
         final int placesInRow = 11;
-        boolean placeAlreadyFilledIn;
 
         Map<Integer,Ticket> hallMap = new HashMap<>();
-        for(int row=1; row<=rows; row++) {
 
-            for(int place=1; place<placesInRow; place++) {
-                placeAlreadyFilledIn = false;
-                int absolutePlaceNumber = calculateAbsolutePlaceNumber(row, place, placesInRow);
+        for(Ticket existingTicket : ticketsForSeance) {
+            int absolutePlaceNumber = calculateAbsolutePlaceNumber(
+                    existingTicket.getRow(), existingTicket.getPlace(), placesInRow);
+            hallMap.put(absolutePlaceNumber, existingTicket);
 
-                for(Ticket existingTicket : ticketsForSeance) {
-                    if (row == existingTicket.getRowNumber() && place == existingTicket.getPlaceNumber()) {
-                        hallMap.put(absolutePlaceNumber, existingTicket);
-                        placeAlreadyFilledIn = true;
-                        break;
-                    }
-                }
-                if (!placeAlreadyFilledIn)
-                    hallMap.put(absolutePlaceNumber, null);
-            }
         }
+
+
         return hallMap;
     }
 

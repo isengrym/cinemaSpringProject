@@ -28,21 +28,21 @@
 }
 .cardRight:before,
 .cardRight:after {
-     content: "";
-     position: absolute;
-     display: block;
-     width: .9em;
-     height: .9em;
-     background: #fff;
-     border-radius: 50%;
-     left: -.5em;
- }
+    content: "";
+    position: absolute;
+    display: block;
+    width: .9em;
+    height: .9em;
+    background: #fff;
+    border-radius: 50%;
+    left: -.5em;
+}
 .cardRight:before {
-     top: -.4em;
- }
+    top: -.4em;
+}
 .cardRight:after {
-     bottom: -.4em;
- }
+    bottom: -.4em;
+}
 
 
 h1 {
@@ -96,27 +96,27 @@ span {
     z-index: 1;
 }
 .eye:before, .eye:after {
-               content:"";
-               display: block;
-               position: absolute;
-               border-radius: 50%;
+    content:"";
+    display: block;
+    position: absolute;
+    border-radius: 50%;
 }
 .eye:before {
-     width: 1em;
-     height: 1em;
-     background: #000000;
-     z-index: 2;
-     left: 8px;
-     top: 4px;
- }
+    width: 1em;
+    height: 1em;
+    background: #000000;
+    z-index: 2;
+    left: 8px;
+    top: 4px;
+}
 .eye:after {
-     width: .5em;
-     height: .5em;
-     background: #fff;
-     z-index: 3;
-     left: 12px;
-     top: 8px;
- }
+    width: .5em;
+    height: .5em;
+    background: #fff;
+    z-index: 3;
+    left: 12px;
+    top: 8px;
+}
 
 
 .number {

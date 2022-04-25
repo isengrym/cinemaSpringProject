@@ -4,8 +4,8 @@
         <meta charset="UTF-8">
         <title th:text="#{seances.title}"></title>
         <link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-        <link href="../../static/css/seances.css" th:href="@{/css/seances.css}" rel="stylesheet" />
-        <link href="../../static/css/style.css" th:href="@{/css/style.css}" rel="stylesheet" />
+        <link th:href="@{/css/seances.css}" rel="stylesheet" />
+        <link th:href="@{/css/style.css}" rel="stylesheet" />
     </head>
     <body>
         <div th:replace="/include/header :: header"></div>
@@ -63,7 +63,7 @@
                     <a th:href="@{/movies/{id}(id=${seance.movie.id})}">
                         <div class="seance-item row">
                             <div class="left-side col-xs-12 col-sm-3 col-md-3 col-lg-3">
-                                <img th:src="${seance.movie.getImagePath()}" alt="" width="170" height="257">
+                                <img th:src="${seance.movie.imagePath}" alt="" width="170" height="257">
                             </div>
                             <div class="right-side col-xs-12 col-sm-8 col-md-8 col-lg-8">
                                 <h3 th:text="${seance.movie.title}"></h3>

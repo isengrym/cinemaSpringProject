@@ -1,21 +1,17 @@
 package ua.klieshchunov.spring.cinemaSpringProject.model.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
-import org.hibernate.annotations.Filter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 
 @Entity
 @Table(name = "seances")
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @ToString
 public class Seance {
     @Id
@@ -44,4 +40,16 @@ public class Seance {
         return startTime.plusMinutes(this.movie.getDuration());
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Seance seance = (Seance) o;
+        return id == seance.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }

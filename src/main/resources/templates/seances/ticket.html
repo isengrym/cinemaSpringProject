@@ -2,10 +2,65 @@
 <html lang="en" xmlns:th="https://www.thymeleaf.org">
     <head>
         <meta charset="UTF-8">
+        <link th:href="@{/css/ticketPage.css}" rel="stylesheet" />
         <title th:text="#{seances.title}"></title>
     </head>
     <body>
-        <div th:replace="/include/header :: header"></div>
-        <p th:text="'Here u\'ll see the page for a chosen ticket for seance with id: ' + ${id}"></p>
+<!--        <div th:replace="/include/header :: header"></div>-->
+
+        <div class="cardWrap">
+            <div class="card cardLeft">
+                <h1 th:text="#{header.title}"></h1>
+                <div class="title">
+                    <h2 th:text="${seance.movie.title}"></h2>
+                    <span th:text="#{ticket.movie}"></span>
+                </div>
+                <div class="name">
+                    <h2 th:text="${user.name + ' ' + user.surname}"></h2>
+                    <span th:text="#{ticket.name}"></span>
+                </div>
+                <div class="time">
+                    <h2 th:text="${seance.getStartDateTime().toLocalDate()
+                                    + ' ' + seance.getStartDateTime().toLocalTime()}">
+                    </h2>
+                    <span th:text="#{ticket.dateTime}"></span>
+                </div>
+
+            </div>
+            <div class="card cardRight">
+                <div class="eye"></div>
+                <div class="number">
+                    <h3 th:text="${rowId}"></h3>
+                    <span th:text="#{ticket.row}"></span>
+                    <h3 th:text="${placeId}"></h3>
+                    <span th:text="#{ticket.seat}"></span>
+                </div>
+            </div>
+
+            <div class="col-lg-5">
+
+            </div>
+
+
+            <form th:method="POST" th:action="@{/seances/{id}/ticket(id=${seance.id})}" th:object="${ticket}">
+                <input type="hidden" name="row" th:value="${rowId}"/>
+                <input type="hidden" name="place" th:value="${placeId}"/>
+
+                <button type="submit" class="action-button submit-button col-lg-1" style="border: none;">
+                        <h4 th:text="#{button.confirm}"></h4>
+                </button>
+            </form>
+
+            <a th:href="@{/seances/{id}(id=${seance.id})}">
+                <div class="action-button decline-button col-lg-1">
+                    <h4 th:text="#{button.decline}"></h4>
+                </div>
+            </a>
+
+        </div>
+
+        <div class="col-lg-5">
+        </div>
+
     </body>
 </html>

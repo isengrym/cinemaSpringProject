@@ -9,6 +9,8 @@ import ua.klieshchunov.spring.cinemaSpringProject.model.entity.User;
 @Repository
 public interface UserRepository extends CrudRepository<User, Integer> {
     boolean existsByEmail(@Param("email") String email);
+    User getUserByEmail(@Param("email") String email);
+
     @Override
-    <S extends User> S save(S entity);
+    <S extends User> S save(S user);
 }

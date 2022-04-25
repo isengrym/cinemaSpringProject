@@ -10,6 +10,7 @@ import ua.klieshchunov.spring.cinemaSpringProject.model.entity.Movie;
 import ua.klieshchunov.spring.cinemaSpringProject.model.entity.Seance;
 import ua.klieshchunov.spring.cinemaSpringProject.model.repository.SeanceRepository;
 import ua.klieshchunov.spring.cinemaSpringProject.service.SeanceService;
+import ua.klieshchunov.spring.cinemaSpringProject.service.exceptions.NoFreePlacesException;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -103,6 +104,17 @@ public class SeanceServiceImpl implements SeanceService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public void decrementFreePlacesQuantity(Seance seance) {
+        if (hasFreePlaces(seance))
+            seanceRepository.decrementFreePlaces(seance.getId());
+        else
+            throw new NoFreePlacesException("No free places available by the seance");
+    }
 
-
+    @Override
+    public boolean hasFreePlaces(Seance seance) {
+        int freePlaces = seance.getFreePlaces();
+        return freePlaces > 0;
+    }
 }

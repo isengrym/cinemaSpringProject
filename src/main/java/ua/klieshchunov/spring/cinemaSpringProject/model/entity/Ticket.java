@@ -1,16 +1,10 @@
 package ua.klieshchunov.spring.cinemaSpringProject.model.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
+import java.util.Objects;
 
-/**
- * Class represents 'ticket' entity.
- *
- */
 
 @Entity
 @Table(name="tickets")
@@ -32,49 +26,22 @@ public class Ticket {
     @JoinColumn(name="seance_id")
     private Seance seance;
 
-    @Column(name="row_number")
-    private int rowNumber;
+    @Column(name="hall_row")
+    private int row;
 
-    @Column(name="place_number")
-    private int placeNumber;
+    @Column(name="hall_place")
+    private int place;
 
-    public int getTicketId() {
-        return ticketId;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Ticket ticket = (Ticket) o;
+        return ticketId == ticket.ticketId;
     }
 
-    public void setTicketId(int ticketId) {
-        this.ticketId = ticketId;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public Seance getSeance() {
-        return seance;
-    }
-
-    public void setSeance(Seance seance) {
-        this.seance = seance;
-    }
-
-    public int getRowNumber() {
-        return rowNumber;
-    }
-
-    public void setRowNumber(int rowNumber) {
-        this.rowNumber = rowNumber;
-    }
-
-    public int getPlaceNumber() {
-        return placeNumber;
-    }
-
-    public void setPlaceNumber(int placeNumber) {
-        this.placeNumber = placeNumber;
+    @Override
+    public int hashCode() {
+        return Objects.hash(ticketId);
     }
 }
