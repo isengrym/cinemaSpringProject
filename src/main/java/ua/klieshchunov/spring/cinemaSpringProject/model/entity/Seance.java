@@ -39,7 +39,9 @@ public class Seance {
         LocalDateTime startTime = getStartDateTime();
         return startTime.plusMinutes(this.movie.getDuration());
     }
-
+    public boolean isExpired() {
+        return LocalDateTime.now().isAfter(getStartDateTime());
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

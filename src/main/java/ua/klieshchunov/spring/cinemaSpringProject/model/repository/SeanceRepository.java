@@ -11,10 +11,11 @@ import ua.klieshchunov.spring.cinemaSpringProject.model.entity.Seance;
 import java.util.List;
 
 public interface SeanceRepository extends PagingAndSortingRepository<Seance, Integer> {
-    Seance findById(@Param("id") int id);
+    Seance findById(int id);
     List<Seance> findAll();
-    List<Seance> findAllByMovie(@Param("movie") Movie movie);
-    Page<Seance> findAll(Pageable pageable);
+    List<Seance> findAllByMovie(Movie movie);
+    Page<Seance> findAllByStartDateEpochSecondsGreaterThan(int currentTime, Pageable pageable);
+
     @Modifying
     @Query("update Seance seance set seance.freePlaces = seance.freePlaces-1 where seance.id = :id")
     void decrementFreePlaces(@Param("id") int id);

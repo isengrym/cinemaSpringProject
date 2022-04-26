@@ -1,11 +1,101 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>User panel</title>
+    <title th:text="#{profile.title}"></title>
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <link th:href="@{/css/profile.css}" rel="stylesheet" />
+    <link th:href="@{/css/style.css}" rel="stylesheet" />
 </head>
 <body>
 <div th:replace="/include/header :: header"></div>
 
+    <div class="page-body">
+        <div class="col-sm-0 col-md-0 col-lg-2">
+
+        </div>
+
+        <div class="ticket-list col-sm-12 col-md-6 col-lg-4">
+            <h3 class="headline" th:text="#{profile.tickets}"></h3>
+
+                <div th:each="ticket : ${tickets}" class="ticket-item">
+                    <div class="left-side">
+                            <a th:if="${ticket.seance.isExpired()} == false" th:href="@{/seances/{id}(id=${ticket.seance.id})}">
+                                <img class="ticket-image" th:src="${ticket.seance.movie.imagePath}" alt="">
+                            </a>
+
+                            <a th:if="${ticket.seance.isExpired()} == true">
+                                <img class="ticket-image" th:src="${ticket.seance.movie.imagePath}" alt="">
+                            </a>
+                    </div>
+
+                    <div class="right-side">
+
+                        <h6 class="ticket-expired ticket-info ticket-title"
+                            th:if="${ticket.seance.isExpired()} == true"
+                            th:text="${ticket.seance.movie.title} + '(' + #{ticket.expired} + ')'">
+                        </h6>
+
+                        <h6 class="ticket-info ticket-title" th:if="${ticket.seance.isExpired()} == false"
+                            th:text="${ticket.seance.movie.title}">
+                        </h6>
+                        <h6 class="ticket-info"
+                            th:text="#{ticket.when} + ': ' +
+                            ${ticket.seance.getStartDateTime().toLocalDate()} + ' ' +
+                            ${ticket.seance.getStartDateTime().toLocalTime()}">
+                        </h6>
+                        <h6 class="ticket-info"
+                            th:text="#{ticket.row} + ': ' + ${ticket.row}">
+                        </h6>
+                        <h6 class="ticket-info"
+                            th:text="#{ticket.place} + ': ' + ${ticket.place}">
+                        </h6>
+                        <h6 class="ticket-info"
+                            th:text="#{ticket.price} + ': ' + ${ticket.seance.ticketPrice} +'₴'">
+                        </h6>
+                    </div>
+                </div>
+
+            <div th:if="${totalPages>1}" class="page-number-block col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <a class="page-number-link" th:each="number : ${#numbers.sequence(1,totalPages)}"
+                   th:href="@{/profile?pageNum={num}(num=${number-1})}">
+                    <p class="page-number-item" th:text="${number}"></p>
+                </a>
+            </div>
+        </div>
+
+
+        <div class="col-sm-0 col-md-0 col-lg-2">
+
+        </div>
+
+        <div class = "personal-data col-sm-12 col-md-6 col-lg-4">
+            <h3 class="headline" th:text="#{profile.personalData}"></h3>
+            <h4>
+                <span th:text="#{signUp.name} + ': ' +  ${user.name}"></span>
+                <a class="change" th:text="#{profile.change}" th:href="@{/profile/update/name}"></a>
+            </h4>
+            <h4>
+                <span th:text="#{signUp.surname} + ': ' +  ${user.surname}"></span>
+                <a class="change" th:text="#{profile.change}" th:href="@{/profile/update/surname}"></a>
+            </h4>
+            <h4>
+                <span th:text="#{signUp.email} + ': ' +  ${user.email}"></span>
+                <a class="change" th:text="#{profile.change}" th:href="@{/profile/update/email}"></a>
+            </h4>
+            <h4>
+                <span th:text="#{signUp.password} + ': ' +  '***********'"></span>
+                <a class="change" th:text="#{profile.change}" th:href="@{/profile/update/password}"></a>
+            </h4>
+
+            <a href="#">
+            <button class="command-button" type="button" th:text="#{profile.deleteAcc}"></button>
+            </a>
+        </div>
+
+        <div class="col-sm-0 col-md-0 col-lg-2">
+
+        </div>
+    </div>
 </body>
 </html>

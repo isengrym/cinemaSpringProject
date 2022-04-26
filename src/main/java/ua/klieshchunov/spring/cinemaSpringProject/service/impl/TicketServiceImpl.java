@@ -1,9 +1,13 @@
 package ua.klieshchunov.spring.cinemaSpringProject.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ua.klieshchunov.spring.cinemaSpringProject.model.entity.Seance;
 import ua.klieshchunov.spring.cinemaSpringProject.model.entity.Ticket;
+import ua.klieshchunov.spring.cinemaSpringProject.model.entity.User;
 import ua.klieshchunov.spring.cinemaSpringProject.model.repository.TicketRepository;
 import ua.klieshchunov.spring.cinemaSpringProject.service.SeanceService;
 import ua.klieshchunov.spring.cinemaSpringProject.service.TicketService;
@@ -11,6 +15,8 @@ import ua.klieshchunov.spring.cinemaSpringProject.service.exceptions.NoFreePlace
 import ua.klieshchunov.spring.cinemaSpringProject.service.exceptions.TicketAlreadyExistsException;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +35,16 @@ public class TicketServiceImpl implements TicketService{
     @Override
     public List<Ticket> findAllTicketsForSeance(Seance seance) {
         return ticketRepository.findAllTicketsBySeance(seance);
+    }
+
+    @Override
+    public Page<Ticket> findTicketsByUserPaginatedAndSorted(User user, Integer pageNum, Integer pageSize) {
+        Pageable customizedPageable = PageRequest.of(pageNum, pageSize);
+        Page<Ticket> pageWithSeances =
+                ticketRepository.findAllByUser(
+                        user, customizedPageable);
+
+        return pageWithSeances;
     }
 
     @Override
@@ -72,4 +88,6 @@ public class TicketServiceImpl implements TicketService{
     private int calculateAbsolutePlaceNumber(int row, int placeInRow, int totalPlacesInRow) {
         return (row - 1) * totalPlacesInRow + placeInRow;
     }
+
+
 }

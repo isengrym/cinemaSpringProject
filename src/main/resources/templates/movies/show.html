@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
     <head>
         <meta charset="UTF-8">
         <title th:text="#{movies.title}"></title>
@@ -30,8 +30,8 @@
                 <div class="bottom-block">
 
                     <div class="col-sm-12 col-md-12 col-lg-5">
-                        <h2 th:if="${!#lists.isEmpty(seancesByDates)}" th:text="#{movie.seances}" class="seances-headline"></h2>
-                        <h2 th:if="${#lists.isEmpty(seancesByDates)}" th:text="#{movie.noSeances}" class="seances-headline"></h2>
+                        <h2 th:if="${!seancesByDates.isEmpty()}" th:text="#{movie.seances}" class="seances-headline"></h2>
+                        <h2 th:if="${seancesByDates.isEmpty()}" th:text="#{movie.noSeances}" class="seances-headline"></h2>
 
                         <div th:each="date : ${seancesByDates}">
                             <div class="day-item">

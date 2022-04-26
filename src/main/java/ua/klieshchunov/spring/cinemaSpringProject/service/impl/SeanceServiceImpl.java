@@ -68,7 +68,9 @@ public class SeanceServiceImpl implements SeanceService {
 
     @Override
     public List<Seance> findAllSeancesForMovie(Movie movie) {
-        List<Seance> seances = seanceRepository.findAllByMovie(movie);
+        int currentTime = (int)LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
+        List<Seance> seances =
+                seanceRepository.findAllByMovie(movie);
         return filterPastSeances(seances);
     }
 
@@ -76,8 +78,12 @@ public class SeanceServiceImpl implements SeanceService {
     @Override
     public Page<Seance> findAllSeancesPaginatedAndSorted(Integer pageNumber, Integer pageSize,
                                                          String sortBy, String sortOrder) {
+        int currentTime = (int)LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
+
         Pageable customizedPageable = formPageable(pageNumber, pageSize, sortBy, sortOrder);
-        Page<Seance> pageWithSeances = seanceRepository.findAll(customizedPageable);
+        Page<Seance> pageWithSeances =
+                seanceRepository.findAllByStartDateEpochSecondsGreaterThan(
+                currentTime,customizedPageable);
 
         return pageWithSeances;
     }
