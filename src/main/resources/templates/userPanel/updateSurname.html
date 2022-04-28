@@ -2,9 +2,35 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title th:text="#{profile.title}"></title>
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <link th:href="@{/css/profile.css}" rel="stylesheet" />
 </head>
 <body>
+<div th:replace="/include/header :: header"></div>
+
+<div class="col-lg-4">
+
+</div>
+<div style="margin-top: 50px" class="col-lg-4">
+    <form th:action="@{/profile/update/surname}" th:method="post">
+        <div class="form-group">
+            <label for="surname" th:text="#{signUp.surname}"></label>
+            <input id="surname" type="text" required pattern="^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$" th:placeholder="#{field.name}" class="form-control"/>
+        </div>
+
+        <div class="form-group">
+            <label for="password" th:text="#{edit.passwordConfirmation}"></label>
+            <input id="password" type="password" class="form-control" placeholder="********">
+        </div>
+
+        <button type="submit" class="btn btn-black" th:text="#{edit.save}"></button>
+
+    </form>
+</div>
+<div class="col-lg-4">
+
+</div>
 
 </body>
 </html>

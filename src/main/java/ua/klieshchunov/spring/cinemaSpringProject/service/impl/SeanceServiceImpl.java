@@ -2,13 +2,12 @@ package ua.klieshchunov.spring.cinemaSpringProject.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ua.klieshchunov.spring.cinemaSpringProject.model.entity.Movie;
 import ua.klieshchunov.spring.cinemaSpringProject.model.entity.Seance;
 import ua.klieshchunov.spring.cinemaSpringProject.model.repository.SeanceRepository;
+import ua.klieshchunov.spring.cinemaSpringProject.service.PaginationService;
 import ua.klieshchunov.spring.cinemaSpringProject.service.SeanceService;
 import ua.klieshchunov.spring.cinemaSpringProject.service.exceptions.NoFreePlacesException;
 
@@ -22,10 +21,13 @@ import java.util.stream.Collectors;
 public class SeanceServiceImpl implements SeanceService {
 
     private final SeanceRepository seanceRepository;
+    private final PaginationService paginationService;
 
     @Autowired
-    public SeanceServiceImpl(SeanceRepository seanceRepository) {
+    public SeanceServiceImpl(SeanceRepository seanceRepository,
+                             PaginationService paginationService) {
         this.seanceRepository = seanceRepository;
+        this.paginationService = paginationService;
     }
 
     @Override
@@ -68,36 +70,9 @@ public class SeanceServiceImpl implements SeanceService {
 
     @Override
     public List<Seance> findAllSeancesForMovie(Movie movie) {
-        int currentTime = (int)LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
         List<Seance> seances =
                 seanceRepository.findAllByMovie(movie);
         return filterPastSeances(seances);
-    }
-
-
-    @Override
-    public Page<Seance> findAllSeancesPaginatedAndSorted(Integer pageNumber, Integer pageSize,
-                                                         String sortBy, String sortOrder) {
-        int currentTime = (int)LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
-
-        Pageable customizedPageable = formPageable(pageNumber, pageSize, sortBy, sortOrder);
-        Page<Seance> pageWithSeances =
-                seanceRepository.findAllByStartDateEpochSecondsGreaterThan(
-                currentTime,customizedPageable);
-
-        return pageWithSeances;
-    }
-
-    private Pageable formPageable(Integer pageNumber, Integer pageSize, String sortBy, String sortDirection) {
-        Sort sort = sortDirection.equalsIgnoreCase("ASC")
-                ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
-
-        return PageRequest.of(pageNumber, pageSize, sort);
-    }
-
-    @Override
-    public Seance findSeanceById(int id) {
-        return seanceRepository.findById(id);
     }
 
 
@@ -111,7 +86,22 @@ public class SeanceServiceImpl implements SeanceService {
     }
 
     @Override
-    public void decrementFreePlacesQuantity(Seance seance) {
+    public Page<Seance> findAllSeancesPaginatedAndSorted(Pageable pageable) {
+        int currentTime = (int)LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
+        Pageable customizedPageable = paginationService.formPageableWithSorting(pageable);
+
+        return seanceRepository
+                .findAllByStartDateEpochSecondsGreaterThan(currentTime, customizedPageable);
+    }
+
+    @Override
+    public Seance findSeanceById(int id) {
+        return seanceRepository.findById(id);
+    }
+
+
+    @Override
+    public void decrementFreePlacesQuantity(Seance seance) throws NoFreePlacesException {
         if (hasFreePlaces(seance))
             seanceRepository.decrementFreePlaces(seance.getId());
         else

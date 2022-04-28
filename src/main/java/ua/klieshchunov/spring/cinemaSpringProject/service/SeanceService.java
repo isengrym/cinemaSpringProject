@@ -1,6 +1,8 @@
 package ua.klieshchunov.spring.cinemaSpringProject.service;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import ua.klieshchunov.spring.cinemaSpringProject.model.entity.Movie;
 import ua.klieshchunov.spring.cinemaSpringProject.model.entity.Seance;
 import ua.klieshchunov.spring.cinemaSpringProject.service.exceptions.NoFreePlacesException;
@@ -15,8 +17,7 @@ public interface SeanceService {
     List<Seance> findAllSeancesForMovie(Movie movie);
     boolean hasFreePlaces(Seance seance);
     void decrementFreePlacesQuantity(Seance seance) throws NoFreePlacesException;
-    Page<Seance> findAllSeancesPaginatedAndSorted
-            (Integer pageNumber, Integer pageSize, String sortBy, String sortOrder);
+    Page<Seance> findAllSeancesPaginatedAndSorted(Pageable pageable);
     Seance findSeanceById(int seanceId);
 
 

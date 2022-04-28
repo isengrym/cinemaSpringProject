@@ -38,21 +38,28 @@ public class TicketServiceImpl implements TicketService{
     }
 
     @Override
-    public Page<Ticket> findTicketsByUserPaginatedAndSorted(User user, Integer pageNum, Integer pageSize) {
-        Pageable customizedPageable = PageRequest.of(pageNum, pageSize);
-        Page<Ticket> pageWithSeances =
-                ticketRepository.findAllByUser(
-                        user, customizedPageable);
+    public Page<Ticket> findTicketsByUserPaginatedAndSorted(User user, Pageable pageable) {
+        Page<Ticket> pageWithSeances = getTickets(user, pageable);
 
         return pageWithSeances;
     }
 
+    private Page<Ticket> getTickets(User user, Pageable pageable) {
+        int pageNum = pageable.getPageNumber();
+        int pageSize = pageable.getPageSize();
+        Pageable customizedPageable = PageRequest.of(pageNum, pageSize);
+
+        return ticketRepository.findAllByUser(user, customizedPageable);
+    }
+
+
     @Override
     @Transactional
-    public void createTicketAndDecrementFreePlaces(Ticket ticket) throws
-            TicketAlreadyExistsException, NoFreePlacesException{
+    public void createTicketAndDecrementFreePlaces(Ticket ticket)
+            throws NoFreePlacesException, TicketAlreadyExistsException {
             createTicketIfNotExists(ticket);
             seanceService.decrementFreePlacesQuantity(ticket.getSeance());
+
     }
 
     private void createTicketIfNotExists(Ticket ticket) throws TicketAlreadyExistsException {

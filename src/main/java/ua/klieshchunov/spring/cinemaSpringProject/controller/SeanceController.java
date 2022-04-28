@@ -2,6 +2,9 @@ package ua.klieshchunov.spring.cinemaSpringProject.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import ua.klieshchunov.spring.cinemaSpringProject.model.entity.Seance;
 import ua.klieshchunov.spring.cinemaSpringProject.model.entity.Ticket;
 import ua.klieshchunov.spring.cinemaSpringProject.model.entity.User;
+import ua.klieshchunov.spring.cinemaSpringProject.service.PaginationService;
 import ua.klieshchunov.spring.cinemaSpringProject.service.SeanceService;
 import ua.klieshchunov.spring.cinemaSpringProject.service.TicketService;
 import ua.klieshchunov.spring.cinemaSpringProject.service.UserService;
@@ -23,29 +27,34 @@ public class SeanceController {
     private final SeanceService seanceService;
     private final TicketService ticketService;
     private final UserService userService;
+    private final PaginationService paginationService;
 
     @Autowired
-    public SeanceController(SeanceService seanceService, TicketService ticketService, UserService userService) {
+    public SeanceController(SeanceService seanceService, TicketService ticketService, UserService userService, PaginationService paginationService) {
         this.seanceService = seanceService;
         this.ticketService = ticketService;
         this.userService = userService;
+        this.paginationService = paginationService;
     }
 
     @GetMapping
     public String getAllSeances(@RequestParam(defaultValue = "0") Integer pageNum,
                                 @RequestParam(defaultValue = "10") Integer pageSize,
                                 @RequestParam(defaultValue = "startDateEpochSeconds") String sortBy,
-                                @RequestParam(defaultValue = "DSC") String sortDirection,
+                                @RequestParam(defaultValue = "DSC") String sortOrder,
                                 Model model) {
-        Page<Seance> page = seanceService
-                .findAllSeancesPaginatedAndSorted(pageNum, pageSize, sortBy, sortDirection);
+
+        Sort sort = paginationService.formSort(sortBy, sortOrder);
+        Pageable pageable = PageRequest.of(pageNum, pageSize, sort);
+        Page<Seance> page = seanceService.findAllSeancesPaginatedAndSorted(pageable);
+
         List<Seance> seancesPaginated = page.getContent();
 
         model.addAttribute("totalPages", page.getTotalPages());
         model.addAttribute("totalItems", page.getTotalElements());
         model.addAttribute("currentPage", pageNum);
         model.addAttribute("sortBy", sortBy);
-        model.addAttribute("sortDirection", sortDirection);
+        model.addAttribute("sortOrder", sortOrder);
         model.addAttribute("seances", seancesPaginated);
         return "seances/index";
     }
@@ -55,9 +64,9 @@ public class SeanceController {
         Seance seance = seanceService.findSeanceById(id);
         List<Ticket> tickets = ticketService.findAllTicketsForSeance(seance);
 
-        model.addAttribute("tickets", tickets);
-        model.addAttribute("hallMap", ticketService.formHallMap(tickets));
         model.addAttribute("seance", seance);
+        model.addAttribute("hallMap", ticketService.formHallMap(tickets));
+
         return "seances/show";
     }
 
@@ -67,10 +76,9 @@ public class SeanceController {
                                 @RequestParam(name="placeId") int placeId,
                                 @ModelAttribute("ticket") Ticket ticket,
                                 Model model) {
-        Seance seance = seanceService.findSeanceById(seanceId);
 
-        final String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userService.getUserByEmail(username);
+        User user = getUserFromContext();
+        Seance seance = seanceService.findSeanceById(seanceId);
 
         model.addAttribute("seance", seance);
         model.addAttribute("user", user);
@@ -81,29 +89,29 @@ public class SeanceController {
 
     @PostMapping("/{id}/ticket")
     public String createTicket(@PathVariable("id") int seanceId,
-                               @ModelAttribute("ticket") Ticket ticket,
-                               Model model) {
+                               @ModelAttribute("ticket") Ticket ticket) {
+        User user = getUserFromContext();
         Seance seance = seanceService.findSeanceById(seanceId);
-        final String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userService.getUserByEmail(username);
+
         ticket.setSeance(seance);
         ticket.setUser(user);
 
         try {
             ticketService.createTicketAndDecrementFreePlaces(ticket);
         } catch (TicketAlreadyExistsException e) {
-            System.out.println("Ticket for seance with id " +
-                    ticket.getSeance().getId() +
-                    " for row " + ticket.getRow() + " and" +
-                    " for place " + ticket.getPlace() + " already exists.");
+            //Log that
             return "redirect:/seances/" + seance.getId() + "?error";
         } catch (NoFreePlacesException e) {
-            System.out.println("No free places for seance with id: " +
-                    ticket.getSeance().getId());
-
+            //Log that
             return "seances";
         }
 
         return "redirect:/profile/";
+    }
+
+    private User getUserFromContext() {
+        final String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userService.getUserByEmail(username);
+        return user;
     }
 }

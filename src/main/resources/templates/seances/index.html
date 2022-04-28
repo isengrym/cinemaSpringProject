@@ -32,8 +32,8 @@
                     <option th:selected="${sortBy.equals('freePlaces')}" value="freePlaces" th:text="#{sorting.sortBySeat}"></option>
                 </select>
                 <select onchange="callback()" id="select3">
-                    <option th:selected="${sortDirection.equals('ASC')}" value="ASC" th:text="#{sorting.sortASC}"></option>
-                    <option th:selected="${sortDirection.equals('DSC')}" value="DSC" th:text="#{sorting.sortDESC}"></option>
+                    <option th:selected="${sortOrder.equals('ASC')}" value="ASC" th:text="#{sorting.sortASC}"></option>
+                    <option th:selected="${sortOrder.equals('DSC')}" value="DSC" th:text="#{sorting.sortDESC}"></option>
                 </select>
 
 
@@ -45,7 +45,7 @@
                         selectElement = document.querySelector('#select3');
                         orderOutput = selectElement.value;
 
-                        var src = "/seances?sortBy=" + sortingOutput + "&sortDirection=" + orderOutput;
+                        var src = "/seances?sortBy=" + sortingOutput + "&sortOrder=" + orderOutput;
 
                         window.location.href = src;
                     }
@@ -97,8 +97,8 @@
 
         <div th:if="${totalPages>1}" class="page-number-block col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <a class="page-number-link" th:each="number : ${#numbers.sequence(1,totalPages)}"
-               th:href="@{/seances?pageNum={num}&sortBy={sortBy}&sortDirection={sortDir}
-               (num=${number-1}, sortBy=${sortBy}, sortDir=${sortDirection})}">
+               th:href="@{/seances?pageNum={num}&sortBy={sortBy}&sortOrder={sortOrder}
+               (num=${number-1}, sortBy=${sortBy}, sortOrder=${sortOrder})}">
                 <p class="page-number-item" th:text="${number}"></p>
             </a>
 

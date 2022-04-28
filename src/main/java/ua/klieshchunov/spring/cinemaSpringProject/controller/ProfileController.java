@@ -2,19 +2,19 @@ package ua.klieshchunov.spring.cinemaSpringProject.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import ua.klieshchunov.spring.cinemaSpringProject.model.entity.Movie;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 import ua.klieshchunov.spring.cinemaSpringProject.model.entity.Ticket;
 import ua.klieshchunov.spring.cinemaSpringProject.model.entity.User;
 import ua.klieshchunov.spring.cinemaSpringProject.service.TicketService;
 import ua.klieshchunov.spring.cinemaSpringProject.service.UserService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Controller
@@ -33,11 +33,11 @@ public class ProfileController {
     public String index(@RequestParam(defaultValue = "0") Integer pageNum,
                         @RequestParam(defaultValue = "4") Integer pageSize,
                         Model model) {
-        final String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userService.getUserByEmail(userEmail);
+        User user = getUserFromContext();
+        Pageable pageable = PageRequest.of(pageNum, pageSize);
 
         Page<Ticket> page = ticketService
-                .findTicketsByUserPaginatedAndSorted(user, pageNum, pageSize);
+                .findTicketsByUserPaginatedAndSorted(user, pageable);
         List<Ticket> ticketsPaginated = page.getContent();
 
         model.addAttribute("totalPages", page.getTotalPages());
@@ -50,38 +50,53 @@ public class ProfileController {
     }
 
     @GetMapping("update/name")
-    public String getUpdateNamePage() {
+    public String getUpdateNamePage(@ModelAttribute User user) {
         return "userPanel/updateName";
     }
-    @PostMapping("update/name")
-    public String updateName() {
+    
+    @PatchMapping("update/name")
+    public String updateName(@ModelAttribute @Valid User user) {
         return "redirect:/profile";
     }
 
     @GetMapping("update/surname")
-    public String getUpdateSurnamePage() {
+    public String getUpdateSurnamePage(@ModelAttribute User user) {
         return "userPanel/updateSurname";
     }
-    @PostMapping("update/surname")
-    public String updateSurname() {
+    
+    @PatchMapping("update/surname")
+    public String updateSurname(@ModelAttribute @Valid User user) {
         return "redirect:/profile";
     }
 
     @GetMapping("update/email")
-    public String getUpdateEmailPage() {
+    public String getUpdateEmailPage(Model model) {
+        User user = getUserFromContext();
+        model.addAttribute("user", user);
         return "userPanel/updateEmail";
     }
-    @PostMapping("update/email")
-    public String updateEmail() {
+    
+    @PatchMapping("update/email")
+    public String updateEmail(BindingResult bindingResult,
+                              @ModelAttribute @Valid User user) {
+        if(bindingResult.hasErrors()) return "profile/update/name";
         return "redirect:/profile";
     }
 
     @GetMapping("update/password")
-    public String getUpdatePasswordPage() {
+    public String getUpdatePasswordPage(@ModelAttribute User user) {
         return "userPanel/updatePassword";
     }
-    @PostMapping("update/password")
-    public String updatePassword() {
+    
+    @PatchMapping("update/password")
+    public String updatePassword(@ModelAttribute @Valid User user) {
         return "redirect:/profile";
     }
+
+    private User getUserFromContext() {
+        final String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        return userService.getUserByEmail(userEmail);
+    }
 }
+
+

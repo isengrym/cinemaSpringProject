@@ -3,6 +3,8 @@ package ua.klieshchunov.spring.cinemaSpringProject.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,8 +37,10 @@ public class MovieController {
                                @RequestParam(defaultValue = "6") Integer pageSize,
                                Model model) {
 
+        Pageable pageable = PageRequest.of(pageNum, pageSize);
         Page<Movie> page = movieService
-                .findAllMoviesPaginatedAndSorted(pageNum, pageSize);
+                .findAllMoviesPaginatedAndSorted(pageable);
+
         List<Movie> moviesPaginated = page.getContent();
 
         model.addAttribute("totalPages", page.getTotalPages());
