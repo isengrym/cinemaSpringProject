@@ -15,13 +15,4 @@ public class PaginationServiceImpl implements PaginationService {
 
         return sort;
     }
-
-    @Override
-    public Pageable formPageableWithSorting(Pageable pageable) {
-        int pageNumber = pageable.getPageNumber();
-        int pageSize = pageable.getPageSize();
-        Sort sort = pageable.getSort();
-
-        return PageRequest.of(pageNumber, pageSize, sort);
-    }
 }

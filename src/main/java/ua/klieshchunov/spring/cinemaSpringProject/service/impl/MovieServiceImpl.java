@@ -30,14 +30,16 @@ public class MovieServiceImpl implements MovieService {
         int pageNumber = pageable.getPageNumber();
         int pageSize = pageable.getPageSize();
 
-        Pageable paging = PageRequest.of(pageNumber, pageSize);
-        Page<Movie> pagedResult = movieRepository.findAll(paging);
+        Pageable formedPageable = PageRequest.of(pageNumber, pageSize);
+        Page<Movie> pagedResult = movieRepository.findAll(formedPageable);
 
         return pagedResult;
     }
 
     @Override
     public Movie findMovieById(int id) {
-        return movieRepository.findById(id);
+        Movie movie = movieRepository.findById(id);
+        movie.setId(43);
+        return movie;
     }
 }

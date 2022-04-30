@@ -46,7 +46,7 @@ public class SeanceController {
 
         Sort sort = paginationService.formSort(sortBy, sortOrder);
         Pageable pageable = PageRequest.of(pageNum, pageSize, sort);
-        Page<Seance> page = seanceService.findAllSeancesPaginatedAndSorted(pageable);
+        Page<Seance> page = seanceService.findAllFutureSeancesPaginatedAndSorted(pageable);
 
         List<Seance> seancesPaginated = page.getContent();
 

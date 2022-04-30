@@ -3,6 +3,7 @@ package ua.klieshchunov.spring.cinemaSpringProject.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ua.klieshchunov.spring.cinemaSpringProject.model.entity.Movie;
 import ua.klieshchunov.spring.cinemaSpringProject.model.entity.Seance;
@@ -64,13 +65,13 @@ public class SeanceServiceImpl implements SeanceService {
     }
 
     @Override
-    public List<Seance> findAllSeances() {
+    public List<Seance> findAllFutureSeances() {
         List<Seance> seances = seanceRepository.findAll();
         return filterPastSeances(seances);
     }
 
     @Override
-    public List<Seance> findAllSeancesForMovie(Movie movie) {
+    public List<Seance> findAllFutureSeancesForMovie(Movie movie) {
         List<Seance> seances =
                 seanceRepository.findAllByMovie(movie);
         return filterPastSeances(seances);
@@ -87,19 +88,16 @@ public class SeanceServiceImpl implements SeanceService {
     }
 
     @Override
-    public Page<Seance> findAllSeancesPaginatedAndSorted(Pageable pageable) {
+    public Page<Seance> findAllFutureSeancesPaginatedAndSorted(Pageable pageable) {
         int currentTime = (int)LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
-        Pageable customizedPageable = paginationService.formPageableWithSorting(pageable);
-
         return seanceRepository
-                .findAllByStartDateEpochSecondsGreaterThan(currentTime, customizedPageable);
+                .findAllByStartDateEpochSecondsGreaterThan(currentTime, pageable);
     }
 
     @Override
     public Seance findSeanceById(int id) {
         return seanceRepository.findById(id);
     }
-
 
     @Override
     public void decrementFreePlacesQuantity(Seance seance) throws NoFreePlacesException {

@@ -11,7 +11,6 @@ public class AdminSeanceController {
         return "adminPanel/seances/index";
     }
 
-
     @GetMapping("/new")
     public String newSeancePage() {
         return "adminPanel/seances/new";

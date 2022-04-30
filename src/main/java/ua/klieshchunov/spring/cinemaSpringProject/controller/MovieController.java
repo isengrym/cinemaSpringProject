@@ -53,7 +53,7 @@ public class MovieController {
     @GetMapping("/{id}")
     public String getSpecificMovie(@PathVariable("id") int id, Model model) {
         Movie movie = movieService.findMovieById(id);
-        List<Seance> seances = seanceService.findAllSeancesForMovie(movie);
+        List<Seance> seances = seanceService.findAllFutureSeancesForMovie(movie);
         Map<LocalDate, List<Seance>> seancesByDates = seanceService.collectSeancesByDate(seances);
 
         model.addAttribute("movie", movie);
