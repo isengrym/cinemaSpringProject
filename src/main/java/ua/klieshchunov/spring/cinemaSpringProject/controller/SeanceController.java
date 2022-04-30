@@ -97,7 +97,7 @@ public class SeanceController {
         ticket.setUser(user);
 
         try {
-            ticketService.createTicketAndDecrementFreePlaces(ticket);
+            ticketService.createTicket(ticket);
         } catch (TicketAlreadyExistsException e) {
             //Log that
             return "redirect:/seances/" + seance.getId() + "?error";

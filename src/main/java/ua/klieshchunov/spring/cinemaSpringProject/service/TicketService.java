@@ -14,6 +14,6 @@ public interface TicketService {
     List<Ticket> findAllTicketsForSeance(Seance seance);
     Page<Ticket> findTicketsByUserPaginatedAndSorted(User user, Pageable pageable);
     Map<Integer, Ticket> formHallMap(List<Ticket> ticketsForSeance);
-    void createTicketAndDecrementFreePlaces(Ticket ticket) throws TicketAlreadyExistsException, NoFreePlacesException;
+    void createTicket(Ticket ticket) throws NoFreePlacesException, TicketAlreadyExistsException;
 
 }

@@ -10,7 +10,6 @@ import ua.klieshchunov.spring.cinemaSpringProject.model.repository.SeanceReposit
 import ua.klieshchunov.spring.cinemaSpringProject.service.PaginationService;
 import ua.klieshchunov.spring.cinemaSpringProject.service.SeanceService;
 import ua.klieshchunov.spring.cinemaSpringProject.service.exceptions.NoFreePlacesException;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -46,11 +45,13 @@ public class SeanceServiceImpl implements SeanceService {
     private List<LocalDate> collectDatesOfSeances(List<Seance> seances) {
         List<LocalDate> dates = new LinkedList<>();
         List<Seance> onlyFutureSeances = filterPastSeances(seances);
+
         for (Seance seance : onlyFutureSeances) {
             LocalDate date = seance.getStartDateTime().toLocalDate();
             if (!dates.contains(date))
                 dates.add(date);
         }
+
         return dates;
     }
 
