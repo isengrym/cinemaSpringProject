@@ -3,12 +3,10 @@ package ua.klieshchunov.spring.cinemaSpringProject.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ua.klieshchunov.spring.cinemaSpringProject.model.entity.Movie;
 import ua.klieshchunov.spring.cinemaSpringProject.model.entity.Seance;
 import ua.klieshchunov.spring.cinemaSpringProject.model.repository.SeanceRepository;
-import ua.klieshchunov.spring.cinemaSpringProject.service.PaginationService;
 import ua.klieshchunov.spring.cinemaSpringProject.service.SeanceService;
 import ua.klieshchunov.spring.cinemaSpringProject.service.exceptions.NoFreePlacesException;
 import java.time.LocalDate;
@@ -21,13 +19,10 @@ import java.util.stream.Collectors;
 public class SeanceServiceImpl implements SeanceService {
 
     private final SeanceRepository seanceRepository;
-    private final PaginationService paginationService;
 
     @Autowired
-    public SeanceServiceImpl(SeanceRepository seanceRepository,
-                             PaginationService paginationService) {
+    public SeanceServiceImpl(SeanceRepository seanceRepository) {
         this.seanceRepository = seanceRepository;
-        this.paginationService = paginationService;
     }
 
     @Override
@@ -36,18 +31,16 @@ public class SeanceServiceImpl implements SeanceService {
         Map<LocalDate,List<Seance>> seancesByDaysMap = new LinkedHashMap<>();
 
         for(LocalDate date : dates) {
-            List<Seance> seancesOnGivenDay = groupSeancesByGivenDay(seances, date);
+            List<Seance> seancesOnGivenDay = leaveSeancesThatMatchGivenDay(seances, date);
             seancesByDaysMap.put(date,seancesOnGivenDay);
         }
-
         return seancesByDaysMap;
     }
 
     private List<LocalDate> collectDatesOfSeances(List<Seance> seances) {
         List<LocalDate> dates = new LinkedList<>();
-        List<Seance> onlyFutureSeances = filterPastSeances(seances);
 
-        for (Seance seance : onlyFutureSeances) {
+        for (Seance seance : seances) {
             LocalDate date = seance.getStartDateTime().toLocalDate();
             if (!dates.contains(date))
                 dates.add(date);
@@ -56,7 +49,7 @@ public class SeanceServiceImpl implements SeanceService {
         return dates;
     }
 
-    private List<Seance> groupSeancesByGivenDay(List<Seance> seances, LocalDate date) {
+    private List<Seance> leaveSeancesThatMatchGivenDay(List<Seance> seances, LocalDate date) {
         return seances.stream()
                 .filter(seance -> seance.getStartDateTime().getYear() == date.getYear())
                 .filter(seance -> seance.getStartDateTime().getMonth() == date.getMonth())
@@ -67,31 +60,20 @@ public class SeanceServiceImpl implements SeanceService {
     @Override
     public List<Seance> findAllFutureSeances() {
         List<Seance> seances = seanceRepository.findAll();
-        return filterPastSeances(seances);
+        return seances;
     }
 
     @Override
     public List<Seance> findAllFutureSeancesForMovie(Movie movie) {
-        List<Seance> seances =
-                seanceRepository.findAllByMovie(movie);
-        return filterPastSeances(seances);
-    }
-
-
-    private List<Seance> filterPastSeances(List<Seance> seances) {
-        long currentTime = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
-
-        return seances
-                .stream()
-                .filter(seance -> seance.getStartDateTime().toEpochSecond(ZoneOffset.UTC) > currentTime)
-                .collect(Collectors.toList());
+        List<Seance> seances = seanceRepository.findAllByMovie(movie);
+        return seances;
     }
 
     @Override
     public Page<Seance> findAllFutureSeancesPaginatedAndSorted(Pageable pageable) {
         int currentTime = (int)LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
         return seanceRepository
-                .findAllByStartDateEpochSecondsGreaterThan(currentTime, pageable);
+                .findAllFutureSeancesPaginatedAndSorted(currentTime, pageable);
     }
 
     @Override
