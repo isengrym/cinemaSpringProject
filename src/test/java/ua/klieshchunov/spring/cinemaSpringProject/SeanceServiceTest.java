@@ -1,21 +1,16 @@
 package ua.klieshchunov.spring.cinemaSpringProject;
 
-import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
 import org.springframework.data.domain.*;
 import ua.klieshchunov.spring.cinemaSpringProject.model.entity.Movie;
 import ua.klieshchunov.spring.cinemaSpringProject.model.entity.Seance;
 import ua.klieshchunov.spring.cinemaSpringProject.model.repository.SeanceRepository;
-import ua.klieshchunov.spring.cinemaSpringProject.service.PaginationService;
 import ua.klieshchunov.spring.cinemaSpringProject.service.exceptions.NoFreePlacesException;
 import ua.klieshchunov.spring.cinemaSpringProject.service.impl.SeanceServiceImpl;
 
@@ -23,7 +18,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.*;
-import java.util.function.Function;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -103,7 +97,7 @@ public class SeanceServiceTest {
         List<Seance> seances = new ArrayList<>();
 
         when(seanceRepository
-                .findAllByStartDateEpochSecondsGreaterThan(
+                .findAll(
                         anyInt(),
                         any(Pageable.class)))
                 .thenReturn(new PageImpl<>(seances));
@@ -112,7 +106,7 @@ public class SeanceServiceTest {
         Page<Seance> actualPage = seanceService.findAllFutureSeancesPaginatedAndSorted(pageable);
 
         verify(seanceRepository, times(1))
-                .findAllByStartDateEpochSecondsGreaterThan(
+                .findAll(
                         anyInt(),
                         any(Pageable.class));
         Assertions.assertEquals(expectedPage, actualPage);

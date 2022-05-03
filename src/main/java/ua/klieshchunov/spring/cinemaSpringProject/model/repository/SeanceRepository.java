@@ -13,8 +13,11 @@ import java.util.List;
 public interface SeanceRepository extends PagingAndSortingRepository<Seance, Integer> {
     Seance findById(int id);
     List<Seance> findAll();
-    List<Seance> findAllByMovie(Movie movie);
-    Page<Seance> findAllByStartDateEpochSecondsGreaterThan(int currentTime, Pageable pageable);
+    @Query("select seance from Seance seance where seance.startDateEpochSeconds > :currentTime and seance.movie = :movie")
+    List<Seance> findAllByMovie(int currentTime, Movie movie);
+
+    @Query("select seance from Seance seance where seance.startDateEpochSeconds > :currentTime")
+    Page<Seance> findAll(int currentTime, Pageable pageable);
 
     @Modifying
     @Query("update Seance seance set seance.freePlaces = seance.freePlaces-1 where seance.id = :id")

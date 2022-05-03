@@ -62,6 +62,9 @@ public class SeanceController {
     public String getSpecificSeance(@PathVariable("id") int id,
                                     Model model) {
         Seance seance = seanceService.findSeanceById(id);
+        if (seanceService.hasAlreadyEnded(seance))
+            return "redirect:/seances/";
+
         List<Ticket> tickets = ticketService.findAllTicketsForSeance(seance);
 
         model.addAttribute("seance", seance);
@@ -76,9 +79,11 @@ public class SeanceController {
                                 @RequestParam(name="placeId") int placeId,
                                 @ModelAttribute("ticket") Ticket ticket,
                                 Model model) {
+        Seance seance = seanceService.findSeanceById(seanceId);
+        if (seanceService.hasAlreadyEnded(seance))
+            return "redirect:/seances/";
 
         User user = getUserFromContext();
-        Seance seance = seanceService.findSeanceById(seanceId);
 
         model.addAttribute("seance", seance);
         model.addAttribute("user", user);
@@ -90,8 +95,12 @@ public class SeanceController {
     @PostMapping("/{id}/ticket")
     public String createTicket(@PathVariable("id") int seanceId,
                                @ModelAttribute("ticket") Ticket ticket) {
-        User user = getUserFromContext();
+
         Seance seance = seanceService.findSeanceById(seanceId);
+        if (seanceService.hasAlreadyEnded(seance))
+            return "redirect:/seances/";
+
+        User user = getUserFromContext();
 
         ticket.setSeance(seance);
         ticket.setUser(user);
@@ -112,6 +121,8 @@ public class SeanceController {
     private User getUserFromContext() {
         final String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.getUserByEmail(username);
+
         return user;
     }
+
 }

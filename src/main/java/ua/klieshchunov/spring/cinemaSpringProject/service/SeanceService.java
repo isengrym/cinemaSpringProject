@@ -12,12 +12,15 @@ import java.util.Map;
 
 public interface SeanceService {
     Map<LocalDate,List<Seance>> collectSeancesByDate(List<Seance> seances);
+    Seance findSeanceById(int seanceId);
     List<Seance> findAllFutureSeances();
     List<Seance> findAllFutureSeancesForMovie(Movie movie);
-    boolean hasFreePlaces(Seance seance);
-    void decrementFreePlacesQuantity(Seance seance) throws NoFreePlacesException;
     Page<Seance> findAllFutureSeancesPaginatedAndSorted(Pageable pageable);
-    Seance findSeanceById(int seanceId);
+    boolean hasFreePlaces(Seance seance);
+    boolean hasAlreadyEnded(Seance seance);
+    void decrementFreePlacesQuantity(Seance seance) throws NoFreePlacesException;
+
+
 
 
 }

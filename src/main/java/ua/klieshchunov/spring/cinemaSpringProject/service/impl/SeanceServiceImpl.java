@@ -3,12 +3,10 @@ package ua.klieshchunov.spring.cinemaSpringProject.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ua.klieshchunov.spring.cinemaSpringProject.model.entity.Movie;
 import ua.klieshchunov.spring.cinemaSpringProject.model.entity.Seance;
 import ua.klieshchunov.spring.cinemaSpringProject.model.repository.SeanceRepository;
-import ua.klieshchunov.spring.cinemaSpringProject.service.PaginationService;
 import ua.klieshchunov.spring.cinemaSpringProject.service.SeanceService;
 import ua.klieshchunov.spring.cinemaSpringProject.service.exceptions.NoFreePlacesException;
 import java.time.LocalDate;
@@ -21,19 +19,16 @@ import java.util.stream.Collectors;
 public class SeanceServiceImpl implements SeanceService {
 
     private final SeanceRepository seanceRepository;
-    private final PaginationService paginationService;
 
     @Autowired
-    public SeanceServiceImpl(SeanceRepository seanceRepository,
-                             PaginationService paginationService) {
+    public SeanceServiceImpl(SeanceRepository seanceRepository) {
         this.seanceRepository = seanceRepository;
-        this.paginationService = paginationService;
     }
 
     @Override
     public Map<LocalDate,List<Seance>> collectSeancesByDate(List<Seance> seances) {
         List<LocalDate> dates = collectDatesOfSeances(seances);
-        Map<LocalDate,List<Seance>> seancesByDaysMap = new LinkedHashMap<>();
+        Map<LocalDate,List<Seance>> seancesByDaysMap = new TreeMap<>();
 
         for(LocalDate date : dates) {
             List<Seance> seancesOnGivenDay = groupSeancesByGivenDay(seances, date);
@@ -45,7 +40,7 @@ public class SeanceServiceImpl implements SeanceService {
 
     private List<LocalDate> collectDatesOfSeances(List<Seance> seances) {
         List<LocalDate> dates = new LinkedList<>();
-        List<Seance> onlyFutureSeances = filterPastSeances(seances);
+        List<Seance> onlyFutureSeances = seances;
 
         for (Seance seance : onlyFutureSeances) {
             LocalDate date = seance.getStartDateTime().toLocalDate();
@@ -67,31 +62,22 @@ public class SeanceServiceImpl implements SeanceService {
     @Override
     public List<Seance> findAllFutureSeances() {
         List<Seance> seances = seanceRepository.findAll();
-        return filterPastSeances(seances);
+        return seances;
     }
 
     @Override
     public List<Seance> findAllFutureSeancesForMovie(Movie movie) {
+        int currentTime = getCurrentTime();
         List<Seance> seances =
-                seanceRepository.findAllByMovie(movie);
-        return filterPastSeances(seances);
-    }
-
-
-    private List<Seance> filterPastSeances(List<Seance> seances) {
-        long currentTime = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
-
-        return seances
-                .stream()
-                .filter(seance -> seance.getStartDateTime().toEpochSecond(ZoneOffset.UTC) > currentTime)
-                .collect(Collectors.toList());
+                seanceRepository.findAllByMovie(currentTime, movie);
+        return seances;
     }
 
     @Override
     public Page<Seance> findAllFutureSeancesPaginatedAndSorted(Pageable pageable) {
-        int currentTime = (int)LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
+        int currentTime = getCurrentTime();
         return seanceRepository
-                .findAllByStartDateEpochSecondsGreaterThan(currentTime, pageable);
+                .findAll(currentTime, pageable);
     }
 
     @Override
@@ -111,5 +97,15 @@ public class SeanceServiceImpl implements SeanceService {
     public boolean hasFreePlaces(Seance seance) {
         int freePlaces = seance.getFreePlaces();
         return freePlaces > 0;
+    }
+
+    @Override
+    public boolean hasAlreadyEnded(Seance seance) {
+        int currentTime = getCurrentTime();
+        return seance.getStartDateEpochSeconds() < currentTime;
+    }
+
+    private int getCurrentTime() {
+        return (int) LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
     }
 }
