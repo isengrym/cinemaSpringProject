@@ -39,6 +39,18 @@ public class UserServiceImpl implements UserService {
         user.setRole(ApplicationUserRole.USER);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
+
         return true;
+    }
+
+    @Override
+    public boolean isCorrectPassword(String password, User userFromDb) {
+        return passwordEncoder.matches(password, userFromDb.getPassword());
+    }
+
+    @Override
+    @Transactional
+    public void updateUser(User userFromDb) {
+
     }
 }

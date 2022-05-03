@@ -4,15 +4,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import ua.klieshchunov.spring.cinemaSpringProject.model.entity.Ticket;
 import ua.klieshchunov.spring.cinemaSpringProject.model.entity.User;
 import ua.klieshchunov.spring.cinemaSpringProject.service.TicketService;
 import ua.klieshchunov.spring.cinemaSpringProject.service.UserService;
+import ua.klieshchunov.spring.cinemaSpringProject.utils.UserDetailsImpl;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -70,17 +74,36 @@ public class ProfileController {
     }
 
     @GetMapping("update/email")
-    public String getUpdateEmailPage(Model model) {
-        User user = getUserFromContext();
-        model.addAttribute("user", user);
+    public String getUpdateEmailPage(@ModelAttribute("user") User user) {
         return "userPanel/updateEmail";
     }
     
-    @PatchMapping("update/email")
-    public String updateEmail(BindingResult bindingResult,
-                              @ModelAttribute @Valid User user) {
-        if(bindingResult.hasErrors()) return "profile/update/name";
-        return "redirect:/profile";
+    @PostMapping("update/email")
+    public String updateEmail(@ModelAttribute @Valid User userFromForm,
+                              BindingResult bindingResult) {
+        User userFromContext = getUserFromContext();
+
+        if (!userService.isCorrectPassword(userFromForm.getPassword(), userFromContext))
+            bindingResult.rejectValue("password", "error.update.oldPassword");
+        if (userService.userWithSuchEmailExists(userFromForm.getEmail()))
+            bindingResult.rejectValue("email", "error.userExists");
+
+        if(bindingResult.hasErrors()) return "userPanel/updateEmail";
+
+        userFromContext.setEmail(userFromForm.getEmail());
+        updateUser(userFromContext);
+
+        return "redirect:/profile/";
+    }
+
+    private void updateUser(User updatedUser) {
+        userService.updateUser(updatedUser);
+        updateUserDetails(updatedUser);
+    }
+
+    private void updateUserDetails(User updatedUser) {
+        UserDetailsImpl userDetails = (UserDetailsImpl)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        userDetails.setUser(updatedUser);
     }
 
     @GetMapping("update/password")

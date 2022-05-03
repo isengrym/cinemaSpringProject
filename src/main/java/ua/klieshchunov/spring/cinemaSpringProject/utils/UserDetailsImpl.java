@@ -8,8 +8,8 @@ import java.util.Collection;
 import java.util.Set;
 
 public class UserDetailsImpl implements UserDetails {
-    private final User user;
-    private final Set<? extends GrantedAuthority> grantedAuthorities;
+    private User user;
+    private Set<? extends GrantedAuthority> grantedAuthorities;
 
     public UserDetailsImpl(User user, Set<? extends GrantedAuthority> grantedAuthorities) {
         this.user = user;
@@ -49,5 +49,13 @@ public class UserDetailsImpl implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public void setGrantedAuthorities(Set<? extends GrantedAuthority> grantedAuthorities) {
+        this.grantedAuthorities = grantedAuthorities;
     }
 }
