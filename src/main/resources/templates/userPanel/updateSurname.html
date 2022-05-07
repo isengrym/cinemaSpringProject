@@ -1,36 +1,39 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title th:text="#{profile.title}"></title>
-    <link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-    <link th:href="@{/css/profile.css}" rel="stylesheet" />
-</head>
-<body>
-<div th:replace="/include/header :: header"></div>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title th:text="#{profile.title}"></title>
+        <link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+        <link th:href="@{/css/profile.css}" rel="stylesheet" />
+    </head>
+    <body>
+        <div th:replace="/include/header :: header"></div>
 
-<div class="col-lg-4">
+        <div class="col-lg-4">
 
-</div>
-<div style="margin-top: 50px" class="col-lg-4">
-    <form th:action="@{/profile/update/surname}" th:method="post">
-        <div class="form-group">
-            <label for="surname" th:text="#{signUp.surname}"></label>
-            <input id="surname" type="text" required pattern="^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$" th:placeholder="#{field.name}" class="form-control"/>
+        </div>
+        <div style="margin-top: 50px" class="col-lg-4">
+            <form th:action="@{/profile/update/surname}" th:object="${user}" th:method="post">
+                <div class="form-group">
+                    <label th:text="#{signUp.surname}"></label>
+                    <input th:field="*{surname}" class="form-control" th:placeholder="#{field.surname}"
+                           type="text" required pattern="^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$"/>
+                    <div style="color:red" th:if="${#fields.hasErrors('surname')}" th:errors="*{surname}"></div>
+                </div>
+
+                <div class="form-group">
+                    <label th:text="#{edit.passwordConfirmation}"></label>
+                    <input name="confirmationPassword" class="form-control" placeholder="********" type="password">
+                    <div style="color:red" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+                </div>
+
+                <button type="submit" class="btn btn-black" th:text="#{edit.save}"></button>
+
+            </form>
+        </div>
+        <div class="col-lg-4">
+
         </div>
 
-        <div class="form-group">
-            <label for="password" th:text="#{edit.passwordConfirmation}"></label>
-            <input id="password" type="password" class="form-control" placeholder="********">
-        </div>
-
-        <button type="submit" class="btn btn-black" th:text="#{edit.save}"></button>
-
-    </form>
-</div>
-<div class="col-lg-4">
-
-</div>
-
-</body>
+    </body>
 </html>

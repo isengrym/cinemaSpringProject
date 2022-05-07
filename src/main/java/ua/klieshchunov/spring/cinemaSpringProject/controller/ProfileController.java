@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -26,11 +27,15 @@ import java.util.List;
 public class ProfileController {
     private final UserService userService;
     private final TicketService ticketService;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public ProfileController(UserService userService, TicketService ticketService) {
+    public ProfileController(UserService userService,
+                             TicketService ticketService,
+                             PasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.ticketService = ticketService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping
@@ -54,23 +59,47 @@ public class ProfileController {
     }
 
     @GetMapping("update/name")
-    public String getUpdateNamePage(@ModelAttribute User user) {
+    public String getUpdateNamePage(@ModelAttribute("user") User user) {
         return "userPanel/updateName";
     }
     
-    @PatchMapping("update/name")
-    public String updateName(@ModelAttribute @Valid User user) {
-        return "redirect:/profile";
+    @PostMapping("update/name")
+    public String updateName(@ModelAttribute @Valid User userFromForm,
+                             BindingResult bindingResult,
+                             @ModelAttribute("confirmationPassword") String confirmationPassword) {
+        User userFromContext = getUserFromContext();
+
+        if (!userService.isCorrectPassword(confirmationPassword, userFromContext))
+            bindingResult.rejectValue("password", "error.update.oldPassword");
+
+        if(bindingResult.hasErrors()) return "userPanel/updateName";
+
+        userFromContext.setName(userFromForm.getName());
+        updateUser(userFromContext);
+
+        return "redirect:/profile/";
     }
 
     @GetMapping("update/surname")
-    public String getUpdateSurnamePage(@ModelAttribute User user) {
+    public String getUpdateSurnamePage(@ModelAttribute("user") User user) {
         return "userPanel/updateSurname";
     }
-    
-    @PatchMapping("update/surname")
-    public String updateSurname(@ModelAttribute @Valid User user) {
-        return "redirect:/profile";
+
+    @PostMapping("update/surname")
+    public String updateSurname(@ModelAttribute @Valid User userFromForm,
+                                BindingResult bindingResult,
+                                @ModelAttribute("confirmationPassword") String confirmationPassword) {
+        User userFromContext = getUserFromContext();
+
+        if (!userService.isCorrectPassword(confirmationPassword, userFromContext))
+            bindingResult.rejectValue("password", "error.update.oldPassword");
+
+        if(bindingResult.hasErrors()) return "userPanel/updateSurname";
+
+        userFromContext.setSurname(userFromForm.getSurname());
+        updateUser(userFromContext);
+
+        return "redirect:/profile/";
     }
 
     @GetMapping("update/email")
@@ -80,10 +109,11 @@ public class ProfileController {
     
     @PostMapping("update/email")
     public String updateEmail(@ModelAttribute @Valid User userFromForm,
-                              BindingResult bindingResult) {
+                              BindingResult bindingResult,
+                              @ModelAttribute("confirmationPassword") String confirmationPassword) {
         User userFromContext = getUserFromContext();
 
-        if (!userService.isCorrectPassword(userFromForm.getPassword(), userFromContext))
+        if (!userService.isCorrectPassword(confirmationPassword, userFromContext))
             bindingResult.rejectValue("password", "error.update.oldPassword");
         if (userService.userWithSuchEmailExists(userFromForm.getEmail()))
             bindingResult.rejectValue("email", "error.userExists");
@@ -91,6 +121,29 @@ public class ProfileController {
         if(bindingResult.hasErrors()) return "userPanel/updateEmail";
 
         userFromContext.setEmail(userFromForm.getEmail());
+        updateUser(userFromContext);
+
+        return "redirect:/profile/";
+    }
+
+    @GetMapping("update/password")
+    public String getUpdatePasswordPage(@ModelAttribute("user") User user) {
+        return "userPanel/updatePassword";
+    }
+    
+    @PostMapping("update/password")
+    public String updatePassword(@ModelAttribute("user") @Valid User userFromForm,
+                                 BindingResult bindingResult,
+                                 @ModelAttribute("confirmationPassword") String confirmationPassword) {
+        User userFromContext = getUserFromContext();
+
+        if (!userService.isCorrectPassword(confirmationPassword, userFromContext))
+            bindingResult.rejectValue("password", "error.update.oldPassword");
+
+        if(bindingResult.hasErrors()) return "userPanel/updatePassword";
+
+        String encryptedPassword = passwordEncoder.encode(userFromForm.getPassword());
+        userFromContext.setPassword(encryptedPassword);
         updateUser(userFromContext);
 
         return "redirect:/profile/";
@@ -104,16 +157,6 @@ public class ProfileController {
     private void updateUserDetails(User updatedUser) {
         UserDetailsImpl userDetails = (UserDetailsImpl)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         userDetails.setUser(updatedUser);
-    }
-
-    @GetMapping("update/password")
-    public String getUpdatePasswordPage(@ModelAttribute User user) {
-        return "userPanel/updatePassword";
-    }
-    
-    @PatchMapping("update/password")
-    public String updatePassword(@ModelAttribute @Valid User user) {
-        return "redirect:/profile";
     }
 
     private User getUserFromContext() {
