@@ -45,6 +45,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean isCorrectPassword(String password, User userFromDb) {
+        if (password == null)
+            return false;
+
         return passwordEncoder.matches(password, userFromDb.getPassword());
     }
 
