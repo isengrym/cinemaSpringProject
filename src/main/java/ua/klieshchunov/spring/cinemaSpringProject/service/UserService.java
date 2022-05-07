@@ -9,4 +9,5 @@ public interface UserService {
     User getUserByEmail(String email);
     boolean isCorrectPassword(String password, User userFromDb);
     void updateUser(User userFromDb);
+    void deleteUser(User user);
 }

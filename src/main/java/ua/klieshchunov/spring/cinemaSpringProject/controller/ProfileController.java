@@ -1,6 +1,7 @@
 package ua.klieshchunov.spring.cinemaSpringProject.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.server.Session;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -58,12 +59,23 @@ public class ProfileController {
         return "userPanel/index";
     }
 
+    @DeleteMapping("/delete")
+    public String deleteUser() {
+        userService.deleteUser(getUserFromContext());
+        clearSession();
+        return "redirect:/";
+    }
+
+    private void clearSession() {
+        SecurityContextHolder.clearContext();
+    }
+
     @GetMapping("update/name")
     public String getUpdateNamePage(@ModelAttribute("user") User user) {
         return "userPanel/updateName";
     }
     
-    @PostMapping("update/name")
+    @PatchMapping("update/name")
     public String updateName(@ModelAttribute @Valid User userFromForm,
                              BindingResult bindingResult,
                              @ModelAttribute("confirmationPassword") String confirmationPassword) {
@@ -85,7 +97,7 @@ public class ProfileController {
         return "userPanel/updateSurname";
     }
 
-    @PostMapping("update/surname")
+    @PatchMapping("update/surname")
     public String updateSurname(@ModelAttribute @Valid User userFromForm,
                                 BindingResult bindingResult,
                                 @ModelAttribute("confirmationPassword") String confirmationPassword) {
@@ -107,7 +119,7 @@ public class ProfileController {
         return "userPanel/updateEmail";
     }
     
-    @PostMapping("update/email")
+    @PatchMapping("update/email")
     public String updateEmail(@ModelAttribute @Valid User userFromForm,
                               BindingResult bindingResult,
                               @ModelAttribute("confirmationPassword") String confirmationPassword) {
@@ -131,7 +143,7 @@ public class ProfileController {
         return "userPanel/updatePassword";
     }
     
-    @PostMapping("update/password")
+    @PatchMapping("update/password")
     public String updatePassword(@ModelAttribute("user") @Valid User userFromForm,
                                  BindingResult bindingResult,
                                  @ModelAttribute("confirmationPassword") String confirmationPassword) {
@@ -163,6 +175,7 @@ public class ProfileController {
         final String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         return userService.getUserByEmail(userEmail);
     }
+
 }
 
 

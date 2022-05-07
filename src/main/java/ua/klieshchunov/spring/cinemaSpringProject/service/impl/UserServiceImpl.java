@@ -52,8 +52,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional
     public void updateUser(User userFromDb) {
+        userRepository.updateUser(userFromDb);
+    }
 
+    @Override
+    public void deleteUser(User user) {
+        userRepository.deleteUser(user);
     }
 }

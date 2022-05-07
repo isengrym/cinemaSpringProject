@@ -13,7 +13,7 @@
 
         </div>
         <div style="margin-top: 50px" class="col-lg-4">
-            <form th:action="@{/profile/update/surname}" th:object="${user}" th:method="post">
+            <form th:action="@{/profile/update/surname}" th:object="${user}" th:method="PATCH">
                 <div class="form-group">
                     <label th:text="#{signUp.surname}"></label>
                     <input th:field="*{surname}" class="form-control" th:placeholder="#{field.surname}"

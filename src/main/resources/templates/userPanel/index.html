@@ -88,9 +88,12 @@
                 <a class="change" th:text="#{profile.change}" th:href="@{/profile/update/password}"></a>
             </h4>
 
-            <a href="#">
-            <button class="command-button" type="button" th:text="#{profile.deleteAcc}"></button>
-            </a>
+            <form th:method="DELETE" th:action="@{/profile/delete}">
+                <button th:data-confirm-delete="#{button.confirmText}"
+                        onclick="return confirm(this.getAttribute('data-confirm-delete'))"
+                        class="command-button" type="submit" th:text="#{profile.deleteAcc}">
+                </button>
+            </form>
         </div>
 
         <div class="col-sm-0 col-md-0 col-lg-2">
