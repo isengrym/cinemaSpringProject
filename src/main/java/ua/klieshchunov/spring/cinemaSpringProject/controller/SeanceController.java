@@ -9,7 +9,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import ua.klieshchunov.spring.cinemaSpringProject.controller.util.ModelFiller;
+import ua.klieshchunov.spring.cinemaSpringProject.controller.util.PaginationDto;
+import ua.klieshchunov.spring.cinemaSpringProject.controller.util.SeanceModelFiller;
 import ua.klieshchunov.spring.cinemaSpringProject.model.entity.Seance;
 import ua.klieshchunov.spring.cinemaSpringProject.model.entity.Ticket;
 import ua.klieshchunov.spring.cinemaSpringProject.model.entity.User;
@@ -29,14 +30,14 @@ public class SeanceController {
     private final TicketService ticketService;
     private final UserService userService;
     private final PaginationService paginationService;
-    private final ModelFiller modelFiller;
+    private final SeanceModelFiller modelFiller;
 
     @Autowired
     public SeanceController(SeanceService seanceService,
                             TicketService ticketService,
                             UserService userService,
                             PaginationService paginationService,
-                            ModelFiller modelFiller) {
+                            SeanceModelFiller modelFiller) {
         this.seanceService = seanceService;
         this.ticketService = ticketService;
         this.userService = userService;
@@ -51,7 +52,13 @@ public class SeanceController {
                                 @RequestParam(defaultValue = "DSC") String sortOrder,
                                 Model model) {
 
-        modelFiller.fillModelForPaginatedSeances(pageNum, pageSize, sortBy, sortOrder, model);
+        Sort sort = paginationService.formSort(sortBy, sortOrder);
+        Pageable pageable = PageRequest.of(pageNum, pageSize, sort);
+        Page<Seance> page = seanceService.findAllFutureSeancesPaginatedAndSorted(pageable);
+
+        PaginationDto paginationDto = new PaginationDto(pageNum, sortBy, sortOrder);
+
+        modelFiller.fillModelForPaginatedItems(page, paginationDto, model);
         return "seances/index";
     }
 
@@ -117,9 +124,8 @@ public class SeanceController {
 
     private User getUserFromContext() {
         final String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userService.getUserByEmail(username);
 
-        return user;
+        return userService.getUserByEmail(username);
     }
 
 }

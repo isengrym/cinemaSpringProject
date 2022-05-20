@@ -1,19 +1,35 @@
 package ua.klieshchunov.spring.cinemaSpringProject.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ua.klieshchunov.spring.cinemaSpringProject.controller.util.ModelFiller;
+import ua.klieshchunov.spring.cinemaSpringProject.controller.util.PaginationDto;
+import ua.klieshchunov.spring.cinemaSpringProject.controller.util.SeanceModelFiller;
+import ua.klieshchunov.spring.cinemaSpringProject.model.entity.Seance;
+import ua.klieshchunov.spring.cinemaSpringProject.service.PaginationService;
+import ua.klieshchunov.spring.cinemaSpringProject.service.SeanceService;
 
 @Controller
 @RequestMapping("admin/seances")
 public class AdminSeanceController {
-    private final ModelFiller modelFiller;
+    private final ModelFiller<Seance> seanceModelFiller;
+    private final PaginationService paginationService;
+    private final SeanceService seanceService;
 
     @Autowired
-    public AdminSeanceController(ModelFiller modelFiller) {
-        this.modelFiller = modelFiller;
+    public AdminSeanceController(@Qualifier("seanceModelFiller") ModelFiller<Seance> seanceModelFiller,
+                                 PaginationService paginationService,
+                                 SeanceService seanceService) {
+        this.seanceModelFiller = seanceModelFiller;
+        this.paginationService = paginationService;
+        this.seanceService = seanceService;
     }
 
     @GetMapping
@@ -22,7 +38,13 @@ public class AdminSeanceController {
                              @RequestParam(defaultValue = "id") String sortBy,
                              @RequestParam(defaultValue = "ASC") String sortOrder,
                              Model model) {
-        modelFiller.fillModelForPaginatedSeances(pageNum, pageSize, sortBy, sortOrder, model);
+        Sort sort = paginationService.formSort(sortBy, sortOrder);
+        Pageable pageable = PageRequest.of(pageNum, pageSize, sort);
+        Page<Seance> page = seanceService.findAllFutureSeancesPaginatedAndSorted(pageable);
+
+        PaginationDto paginationDto = new PaginationDto(pageNum, sortBy, sortOrder);
+
+        seanceModelFiller.fillModelForPaginatedItems(page, paginationDto, model);
 
         return "adminPanel/seances/index";
     }
@@ -34,12 +56,12 @@ public class AdminSeanceController {
 
     @PostMapping("/new")
     public String addSeance() {
-        return "edit";
+        return "adminPanel/seances/edit";
     }
 
     @GetMapping("/{id}")
     public String getSeance(@PathVariable("id") int id) {
-        return "edit";
+        return "adminPanel/seances/edit";
     }
 
     @PutMapping("/{id}")

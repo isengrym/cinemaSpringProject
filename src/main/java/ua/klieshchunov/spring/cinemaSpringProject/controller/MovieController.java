@@ -1,6 +1,10 @@
 package ua.klieshchunov.spring.cinemaSpringProject.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,10 +12,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ua.klieshchunov.spring.cinemaSpringProject.controller.util.ModelFiller;
+import ua.klieshchunov.spring.cinemaSpringProject.controller.util.PaginationDto;
 import ua.klieshchunov.spring.cinemaSpringProject.model.entity.Movie;
 import ua.klieshchunov.spring.cinemaSpringProject.model.entity.Seance;
 import ua.klieshchunov.spring.cinemaSpringProject.service.MovieService;
 import ua.klieshchunov.spring.cinemaSpringProject.service.SeanceService;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -21,15 +27,15 @@ import java.util.Map;
 public class MovieController {
     private final MovieService movieService;
     private final SeanceService seanceService;
-    private final ModelFiller modelFiller;
+    private final ModelFiller<Movie> movieModelFiller;
 
     @Autowired
     public MovieController(MovieService movieService,
                            SeanceService seanceService,
-                           ModelFiller modelFiller) {
+                           @Qualifier("movieModelFiller") ModelFiller<Movie> modelFiller) {
         this.movieService = movieService;
         this.seanceService = seanceService;
-        this.modelFiller = modelFiller;
+        this.movieModelFiller = modelFiller;
     }
 
     @GetMapping
@@ -37,7 +43,14 @@ public class MovieController {
                                @RequestParam(defaultValue = "6") Integer pageSize,
                                Model model) {
 
-        modelFiller.fillModelForPaginatedMovies(pageNum, pageSize, model);
+        Pageable pageable = PageRequest.of(pageNum, pageSize);
+        Page<Movie> page = movieService
+                .findAllMoviesPaginatedAndSorted(pageable);
+
+        PaginationDto paginationDto = new PaginationDto();
+        paginationDto.pageNumber = pageNum;
+
+        movieModelFiller.fillModelForPaginatedItems(page, paginationDto, model);
 
         return "movies/index";
     }
