@@ -11,7 +11,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
-@Table(name="users_spring")
+@Table(name="users")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
