@@ -23,10 +23,8 @@ public class TicketCreationServiceImpl implements TicketCreationService {
     }
 
     @Override
-    @Transactional
-    public void createTicketAndDecrementFreePlacesTransactional(Ticket ticket)
-            throws NoFreePlacesException, TicketAlreadyExistsException {
-        createTicketIfNotExists(ticket);
+    public void decrementFreePlaces(Ticket ticket)
+            throws NoFreePlacesException {
         seanceService.decrementFreePlacesQuantity(ticket.getSeance());
     }
 

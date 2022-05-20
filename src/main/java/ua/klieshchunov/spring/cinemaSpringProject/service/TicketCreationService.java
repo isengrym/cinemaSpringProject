@@ -5,8 +5,8 @@ import ua.klieshchunov.spring.cinemaSpringProject.service.exceptions.NoFreePlace
 import ua.klieshchunov.spring.cinemaSpringProject.service.exceptions.TicketAlreadyExistsException;
 
 public interface TicketCreationService {
-    void createTicketAndDecrementFreePlacesTransactional(Ticket ticket)
-            throws NoFreePlacesException, TicketAlreadyExistsException;
+    void decrementFreePlaces(Ticket ticket)
+            throws NoFreePlacesException;
 
     void createTicketIfNotExists(Ticket ticket)
             throws TicketAlreadyExistsException;

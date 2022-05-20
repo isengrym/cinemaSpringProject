@@ -9,6 +9,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import ua.klieshchunov.spring.cinemaSpringProject.controller.util.ModelFiller;
 import ua.klieshchunov.spring.cinemaSpringProject.model.entity.Seance;
 import ua.klieshchunov.spring.cinemaSpringProject.model.entity.Ticket;
 import ua.klieshchunov.spring.cinemaSpringProject.model.entity.User;
@@ -28,13 +29,19 @@ public class SeanceController {
     private final TicketService ticketService;
     private final UserService userService;
     private final PaginationService paginationService;
+    private final ModelFiller modelFiller;
 
     @Autowired
-    public SeanceController(SeanceService seanceService, TicketService ticketService, UserService userService, PaginationService paginationService) {
+    public SeanceController(SeanceService seanceService,
+                            TicketService ticketService,
+                            UserService userService,
+                            PaginationService paginationService,
+                            ModelFiller modelFiller) {
         this.seanceService = seanceService;
         this.ticketService = ticketService;
         this.userService = userService;
         this.paginationService = paginationService;
+        this.modelFiller = modelFiller;
     }
 
     @GetMapping
@@ -44,20 +51,10 @@ public class SeanceController {
                                 @RequestParam(defaultValue = "DSC") String sortOrder,
                                 Model model) {
 
-        Sort sort = paginationService.formSort(sortBy, sortOrder);
-        Pageable pageable = PageRequest.of(pageNum, pageSize, sort);
-        Page<Seance> page = seanceService.findAllFutureSeancesPaginatedAndSorted(pageable);
-
-        List<Seance> seancesPaginated = page.getContent();
-
-        model.addAttribute("totalPages", page.getTotalPages());
-        model.addAttribute("totalItems", page.getTotalElements());
-        model.addAttribute("currentPage", pageNum);
-        model.addAttribute("sortBy", sortBy);
-        model.addAttribute("sortOrder", sortOrder);
-        model.addAttribute("seances", seancesPaginated);
+        modelFiller.fillModelForPaginatedSeances(pageNum, pageSize, sortBy, sortOrder, model);
         return "seances/index";
     }
+
     @GetMapping("/{id}")
     public String getSpecificSeance(@PathVariable("id") int id,
                                     Model model) {

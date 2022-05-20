@@ -13,6 +13,8 @@ import ua.klieshchunov.spring.cinemaSpringProject.service.TicketCreationService;
 import ua.klieshchunov.spring.cinemaSpringProject.service.TicketService;
 import ua.klieshchunov.spring.cinemaSpringProject.service.exceptions.NoFreePlacesException;
 import ua.klieshchunov.spring.cinemaSpringProject.service.exceptions.TicketAlreadyExistsException;
+
+import javax.transaction.Transactional;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,9 +52,11 @@ public class TicketServiceImpl implements TicketService{
     }
 
     @Override
+    @Transactional(rollbackOn = {NoFreePlacesException.class, TicketAlreadyExistsException.class})
     public void createTicket(Ticket ticket)
             throws NoFreePlacesException, TicketAlreadyExistsException {
-        ticketCreationService.createTicketAndDecrementFreePlacesTransactional(ticket);
+        ticketCreationService.decrementFreePlaces(ticket);
+        ticketCreationService.createTicketIfNotExists(ticket);
     }
 
     @Override
@@ -69,7 +73,9 @@ public class TicketServiceImpl implements TicketService{
     }
 
     private int calculateAbsolutePlaceNumber(Ticket ticket, int totalPlacesInRow) {
-        return (ticket.getRow() - 1) * totalPlacesInRow + ticket.getPlace();
+        int placesBeforeRequiredRow = (ticket.getRow() - 1) * totalPlacesInRow;
+        int placeInRequiredRow = ticket.getPlace();
+        return  placesBeforeRequiredRow + placeInRequiredRow;
     }
 
 

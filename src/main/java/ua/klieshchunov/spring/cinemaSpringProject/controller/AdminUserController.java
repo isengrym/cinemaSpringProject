@@ -25,7 +25,7 @@ public class AdminUserController {
 
     @GetMapping("/{id}")
     public String getUser(@PathVariable("id") int id) {
-        return "adminPanel/users/show";
+        return "edit";
     }
 
     @PutMapping("/{id}")

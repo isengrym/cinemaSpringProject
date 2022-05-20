@@ -1,10 +1,50 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <title>Admin seances list</title>
-</head>
-<body>
 
+  <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+  <link th:href="@{/css/style.css}" rel="stylesheet" />
+
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+  <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+</head>
+
+<body>
+  <div th:replace="/include/adminPanelHeader :: adminPanelHeader"></div>
+
+  <div class="container">
+    <div class="row col-lg-12 custyle">
+      <table class="table table-striped custab">
+        <thead>
+        <h2 class="headline" style="margin-bottom: 20px" th:text="#{seances.title}"></h2>
+        <a href="#" class="btn btn-primary btn-xs pull-right"><b>+</b> Add new seances</a>
+        <tr>
+          <th>ID</th>
+          <th>Movie</th>
+          <th>Ticket price</th>
+          <th>Start time</th>
+          <th>Free places</th>
+          <th class="text-center"></th>
+          <th class="text-center"></th>
+        </tr>
+        </thead>
+        <tr th:each="seance : ${seances}">
+          <td th:text="${seance.id}">1</td>
+          <td th:text="${seance.movie.title}">Uncharted</td>
+          <td th:text="${seance.ticketPrice}">90</td>
+          <td th:text="${seance.getStartDateTime().toLocalDate() + ' ' + seance.getStartDateTime().toLocalTime()}">12.05.2022 10:00</td>
+          <td th:text="${seance.freePlaces}">75</td>
+          <td class="text-center"><a class='btn btn-info btn-xs' href="#">
+            <span class="glyphicon glyphicon-edit"></span> Edit</a>
+          </td>
+          <td class="text-center"><a class="btn btn-danger btn-xs" href="#">
+            <span class="glyphicon glyphicon-remove"></span> Del</a>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
 </body>
 </html>

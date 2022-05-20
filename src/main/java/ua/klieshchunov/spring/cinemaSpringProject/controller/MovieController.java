@@ -1,16 +1,13 @@
 package ua.klieshchunov.spring.cinemaSpringProject.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import ua.klieshchunov.spring.cinemaSpringProject.controller.util.ModelFiller;
 import ua.klieshchunov.spring.cinemaSpringProject.model.entity.Movie;
 import ua.klieshchunov.spring.cinemaSpringProject.model.entity.Seance;
 import ua.klieshchunov.spring.cinemaSpringProject.service.MovieService;
@@ -24,12 +21,15 @@ import java.util.Map;
 public class MovieController {
     private final MovieService movieService;
     private final SeanceService seanceService;
+    private final ModelFiller modelFiller;
 
     @Autowired
-    public MovieController(@Qualifier("movieServiceImpl") MovieService movieService,
-                           @Qualifier("seanceServiceImpl") SeanceService seanceService) {
+    public MovieController(MovieService movieService,
+                           SeanceService seanceService,
+                           ModelFiller modelFiller) {
         this.movieService = movieService;
         this.seanceService = seanceService;
+        this.modelFiller = modelFiller;
     }
 
     @GetMapping
@@ -37,16 +37,8 @@ public class MovieController {
                                @RequestParam(defaultValue = "6") Integer pageSize,
                                Model model) {
 
-        Pageable pageable = PageRequest.of(pageNum, pageSize);
-        Page<Movie> page = movieService
-                .findAllMoviesPaginatedAndSorted(pageable);
+        modelFiller.fillModelForPaginatedMovies(pageNum, pageSize, model);
 
-        List<Movie> moviesPaginated = page.getContent();
-
-        model.addAttribute("totalPages", page.getTotalPages());
-        model.addAttribute("totalItems", page.getTotalElements());
-        model.addAttribute("currentPage", pageNum);
-        model.addAttribute("movies", moviesPaginated);
         return "movies/index";
     }
 
