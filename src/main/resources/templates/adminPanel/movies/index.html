@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="https://www.thymeleaf.org">
   <head>
     <meta charset="UTF-8">
-    <title>Admin movie list</title>
+    <title th:text="#{admin.movies}">Admin movie list</title>
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <link th:href="@{/css/style.css}" rel="stylesheet" />
 
@@ -17,8 +17,8 @@
       <div class="row col-lg-12 custyle">
         <table class="table table-striped custab">
           <thead>
-          <h2 class="headline" style="margin-bottom: 20px" th:text="#{movies.title}"></h2>
-          <a href="#" class="btn btn-primary btn-xs pull-right"><b>+</b> Add new movies</a>
+          <h2 class="headline" style="margin-bottom: 20px" th:text="#{admin.movies}"></h2>
+          <a href="#" class="btn btn-primary btn-xs pull-right"><b>+</b> <span th:text="#{admin.addMovie}"/> </a>
           <tr>
             <th>ID</th>
             <th>Title</th>
@@ -31,7 +31,8 @@
             <th class="text-center"></th>
           </tr>
           </thead>
-          <tr th:each="movie : ${movies}">
+
+          <tr th:each="movie : ${movies}" th:href="@{movies/{id}(id=${movie.id})}">
             <td th:text="${movie.id}">1</td>
             <td th:text="${movie.title}">Uncharted</td>
             <td th:text="${movie.director}">Ruben F</td>
@@ -40,10 +41,11 @@
             <td th:text="${movie.duration}">116</td>
             <td th:text="${movie.ageRestriction}">16</td>
             <td class="text-center"><a class='btn btn-info btn-xs' th:href="@{/admin/movies/{id}(id=${movie.id})}">
-              <span class="glyphicon glyphicon-edit"></span> Edit</a>
+              <span class="glyphicon glyphicon-edit"></span> <span th:text="#{button.edit}"></span></a>
             </td>
+
             <td class="text-center"><a class="btn btn-danger btn-xs" href="#">
-              <span class="glyphicon glyphicon-remove"></span> Del</a>
+              <span class="glyphicon glyphicon-remove"></span> <span th:text="#{button.delete}"></span></a>
             </td>
           </tr>
         </table>

@@ -59,7 +59,7 @@ public class AdminSeanceController {
     }
 
     @GetMapping("/{id}")
-    public String getSeance(@PathVariable("id") int id) {
+    public String getSeanceUpdatePage(@PathVariable("id") int id) {
         return "adminPanel/seances/edit";
     }
 

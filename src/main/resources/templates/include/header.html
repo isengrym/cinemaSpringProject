@@ -32,14 +32,6 @@
                             <li><a th:href="@{/seances}" th:text="#{header.seances}"></a></li>
                         </ul>
                         <ul class="nav navbar-nav navbar-right">
-                            <!--        <c:if test="${empty sessionScope.user}">-->
-                            <!--          <li><a href="login.jsp"><fmt:message key = "header.signIn" /></a></li>-->
-                            <!--          <li><a href="registration.jsp"><fmt:message key = "header.signUp" /></a></li>-->
-                            <!--        </c:if>-->
-                            <!--        <c:if test="${sessionScope.user.role == 'User' || sessionScope.user.role == 'Admin'}">-->
-                            <!--          <li><a href="controller?command=logout"><fmt:message key = "header.logOut" /></a></li>-->
-                            <!--          <li><a href="controller?command=profile"><fmt:message key = "header.profile" /></a></li>-->
-                            <!--        </c:if>-->
                             <li sec:authorize="isAnonymous()">
                                 <a th:href="@{/login}" th:text="#{signIn.title}"></a>
                             </li>
