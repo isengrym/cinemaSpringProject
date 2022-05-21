@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ua.klieshchunov.spring.cinemaSpringProject.controller.util.ModelFiller;
-import ua.klieshchunov.spring.cinemaSpringProject.controller.util.PaginationDto;
+import ua.klieshchunov.spring.cinemaSpringProject.dto.PaginationDto;
 import ua.klieshchunov.spring.cinemaSpringProject.model.entity.Movie;
 import ua.klieshchunov.spring.cinemaSpringProject.model.entity.Seance;
 import ua.klieshchunov.spring.cinemaSpringProject.service.MovieService;

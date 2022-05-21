@@ -1,4 +1,4 @@
-package ua.klieshchunov.spring.cinemaSpringProject.controller.util;
+package ua.klieshchunov.spring.cinemaSpringProject.dto;
 
 public class PaginationDto {
     public Integer pageNumber;

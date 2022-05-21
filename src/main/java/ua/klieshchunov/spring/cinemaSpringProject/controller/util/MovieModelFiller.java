@@ -1,13 +1,10 @@
 package ua.klieshchunov.spring.cinemaSpringProject.controller.util;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
+import ua.klieshchunov.spring.cinemaSpringProject.dto.PaginationDto;
 import ua.klieshchunov.spring.cinemaSpringProject.model.entity.Movie;
-import ua.klieshchunov.spring.cinemaSpringProject.service.MovieService;
 
 import java.util.List;
 
