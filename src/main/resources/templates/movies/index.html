@@ -10,15 +10,27 @@
     <body>
         <div th:replace="/include/header :: header"></div>
 
-        <div class="col-lg-1"></div>
+        <div class="col-lg-1 col-md-0"></div>
 
-        <div class="film-page-title col-lg-10">
-            <h2 class="headline" th:text="#{movies.headline}"></h2>
+        <div class="film-page-title col-xs-12 col-sm-12 col-md-12 col-lg-10">
+            <div class="col-lg-1 col-md-0"></div>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+                <h2 class="headline" th:text="#{movies.headline}"></h2>
+            </div>
+            <div class="sorting-block col-xs-12 col-sm-12 col-md-12 col-lg-4">
+                <select onchange="callback()" id="select1">
+                    <option th:selected="${showInactive.equals('true')}" value="true" th:text="#{seances.showAll}"></option>
+                    <option th:selected="${showInactive.equals('false')}" value="false" th:text="#{seance.showOnlyActive}"></option>
+                </select>
+            </div>
+        </div>
 
-        <div class="film-items col-xs-12 col-sm-12 col-md-10 col-lg-12">
+        <div class="col-lg-1 col-md-0"></div>
+
+        <div class="film-items col-xs-12 col-sm-12 col-md-12 col-lg-10 col-lg-offset-1 ">
                 <div th:each="movie : ${movies}">
                     <a th:href="@{/movies/{id}(id=${movie.getId()})}">
-                        <div class = "film_item col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                        <div class = "film_item col-xs-12 col-sm-6 col-md-6 col-lg-4">
                             <div class="poster">
                                 <img th:src="${movie.getImagePath()}" alt="" width="218" height="322">
                             </div>
@@ -28,16 +40,25 @@
                         </div>
                     </a>
                 </div>
-            </div>
         </div>
+
 
         <div th:if="${totalPages>1}" class="page-number-block col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <a class="page-number-link" th:each="number : ${#numbers.sequence(1,totalPages)}"
-               th:href="@{/movies?pageNum={num}(num=${number-1})}">
+               th:href="@{/movies?pageNum={num}&showInactive={showInactive}(num=${number-1}, showInactive=${showInactive})}">
                 <p class="page-number-item" th:text="${number}"></p>
             </a>
         </div>
-
-        <div class="col-lg-1"></div>
     </body>
+
+    <script>
+        function callback(){
+            selectElement = document.querySelector('#select1')
+            showInactive = selectElement.value;
+
+            var src = "/movies?showInactive=" + showInactive;
+
+            window.location.href = src;
+        }
+    </script>
 </html>

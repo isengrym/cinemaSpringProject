@@ -3,61 +3,20 @@ body {
 }
 
 .film-page-title {
-    margin-bottom: 40px;
-    margin-top: 10px;
-
-}
-
-.film-page-title .headline {
     float: left;
+    text-align: left;
     margin-bottom: 40px;
-    margin-left: 70px;
 }
 
-
-.form {
-    margin-top: 25px;
-    margin-right: 15px;
-    margin-bottom: 40px;
+.sorting-block {
+    margin-top: 20px;
+    text-align: right;
     float: right;
-    color: rgba(10, 10, 10, 0.36);
+}
+
+.sorting-block select {
     border: none;
-    font-size: 16px;
-}
-
-@media (max-width: 780px) {
-    .form {
-        float: left;
-        margin-left: 45px;
-    }
-}
-
-.form button {
-    border: none;
-    border-radius: 3px;
-    background-color: black;
-    color: white;
-    transition: 0.15s;
-    margin-right: 5px;
-    padding-right:17px;
-    padding-left:17px;
-    padding-top: 7px;
-    padding-bottom: 7px;
-}
-.form button:hover {
-    transform: scale(1.02);
-    color: white;
-}
-
-.form a:hover {
-    text-decoration: none;
-}
-
-.film-items {
-    padding-left: 100px;
-    padding-right: 100px;
-    text-align: center;
-
+    padding: 15px;
 }
 .film_item {
     color: #000;
@@ -74,4 +33,14 @@ h5 {
 }
 
 
-
+@media screen and (max-width: 1200px){
+    .film-page-title .headline {
+        margin: 30px auto 0;
+        padding: 0;
+        text-align: center;
+    }
+    .sorting-block {
+        text-align: center;
+        padding-bottom: 20px;
+    }
+}

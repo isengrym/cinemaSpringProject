@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import ua.klieshchunov.spring.cinemaSpringProject.model.entity.Movie;
 import ua.klieshchunov.spring.cinemaSpringProject.model.repository.MovieRepository;
 import ua.klieshchunov.spring.cinemaSpringProject.service.MovieService;
+import ua.klieshchunov.spring.cinemaSpringProject.utils.CurrentTime;
 
 import java.util.List;
 
@@ -26,7 +27,16 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public List<Movie> findMoviesWithSeances() {return movieRepository.findMoviesWithSeances();}
+    public List<Movie> findMoviesWithSeances() {
+        int currentTime = CurrentTime.get();
+        return movieRepository.findMoviesWithSeances(currentTime);
+    }
+
+    @Override
+    public Page<Movie> findMoviesWithSeancesPaginatedAndSorted(Pageable pageable) {
+        int currentTime = CurrentTime.get();
+        return movieRepository.findMoviesWithSeances(currentTime, pageable);
+    }
 
     @Override
     public Page<Movie> findAllMoviesPaginatedAndSorted(Pageable pageable) {

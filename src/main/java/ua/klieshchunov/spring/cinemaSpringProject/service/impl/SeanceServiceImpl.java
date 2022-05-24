@@ -9,6 +9,8 @@ import ua.klieshchunov.spring.cinemaSpringProject.model.entity.Seance;
 import ua.klieshchunov.spring.cinemaSpringProject.model.repository.SeanceRepository;
 import ua.klieshchunov.spring.cinemaSpringProject.service.SeanceService;
 import ua.klieshchunov.spring.cinemaSpringProject.service.exceptions.NoFreePlacesException;
+import ua.klieshchunov.spring.cinemaSpringProject.utils.CurrentTime;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -67,7 +69,7 @@ public class SeanceServiceImpl implements SeanceService {
 
     @Override
     public List<Seance> findAllFutureSeancesForMovie(Movie movie) {
-        int currentTime = getCurrentTime();
+        int currentTime = CurrentTime.get();
         List<Seance> seances =
                 seanceRepository.findAllByMovie(currentTime, movie);
         return seances;
@@ -75,14 +77,14 @@ public class SeanceServiceImpl implements SeanceService {
 
     @Override
     public Page<Seance> findAllFutureSeancesPaginatedAndSorted(Pageable pageable) {
-        int currentTime = getCurrentTime();
+        int currentTime = CurrentTime.get();
         return seanceRepository
                 .findAll(currentTime, pageable);
     }
 
     @Override
     public Page<Seance> findAllFutureSeancesForMoviePaginatedAndSorted(Pageable pageable, Movie movie) {
-        int currentTime = getCurrentTime();
+        int currentTime = CurrentTime.get();
         return seanceRepository
                 .findAllByMovie(currentTime, movie, pageable);
     }
@@ -108,11 +110,8 @@ public class SeanceServiceImpl implements SeanceService {
 
     @Override
     public boolean hasAlreadyEnded(Seance seance) {
-        int currentTime = getCurrentTime();
+        int currentTime = CurrentTime.get();
         return seance.getStartDateEpochSeconds() < currentTime;
     }
 
-    private int getCurrentTime() {
-        return (int) LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
-    }
 }

@@ -41,15 +41,22 @@ public class MovieController {
     @GetMapping
     public String getAllMovies(@RequestParam(defaultValue = "0") Integer pageNum,
                                @RequestParam(defaultValue = "6") Integer pageSize,
+                               @RequestParam(defaultValue= "true") String showInactive,
                                Model model) {
 
         Pageable pageable = PageRequest.of(pageNum, pageSize);
-        Page<Movie> page = movieService
-                .findAllMoviesPaginatedAndSorted(pageable);
+        Page<Movie> page;
+
+        if (Boolean.parseBoolean(showInactive))
+            page = movieService.findAllMoviesPaginatedAndSorted(pageable);
+        else
+            page = movieService.findMoviesWithSeancesPaginatedAndSorted(pageable);
+
 
         PaginationDto paginationDto = new PaginationDto();
         paginationDto.pageNumber = pageNum;
 
+        model.addAttribute("showInactive", showInactive);
         movieModelFiller.fillModelForPaginatedItems(page, paginationDto, model);
 
         return "movies/index";

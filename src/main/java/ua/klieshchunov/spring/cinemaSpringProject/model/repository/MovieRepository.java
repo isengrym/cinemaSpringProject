@@ -14,8 +14,14 @@ import java.util.List;
 @Repository
 public interface MovieRepository extends CrudRepository<Movie, Long> {
     List<Movie> findAll();
-    @Query("select distinct seance.movie from Seance seance")
-    List<Movie> findMoviesWithSeances();
+
+    @Query("select distinct seance.movie from Seance seance where seance.startDateEpochSeconds > :currentTime")
+    List<Movie> findMoviesWithSeances(int currentTime);
+
+    @Query("select distinct seance.movie from Seance seance where seance.startDateEpochSeconds > :currentTime")
+    Page<Movie> findMoviesWithSeances(int currentTime, Pageable pageable);
+
     Page<Movie> findAll(Pageable pageable);
+
     Movie findById(@Param("id") int id);
 }

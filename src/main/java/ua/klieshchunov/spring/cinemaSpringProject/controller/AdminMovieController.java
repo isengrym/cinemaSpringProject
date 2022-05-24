@@ -43,7 +43,6 @@ public class AdminMovieController {
     }
 
 
-
     @GetMapping("/new")
     public String newMoviePage() {
         return "adminPanel/movies/new";
