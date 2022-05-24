@@ -81,6 +81,13 @@ public class SeanceServiceImpl implements SeanceService {
     }
 
     @Override
+    public Page<Seance> findAllFutureSeancesForMoviePaginatedAndSorted(Pageable pageable, Movie movie) {
+        int currentTime = getCurrentTime();
+        return seanceRepository
+                .findAllByMovie(currentTime, movie, pageable);
+    }
+
+    @Override
     public Seance findSeanceById(int id) {
         return seanceRepository.findById(id);
     }

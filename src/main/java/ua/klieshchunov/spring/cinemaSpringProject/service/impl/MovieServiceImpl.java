@@ -26,6 +26,9 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
+    public List<Movie> findMoviesWithSeances() {return movieRepository.findMoviesWithSeances();}
+
+    @Override
     public Page<Movie> findAllMoviesPaginatedAndSorted(Pageable pageable) {
         return movieRepository.findAll(pageable);
     }

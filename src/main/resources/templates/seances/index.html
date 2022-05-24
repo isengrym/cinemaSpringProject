@@ -21,31 +21,32 @@
             </div>
 
             <div class="sorting-block col-xs-12 col-sm-12 col-md-12 col-lg-8">
-<!--                <select id="select1" onchange="firstSelectFunction()">-->
-<!--                    <option value="-1"><fmt:message key = "movies.all" /></option>-->
-<!--                    <c:forEach var="movie" items="${movies}">-->
-<!--                        <option <c:if test="${movieId == movie.id}">selected="selected"</c:if> value="${movie.id}">${movie.title}</option>-->
-<!--                    </c:forEach>-->
-<!--                </select>-->
+                <select onchange="callback()" id="select1">
+                    <option value="-1" th:text="#{movies.all}"></option>
+                    <option th:each="movie : ${movies}" th:selected="${movieId.equals(movie.id)}" th:value="${movie.id}" th:text="${movie.title}"></option>
+                </select>
                 <select onchange="callback()" id="select2">
-                    <option th:selected="${sortBy.equals('startDateEpochSeconds')}" value="startDateEpochSeconds" th:text="#{sorting.sortByDate}"></option>
-                    <option th:selected="${sortBy.equals('freePlaces')}" value="freePlaces" th:text="#{sorting.sortBySeat}"></option>
+                    <option th:selected="${sortBy.equals('startDateEpochSeconds')}" th:value="startDateEpochSeconds" th:text="#{sorting.sortByDate}"></option>
+                    <option th:selected="${sortBy.equals('freePlaces')}" th:value="freePlaces" th:text="#{sorting.sortBySeat}"></option>
                 </select>
                 <select onchange="callback()" id="select3">
-                    <option th:selected="${sortOrder.equals('ASC')}" value="ASC" th:text="#{sorting.sortASC}"></option>
-                    <option th:selected="${sortOrder.equals('DSC')}" value="DSC" th:text="#{sorting.sortDESC}"></option>
+                    <option th:selected="${sortOrder.equals('ASC')}" th:value="ASC" th:text="#{sorting.sortASC}"></option>
+                    <option th:selected="${sortOrder.equals('DSC')}" th:value="DSC" th:text="#{sorting.sortDESC}"></option>
                 </select>
 
 
                 <script>
-                    function callback(e){
+                    function callback(){
+                        selectElement = document.querySelector('#select1')
+                        movie = selectElement.value;
+
                         selectElement = document.querySelector('#select2');
                         sortingOutput = selectElement.value;
 
                         selectElement = document.querySelector('#select3');
                         orderOutput = selectElement.value;
 
-                        var src = "/seances?sortBy=" + sortingOutput + "&sortOrder=" + orderOutput;
+                        var src = "/seances?sortBy=" + sortingOutput + "&sortOrder=" + orderOutput + "&movieId=" + movie;
 
                         window.location.href = src;
                     }
@@ -95,8 +96,8 @@
 
         <div th:if="${totalPages>1}" class="page-number-block col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <a class="page-number-link" th:each="number : ${#numbers.sequence(1,totalPages)}"
-               th:href="@{/seances?pageNum={num}&sortBy={sortBy}&sortOrder={sortOrder}
-               (num=${number-1}, sortBy=${sortBy}, sortOrder=${sortOrder})}">
+               th:href="@{/seances?pageNum={num}&sortBy={sortBy}&sortOrder={sortOrder}&movieId={movieId}
+               (num=${number-1}, sortBy=${sortBy}, sortOrder=${sortOrder}, movieId=${movieId})}">
                 <p class="page-number-item" th:text="${number}"></p>
             </a>
 

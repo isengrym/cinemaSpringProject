@@ -19,6 +19,9 @@ public interface SeanceRepository extends PagingAndSortingRepository<Seance, Int
     @Query("select seance from Seance seance where seance.startDateEpochSeconds > :currentTime")
     Page<Seance> findAll(int currentTime, Pageable pageable);
 
+    @Query("select seance from Seance seance where seance.startDateEpochSeconds > :currentTime and seance.movie = :movie")
+    Page<Seance> findAllByMovie(int currentTime, Movie movie, Pageable pageable);
+
     @Modifying
     @Query("update Seance seance set seance.freePlaces = seance.freePlaces-1 where seance.id = :id")
     void decrementFreePlaces(@Param("id") int id);

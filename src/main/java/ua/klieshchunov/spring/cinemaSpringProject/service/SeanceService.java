@@ -15,12 +15,9 @@ public interface SeanceService {
     Seance findSeanceById(int seanceId);
     List<Seance> findAllFutureSeances();
     List<Seance> findAllFutureSeancesForMovie(Movie movie);
+    Page<Seance> findAllFutureSeancesForMoviePaginatedAndSorted(Pageable pageable, Movie movie);
     Page<Seance> findAllFutureSeancesPaginatedAndSorted(Pageable pageable);
     boolean hasFreePlaces(Seance seance);
     boolean hasAlreadyEnded(Seance seance);
     void decrementFreePlacesQuantity(Seance seance) throws NoFreePlacesException;
-
-
-
-
 }

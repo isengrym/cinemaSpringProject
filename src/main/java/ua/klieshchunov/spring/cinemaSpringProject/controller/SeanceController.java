@@ -11,13 +11,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ua.klieshchunov.spring.cinemaSpringProject.dto.PaginationDto;
 import ua.klieshchunov.spring.cinemaSpringProject.controller.util.SeanceModelFiller;
+import ua.klieshchunov.spring.cinemaSpringProject.model.entity.Movie;
 import ua.klieshchunov.spring.cinemaSpringProject.model.entity.Seance;
 import ua.klieshchunov.spring.cinemaSpringProject.model.entity.Ticket;
 import ua.klieshchunov.spring.cinemaSpringProject.model.entity.User;
-import ua.klieshchunov.spring.cinemaSpringProject.service.PaginationService;
-import ua.klieshchunov.spring.cinemaSpringProject.service.SeanceService;
-import ua.klieshchunov.spring.cinemaSpringProject.service.TicketService;
-import ua.klieshchunov.spring.cinemaSpringProject.service.UserService;
+import ua.klieshchunov.spring.cinemaSpringProject.service.*;
 import ua.klieshchunov.spring.cinemaSpringProject.service.exceptions.NoFreePlacesException;
 import ua.klieshchunov.spring.cinemaSpringProject.service.exceptions.TicketAlreadyExistsException;
 
@@ -27,6 +25,7 @@ import java.util.List;
 @RequestMapping("seances")
 public class SeanceController {
     private final SeanceService seanceService;
+    private final MovieService movieService;
     private final TicketService ticketService;
     private final UserService userService;
     private final PaginationService paginationService;
@@ -34,11 +33,13 @@ public class SeanceController {
 
     @Autowired
     public SeanceController(SeanceService seanceService,
+                            MovieService movieService,
                             TicketService ticketService,
                             UserService userService,
                             PaginationService paginationService,
                             SeanceModelFiller modelFiller) {
         this.seanceService = seanceService;
+        this.movieService = movieService;
         this.ticketService = ticketService;
         this.userService = userService;
         this.paginationService = paginationService;
@@ -47,16 +48,28 @@ public class SeanceController {
 
     @GetMapping
     public String getAllSeances(@RequestParam(defaultValue = "0") Integer pageNum,
-                                @RequestParam(defaultValue = "10") Integer pageSize,
+                                @RequestParam(defaultValue = "8") Integer pageSize,
                                 @RequestParam(defaultValue = "startDateEpochSeconds") String sortBy,
                                 @RequestParam(defaultValue = "DSC") String sortOrder,
+                                @RequestParam(defaultValue = "-1") int movieId,
                                 Model model) {
 
         Sort sort = paginationService.formSort(sortBy, sortOrder);
         Pageable pageable = PageRequest.of(pageNum, pageSize, sort);
-        Page<Seance> page = seanceService.findAllFutureSeancesPaginatedAndSorted(pageable);
+        Page<Seance> page;
+
+        if (movieId == -1)
+             page = seanceService.findAllFutureSeancesPaginatedAndSorted(pageable);
+        else {
+            Movie movie = movieService.findMovieById(movieId);
+            page = seanceService.findAllFutureSeancesForMoviePaginatedAndSorted(pageable, movie);
+        }
 
         PaginationDto paginationDto = new PaginationDto(pageNum, sortBy, sortOrder);
+        List<Movie> moviesForFilter = movieService.findMoviesWithSeances();
+
+        model.addAttribute("movies", moviesForFilter);
+        model.addAttribute("movieId", movieId);
 
         modelFiller.fillModelForPaginatedItems(page, paginationDto, model);
         return "seances/index";
