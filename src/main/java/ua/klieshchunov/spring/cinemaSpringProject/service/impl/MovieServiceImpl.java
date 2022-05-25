@@ -2,7 +2,6 @@ package ua.klieshchunov.spring.cinemaSpringProject.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ua.klieshchunov.spring.cinemaSpringProject.model.entity.Movie;
@@ -46,5 +45,11 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public Movie findMovieById(int id) {
         return movieRepository.findById(id);
+    }
+
+    @Override
+    public void addMovie(Movie movie) {
+        System.out.println(movie);
+        movieRepository.save(movie);
     }
 }

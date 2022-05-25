@@ -7,13 +7,17 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import ua.klieshchunov.spring.cinemaSpringProject.model.entity.Movie;
-import ua.klieshchunov.spring.cinemaSpringProject.model.entity.Seance;
+import ua.klieshchunov.spring.cinemaSpringProject.model.entity.User;
 
 import java.util.List;
 
 @Repository
-public interface MovieRepository extends CrudRepository<Movie, Long> {
+public interface MovieRepository extends CrudRepository<Movie, Integer> {
+    @Override
     List<Movie> findAll();
+
+    @Override
+    <S extends Movie> S save(S movie);
 
     @Query("select distinct seance.movie from Seance seance where seance.startDateEpochSeconds > :currentTime")
     List<Movie> findMoviesWithSeances(int currentTime);

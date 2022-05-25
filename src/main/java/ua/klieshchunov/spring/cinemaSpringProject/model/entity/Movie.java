@@ -1,11 +1,10 @@
 package ua.klieshchunov.spring.cinemaSpringProject.model.entity;
 
 import lombok.*;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.util.Objects;
 
 @Entity
@@ -21,14 +20,16 @@ public class Movie {
     private int id;
 
     @Column(name="title")
+    @NotEmpty(message = "Must not be empty")
     private String title;
 
     @Column(name="director")
-    @NotNull
+    @NotEmpty(message = "Must not be empty")
     private String director;
 
     @Column(name="production_year")
-    @Size(min=1800, max=2077)
+    @Min(value = 1800, message = "Must be bigger than 1800")
+    @Max(value = 2077, message = "Must be less than 2077")
     private int productionYear;
 
     @ManyToOne(optional = false, cascade = CascadeType.REFRESH)
@@ -36,15 +37,17 @@ public class Movie {
     private Genre genre;
 
     @Column(name="duration_minutes")
-    @Max(900)
+    @Min(value = 1 , message = "Must be bigger than 1")
+    @Max(value = 900 , message = "Must be less than 900")
     private int duration;
 
     @Column(name="age_restriction")
-    @Max(120)
+    @Min(value = 1 , message = "Must be bigger than 1")
+    @Max(value = 120 , message = "Must be less than 120")
     private int ageRestriction;
 
     @Column(name="image_path")
-    @NotNull
+    @NotEmpty(message = "Must not be empty")
     private String imagePath;
 
     @Override

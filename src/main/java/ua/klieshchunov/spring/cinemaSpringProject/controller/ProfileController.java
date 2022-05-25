@@ -41,7 +41,7 @@ public class ProfileController {
 
     @GetMapping
     public String index(@RequestParam(defaultValue = "0") Integer pageNum,
-                        @RequestParam(defaultValue = "4") Integer pageSize,
+                        @RequestParam(defaultValue = "3") Integer pageSize,
                         Model model) {
         User user = getUserFromContext();
         Pageable pageable = PageRequest.of(pageNum, pageSize);

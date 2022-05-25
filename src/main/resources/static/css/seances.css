@@ -33,18 +33,28 @@
     font-size: 18px;
 }
 
+
+.seance-item .action-button {
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 7px;
+    padding-bottom: 7px;
+    border: none;
+    border-radius: 2px;
+    background-color: black;
+    color: white;
+    transition: 0.15s;
+}
+.seance-item .action-button:hover {
+    transform: scale(1.04);
+}
+.seance-item .add-seance h3{
+    margin-top: 95px;
+}
+
 .sorting-block {
     text-align: right;
     margin-top: 20px;
-}
-
-@media screen and (max-width: 1200px){
-    .seance-page-title {
-        text-align: center;
-    }
-    .sorting-block {
-        text-align: center;
-    }
 }
 
 .sorting-block select {
@@ -68,3 +78,11 @@
 }
 
 
+@media screen and (max-width: 1200px){
+    .seance-page-title {
+        text-align: center;
+    }
+    .sorting-block {
+        text-align: center;
+    }
+}

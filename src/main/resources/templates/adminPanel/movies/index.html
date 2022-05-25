@@ -18,7 +18,7 @@
         <table class="table table-striped custab">
           <thead>
           <h2 class="headline" style="margin-bottom: 20px" th:text="#{admin.movies}"></h2>
-          <a href="#" class="btn btn-primary btn-xs pull-right"><b>+</b> <span th:text="#{admin.addMovie}"/> </a>
+          <a th:href="@{/admin/movies/new}" class="btn btn-primary btn-xs pull-right"><b>+</b> <span th:text="#{admin.addMovie}"/> </a>
           <tr>
             <th>ID</th>
             <th>Title</th>

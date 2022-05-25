@@ -1,10 +1,69 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>New movie page</title>
+    <title th:text="#{profile.title}"></title>
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <link th:href="@{/css/profile.css}" rel="stylesheet" />
 </head>
 <body>
+<div th:replace="/include/header :: header"></div>
+
+<div class="col-lg-4">
+
+</div>
+<div style="margin-top: 50px" class="col-lg-4">
+    <form th:action="@{/admin/movies/new}" th:object="${movie}" th:method="POST">
+        <div class="form-group">
+            <label th:text="#{movieItem.name}"></label>
+            <input th:field="*{title}" class="form-control" type="text"/>
+            <div style="color:red" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
+        </div>
+
+        <div class="form-group">
+            <label th:text="#{movieItem.director}"></label>
+            <input th:field="*{director}" class="form-control" type="text"/>
+            <div style="color:red" th:if="${#fields.hasErrors('director')}" th:errors="*{director}"></div>
+        </div>
+
+        <div class="form-group">
+            <label th:text="#{movieItem.year}"></label>
+            <input th:field="*{productionYear}" class="form-control" type="number"/>
+            <div style="color:red" th:if="${#fields.hasErrors('productionYear')}" th:errors="*{productionYear}"></div>
+        </div>
+
+        <div class="form-group">
+            <label th:text="#{movieItem.genre}"></label>
+            <select id="select" th:field="*{genre}">
+                <option th:each="genre : ${genres}" th:value="${genre.id}" th:text="${genre.name}"></option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label th:text="#{movieItem.duration}"></label>
+            <input th:field="*{duration}" class="form-control" type="number"/>
+            <div style="color:red" th:if="${#fields.hasErrors('duration')}" th:errors="*{duration}"></div>
+        </div>
+
+        <div class="form-group">
+            <label th:text="#{movieItem.age}"></label>
+            <input th:field="*{ageRestriction}" class="form-control" type="number"/>
+            <div style="color:red" th:if="${#fields.hasErrors('ageRestriction')}" th:errors="*{ageRestriction}"></div>
+        </div>
+
+        <div class="form-group">
+            <label th:text="#{movieItem.image}"></label>
+            <input th:field="*{imagePath}" class="form-control" type="text"/>
+            <div style="color:red" th:if="${#fields.hasErrors('imagePath')}" th:errors="*{imagePath}"></div>
+        </div>
+
+        <button type="submit" class="btn btn-black" th:text="#{edit.save}"></button>
+
+    </form>
+</div>
+<div class="col-lg-4">
+
+</div>
 
 </body>
 </html>
