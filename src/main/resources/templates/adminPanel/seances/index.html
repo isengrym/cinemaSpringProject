@@ -19,7 +19,7 @@
       <table class="table table-striped custab">
         <thead>
         <h2 class="headline" style="margin-bottom: 20px" th:text="#{admin.seances}"></h2>
-        <a href="#" class="btn btn-primary btn-xs pull-right"><b>+</b> <span th:text="#{admin.addSeance}"></span></a>
+        <a th:href="@{/admin/seances/new}" class="btn btn-primary btn-xs pull-right"><b>+</b> <span th:text="#{admin.addSeance}"></span></a>
         <tr>
           <th>ID</th>
           <th>Movie</th>

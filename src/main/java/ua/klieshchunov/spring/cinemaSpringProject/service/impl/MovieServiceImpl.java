@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import ua.klieshchunov.spring.cinemaSpringProject.model.entity.Movie;
 import ua.klieshchunov.spring.cinemaSpringProject.model.repository.MovieRepository;
 import ua.klieshchunov.spring.cinemaSpringProject.service.MovieService;
-import ua.klieshchunov.spring.cinemaSpringProject.utils.CurrentTime;
+import ua.klieshchunov.spring.cinemaSpringProject.service.impl.date.CurrentTime;
 
 import java.util.List;
 

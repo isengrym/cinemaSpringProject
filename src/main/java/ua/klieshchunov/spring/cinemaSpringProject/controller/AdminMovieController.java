@@ -67,7 +67,6 @@ public class AdminMovieController {
                            BindingResult bindingResult,
                            Model model) {
         if (bindingResult.hasErrors()) {
-            System.out.println(bindingResult);
             List<Genre> genres = genreService.findAllGenres();
             model.addAttribute("genres", genres);
             return "adminPanel/movies/new";

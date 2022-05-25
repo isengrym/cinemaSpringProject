@@ -1,10 +1,45 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Admin new seance page</title>
+    <title th:text="#{profile.title}"></title>
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <link th:href="@{/css/selectInput.css}" rel="stylesheet" />
 </head>
 <body>
+<div th:replace="/include/adminPanelHeader :: adminPanelHeader"></div>
+
+<div class="col-lg-4">
+
+</div>
+<div style="margin-top: 50px" class="col-lg-4">
+    <form th:action="@{/admin/seances/new}" th:object="${seance}" th:method="POST">
+        <div class="form-group">
+            <label th:text="#{movies.title}"></label>
+            <select id="select" th:field="*{movie}">
+                <option th:each="movie : ${movies}" th:value="${movie.id}" th:text="${movie.title}"></option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label th:text="#{ticket.price}"></label>
+            <input th:field="*{ticketPrice}" class="form-control" type="number"/>
+            <div style="color:red" th:if="${#fields.hasErrors('ticketPrice')}" th:errors="*{ticketPrice}"></div>
+        </div>
+
+        <div class="form-group">
+            <label th:text="#{movieItem.startTime}"></label>
+            <input name="dateString" class="form-control" type="datetime-local"/>
+            <div style="color:red" th:if="${#fields.hasErrors('startDateEpochSeconds')}" th:errors="*{startDateEpochSeconds}"></div>
+        </div>
+
+        <button type="submit" class="btn btn-black" th:text="#{edit.save}"></button>
+
+    </form>
+</div>
+<div class="col-lg-4">
+
+</div>
 
 </body>
 </html>

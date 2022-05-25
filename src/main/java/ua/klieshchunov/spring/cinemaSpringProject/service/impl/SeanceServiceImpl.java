@@ -9,11 +9,11 @@ import ua.klieshchunov.spring.cinemaSpringProject.model.entity.Seance;
 import ua.klieshchunov.spring.cinemaSpringProject.model.repository.SeanceRepository;
 import ua.klieshchunov.spring.cinemaSpringProject.service.SeanceService;
 import ua.klieshchunov.spring.cinemaSpringProject.service.exceptions.NoFreePlacesException;
-import ua.klieshchunov.spring.cinemaSpringProject.utils.CurrentTime;
+import ua.klieshchunov.spring.cinemaSpringProject.service.impl.date.CurrentTime;
+import ua.klieshchunov.spring.cinemaSpringProject.service.impl.date.Interval;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -53,26 +53,41 @@ public class SeanceServiceImpl implements SeanceService {
         return dates;
     }
 
-    private List<Seance> groupSeancesByGivenDay(List<Seance> seances, LocalDate date) {
+    //test it
+    @Override
+    public List<Interval> collectIntervalsOfSeances(List<Seance> seances, LocalDate day) {
+        List<Seance> seancesForGivenDay = groupSeancesByGivenDay(seances, day);
+        List<Interval> busyIntervalsForGivenDay = new ArrayList<>();
+        Interval interval;
+
+        for (Seance seance : seancesForGivenDay) {
+            LocalDateTime start = seance.getStartDateTime();
+            LocalDateTime end = seance.getEndDateTime();
+
+            interval = new Interval(start, end);
+            busyIntervalsForGivenDay.add(interval);
+        }
+
+        return busyIntervalsForGivenDay;
+    }
+
+    private List<Seance> groupSeancesByGivenDay(List<Seance> seances, LocalDate day) {
         return seances.stream()
-                .filter(seance -> seance.getStartDateTime().getYear() == date.getYear())
-                .filter(seance -> seance.getStartDateTime().getMonth() == date.getMonth())
-                .filter(seance -> seance.getStartDateTime().getDayOfMonth() == date.getDayOfMonth())
+                .filter(seance -> seance.getStartDateTime().getYear() == day.getYear())
+                .filter(seance -> seance.getStartDateTime().getMonth() == day.getMonth())
+                .filter(seance -> seance.getStartDateTime().getDayOfMonth() == day.getDayOfMonth())
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<Seance> findAllFutureSeances() {
-        List<Seance> seances = seanceRepository.findAll();
-        return seances;
+        return seanceRepository.findAll();
     }
 
     @Override
     public List<Seance> findAllFutureSeancesForMovie(Movie movie) {
         int currentTime = CurrentTime.get();
-        List<Seance> seances =
-                seanceRepository.findAllByMovie(currentTime, movie);
-        return seances;
+        return seanceRepository.findAllByMovie(currentTime, movie);
     }
 
     @Override
@@ -114,4 +129,9 @@ public class SeanceServiceImpl implements SeanceService {
         return seance.getStartDateEpochSeconds() < currentTime;
     }
 
+    //test
+    @Override
+    public void addSeance(Seance seance) {
+        seanceRepository.save(seance);
+    }
 }
