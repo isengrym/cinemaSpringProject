@@ -21,30 +21,31 @@ Written on Java using such frameworks as: Spring Core, Spring Boot, Spring Secur
 - Loging and testing
 
 DB schema
-![image](https://user-images.githubusercontent.com/82778074/170243172-5945f177-3540-4f23-ac0c-a4f1cf3de039.png)
+
+![image](https://user-images.githubusercontent.com/82778074/170499744-0cdf1802-d923-4185-96b8-489b85fc6f1b.png)
 
 Home page
-![image](https://user-images.githubusercontent.com/82778074/170238121-2a81b133-188a-49df-929e-03fc4f12cb9a.png)
+![image](https://user-images.githubusercontent.com/82778074/170499859-4e04eb55-98e3-4959-ba0e-657fb8da667d.png)
 
 Movies page
-![image](https://user-images.githubusercontent.com/82778074/170245286-dd8dc937-2d20-4d2b-9a7f-8ac35003d44a.png)
+![image](https://user-images.githubusercontent.com/82778074/170499905-19c9c09c-3bc3-45f4-be44-835a23031c67.png)
 
 Showtimes page
-![image](https://user-images.githubusercontent.com/82778074/170239322-831b934d-861d-44b8-a6c5-d762d4ba09eb.png)
+![image](https://user-images.githubusercontent.com/82778074/170499981-fc91523b-3a55-44fc-a46c-9847cea52da4.png)
 
 Certain movie page (switched language)
-![image](https://user-images.githubusercontent.com/82778074/170239512-23284115-c1fa-40ab-87ff-25c9eb4b4a65.png)
+![image](https://user-images.githubusercontent.com/82778074/170500590-80d7b7f2-38c1-4027-8081-7a0bcf3a927f.png)
 
 Certain showtime page 
-![image](https://user-images.githubusercontent.com/82778074/170240073-b09be029-c1ad-4bbd-b694-493abfaf05c7.png)
+![image](https://user-images.githubusercontent.com/82778074/170500734-9474864e-75fc-4e63-9a72-15ca0d39f57b.png)
 
 Login page (unregistered user is sent here, if he tries to book a ticket)
-![image](https://user-images.githubusercontent.com/82778074/170240222-e2ef5879-e7b7-474a-b30b-08f511654300.png)
+![image](https://user-images.githubusercontent.com/82778074/170500861-46356e7b-b1c8-412b-a6f5-a5c90f9c3697.png)
 
 Profile page
-![image](https://user-images.githubusercontent.com/82778074/170241278-4847c358-55dd-4553-baca-59622be227c4.png)
+![image](https://user-images.githubusercontent.com/82778074/170500939-d2df817a-a2de-464b-8b66-e33ff082a6e1.png)
 
 Admin panel (in progress)
-![image](https://user-images.githubusercontent.com/82778074/170245368-f8790a9e-4eef-4422-9b61-c1861d2c75c3.png)
+![image](https://user-images.githubusercontent.com/82778074/170501024-cf9753cc-a3b9-418b-b234-1d2151e59205.png)
 
 
