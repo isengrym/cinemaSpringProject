@@ -10,10 +10,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ua.klieshchunov.spring.cinemaSpringProject.controller.util.ModelFiller;
-import ua.klieshchunov.spring.cinemaSpringProject.dto.PaginationDto;
 import ua.klieshchunov.spring.cinemaSpringProject.model.entity.Genre;
 import ua.klieshchunov.spring.cinemaSpringProject.model.entity.Movie;
-import ua.klieshchunov.spring.cinemaSpringProject.model.entity.User;
 import ua.klieshchunov.spring.cinemaSpringProject.service.GenreService;
 import ua.klieshchunov.spring.cinemaSpringProject.service.MovieService;
 
@@ -44,10 +42,7 @@ public class AdminMovieController {
         Page<Movie> page = movieService
                 .findAllMoviesPaginatedAndSorted(pageable);
 
-        PaginationDto paginationDto = new PaginationDto();
-        paginationDto.pageNumber = pageNum;
-
-        movieModelFiller.fillModelForPaginatedItems(page, paginationDto, model);
+        movieModelFiller.fillModelForPaginatedItems(page, model);
 
         return "adminPanel/movies/index";
     }
@@ -66,6 +61,7 @@ public class AdminMovieController {
     public String addMovie(@ModelAttribute @Valid Movie movie,
                            BindingResult bindingResult,
                            Model model) {
+
         if (bindingResult.hasErrors()) {
             List<Genre> genres = genreService.findAllGenres();
             model.addAttribute("genres", genres);

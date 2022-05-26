@@ -1,19 +1,17 @@
 package ua.klieshchunov.spring.cinemaSpringProject.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.web.servlet.server.Session;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
+import ua.klieshchunov.spring.cinemaSpringProject.controller.util.ModelFiller;
 import ua.klieshchunov.spring.cinemaSpringProject.model.entity.Ticket;
 import ua.klieshchunov.spring.cinemaSpringProject.model.entity.User;
 import ua.klieshchunov.spring.cinemaSpringProject.service.TicketService;
@@ -21,21 +19,23 @@ import ua.klieshchunov.spring.cinemaSpringProject.service.UserService;
 import ua.klieshchunov.spring.cinemaSpringProject.utils.UserDetailsImpl;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @Controller
 @RequestMapping("profile")
 public class ProfileController {
     private final UserService userService;
     private final TicketService ticketService;
+    private final ModelFiller<Ticket> ticketModelFiller;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
     public ProfileController(UserService userService,
                              TicketService ticketService,
+                             @Qualifier("ticketModelFiller") ModelFiller<Ticket> modelFiller,
                              PasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.ticketService = ticketService;
+        this.ticketModelFiller = modelFiller;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -45,16 +45,10 @@ public class ProfileController {
                         Model model) {
         User user = getUserFromContext();
         Pageable pageable = PageRequest.of(pageNum, pageSize);
+        Page<Ticket> page = ticketService.findTicketsByUserPaginatedAndSorted(user, pageable);
 
-        Page<Ticket> page = ticketService
-                .findTicketsByUserPaginatedAndSorted(user, pageable);
-        List<Ticket> ticketsPaginated = page.getContent();
-
-        model.addAttribute("totalPages", page.getTotalPages());
-        model.addAttribute("totalItems", page.getTotalElements());
-        model.addAttribute("currentPage", pageNum);
-        model.addAttribute("tickets", ticketsPaginated);
         model.addAttribute("user", user);
+        ticketModelFiller.fillModelForPaginatedItems(page, model);
 
         return "userPanel/index";
     }

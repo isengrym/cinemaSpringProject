@@ -11,7 +11,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ua.klieshchunov.spring.cinemaSpringProject.controller.util.ModelFiller;
-import ua.klieshchunov.spring.cinemaSpringProject.dto.PaginationDto;
 import ua.klieshchunov.spring.cinemaSpringProject.model.entity.Movie;
 import ua.klieshchunov.spring.cinemaSpringProject.model.entity.Showtime;
 import ua.klieshchunov.spring.cinemaSpringProject.service.DateService;
@@ -58,9 +57,7 @@ public class AdminShowtimeController {
         Pageable pageable = PageRequest.of(pageNum, pageSize, sort);
         Page<Showtime> page = showtimeService.findAllFutureShowtimesPaginatedAndSorted(pageable);
 
-        PaginationDto paginationDto = new PaginationDto(pageNum, sortBy, sortOrder);
-
-        showtimeModelFiller.fillModelForPaginatedItems(page, paginationDto, model);
+        showtimeModelFiller.fillModelForPaginatedItems(page, model);
 
         return "adminPanel/showtimes/index";
     }
@@ -80,10 +77,7 @@ public class AdminShowtimeController {
                               @ModelAttribute("dateString") String dateString,
                               Model model) {
         showtime.setFreePlaces(77);
-
-        LocalDateTime parsedDate = LocalDateTime.parse(dateString);
-        Integer epochSecondsDate = (int)parsedDate.toEpochSecond(ZoneOffset.UTC);
-        showtime.setStartDateEpochSeconds(epochSecondsDate);
+        setDateToShowtime(showtime, dateString);
 
         List<Interval> busyIntervals = collectBusyIntervalsForDayOfShowtime(showtime);
         Interval interval = new Interval(showtime.getStartDateTime(), showtime.getEndDateTime());
@@ -105,11 +99,17 @@ public class AdminShowtimeController {
         return "redirect:/admin/showtimes/";
     }
 
+    private void setDateToShowtime(Showtime showtime, String dateString) {
+        LocalDateTime parsedDate = LocalDateTime.parse(dateString);
+        Integer epochSecondsDate = (int)parsedDate.toEpochSecond(ZoneOffset.UTC);
+        showtime.setStartDateEpochSeconds(epochSecondsDate);
+    }
+
 
     private List<Interval> collectBusyIntervalsForDayOfShowtime(Showtime showtime) {
         List<Showtime> showtimes = showtimeService.findAllFutureShowtimes();
-        LocalDate dayOfAddedSeance = showtime.getStartDateTime().toLocalDate();
-        return showtimeService.collectIntervalsOfShowtimes(showtimes, dayOfAddedSeance);
+        LocalDate dayOfAddedShowtime = showtime.getStartDateTime().toLocalDate();
+        return showtimeService.collectIntervalsOfShowtimes(showtimes, dayOfAddedShowtime);
     }
 
     @GetMapping("/{id}")

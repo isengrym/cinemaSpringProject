@@ -10,9 +10,27 @@ import ua.klieshchunov.spring.cinemaSpringProject.service.PaginationService;
 public class PaginationServiceImpl implements PaginationService {
     @Override
     public Sort formSort(String sortBy, String sortOrder) {
-        Sort sort = sortOrder.equalsIgnoreCase("ASC")
+        return sortOrder.equalsIgnoreCase("ASC")
                 ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+    }
 
-        return sort;
+    public String getSortBy(Sort sort) {
+        String sortBy = "id";
+
+        if (sort.isSorted())
+            sortBy = sort.toString().split(":")[0];
+
+        return sortBy;
+    }
+
+    public String getSortOrder(Sort sort) {
+        String sortOrder = "ASC";
+
+        if (sort.isSorted()) {
+            sortOrder = sort.toString().split(":")[1];
+            sortOrder = sortOrder.trim();
+        }
+
+        return sortOrder;
     }
 }

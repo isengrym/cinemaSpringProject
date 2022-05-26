@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ua.klieshchunov.spring.cinemaSpringProject.controller.util.ModelFiller;
-import ua.klieshchunov.spring.cinemaSpringProject.dto.PaginationDto;
 import ua.klieshchunov.spring.cinemaSpringProject.model.entity.Movie;
 import ua.klieshchunov.spring.cinemaSpringProject.model.entity.Showtime;
 import ua.klieshchunov.spring.cinemaSpringProject.service.MovieService;
@@ -45,25 +44,25 @@ public class MovieController {
                                Model model) {
 
         Pageable pageable = PageRequest.of(pageNum, pageSize);
-        Page<Movie> page;
-
-        if (Boolean.parseBoolean(showInactive))
-            page = movieService.findAllMoviesPaginatedAndSorted(pageable);
-        else
-            page = movieService.findMoviesWithShowtimesPaginatedAndSorted(pageable);
-
-
-        PaginationDto paginationDto = new PaginationDto();
-        paginationDto.pageNumber = pageNum;
+        Page<Movie> page = getPageWithCorrectFilling(showInactive, pageable);
 
         model.addAttribute("showInactive", showInactive);
-        movieModelFiller.fillModelForPaginatedItems(page, paginationDto, model);
+        movieModelFiller.fillModelForPaginatedItems(page, model);
 
         return "movies/index";
     }
 
+    private Page<Movie> getPageWithCorrectFilling(String showInactive, Pageable pageable) {
+        Page<Movie> page;
+        if (Boolean.parseBoolean(showInactive))
+            page = movieService.findAllMoviesPaginatedAndSorted(pageable);
+        else
+            page = movieService.findMoviesWithShowtimesPaginatedAndSorted(pageable);
+        return page;
+    }
+
     @GetMapping("/{id}")
-    public String getSpecificMovie(@PathVariable("id") int id, Model model) {
+    public String getParticularMovie(@PathVariable("id") int id, Model model) {
         Movie movie = movieService.findMovieById(id);
         List<Showtime> showtimes = showtimeService.findAllFutureShowtimesForMovie(movie);
         Map<LocalDate, List<Showtime>> showtimesByDates = showtimeService.collectShowtimesByDate(showtimes);

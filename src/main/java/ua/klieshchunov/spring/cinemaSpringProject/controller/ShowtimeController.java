@@ -9,7 +9,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import ua.klieshchunov.spring.cinemaSpringProject.dto.PaginationDto;
 import ua.klieshchunov.spring.cinemaSpringProject.controller.util.ShowtimeModelFiller;
 import ua.klieshchunov.spring.cinemaSpringProject.model.entity.Movie;
 import ua.klieshchunov.spring.cinemaSpringProject.model.entity.Showtime;
@@ -65,13 +64,12 @@ public class ShowtimeController {
             page = showtimeService.findAllFutureShowtimesForMoviePaginatedAndSorted(pageable, movie);
         }
 
-        PaginationDto paginationDto = new PaginationDto(pageNum, sortBy, sortOrder);
         List<Movie> moviesForFilter = movieService.findMoviesWithShowtimes();
 
         model.addAttribute("movies", moviesForFilter);
         model.addAttribute("movieId", movieId);
+        modelFiller.fillModelForPaginatedItems(page, model);
 
-        modelFiller.fillModelForPaginatedItems(page, paginationDto, model);
         return "showtimes/index";
     }
 

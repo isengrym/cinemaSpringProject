@@ -9,7 +9,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ua.klieshchunov.spring.cinemaSpringProject.controller.util.ModelFiller;
-import ua.klieshchunov.spring.cinemaSpringProject.dto.PaginationDto;
 import ua.klieshchunov.spring.cinemaSpringProject.model.entity.User;
 import ua.klieshchunov.spring.cinemaSpringProject.service.UserService;
 
@@ -31,13 +30,9 @@ public class AdminUserController {
                             @RequestParam(defaultValue = "15") Integer pageSize,
                             Model model) {
         Pageable pageable = PageRequest.of(pageNum, pageSize);
-        Page<User> page = userService
-                .findAllUsersPaginatedAndSorted(pageable);
+        Page<User> page = userService.findAllUsersPaginatedAndSorted(pageable);
 
-        PaginationDto paginationDto = new PaginationDto();
-        paginationDto.pageNumber = pageNum;
-
-        userModelFiller.fillModelForPaginatedItems(page, paginationDto, model);
+        userModelFiller.fillModelForPaginatedItems(page, model);
 
         return "adminPanel/users/index";
     }
