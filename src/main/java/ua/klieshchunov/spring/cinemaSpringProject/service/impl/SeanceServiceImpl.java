@@ -53,7 +53,6 @@ public class SeanceServiceImpl implements SeanceService {
         return dates;
     }
 
-    //test it
     @Override
     public List<Interval> collectIntervalsOfSeances(List<Seance> seances, LocalDate day) {
         List<Seance> seancesForGivenDay = groupSeancesByGivenDay(seances, day);
@@ -129,7 +128,6 @@ public class SeanceServiceImpl implements SeanceService {
         return seance.getStartDateEpochSeconds() < currentTime;
     }
 
-    //test
     @Override
     public void addSeance(Seance seance) {
         seanceRepository.save(seance);

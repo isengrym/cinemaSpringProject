@@ -13,6 +13,7 @@ import ua.klieshchunov.spring.cinemaSpringProject.model.entity.Seance;
 import ua.klieshchunov.spring.cinemaSpringProject.model.repository.SeanceRepository;
 import ua.klieshchunov.spring.cinemaSpringProject.service.exceptions.NoFreePlacesException;
 import ua.klieshchunov.spring.cinemaSpringProject.service.impl.SeanceServiceImpl;
+import ua.klieshchunov.spring.cinemaSpringProject.service.impl.date.Interval;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -50,6 +51,7 @@ public class SeanceServiceTest {
         assertEquals(expected, actual);
     }
 
+
     private List<Seance> prepareListOfSeances() {
         List<Seance> seances = new ArrayList<>();
         Seance seanceOne = new Seance(
@@ -77,8 +79,7 @@ public class SeanceServiceTest {
         LocalDate keyTwo = LocalDateTime.ofEpochSecond(
                 seanceTwo.getStartDateEpochSeconds(), 0, ZoneOffset.UTC).toLocalDate();
 
-        List<Seance> seancesForKeyOne = new ArrayList<>();
-        seancesForKeyOne.addAll(Arrays.asList(seanceOne, seanceThree));
+        List<Seance> seancesForKeyOne = new ArrayList<>(Arrays.asList(seanceOne, seanceThree));
 
         List<Seance> seancesForKeyTwo = new ArrayList<>();
         seancesForKeyTwo.add(seanceTwo);
@@ -87,6 +88,25 @@ public class SeanceServiceTest {
         expected.put(keyTwo, seancesForKeyTwo);
 
         return expected;
+    }
+
+    @Test
+    void shouldReturnListOfIntervalsCreatedFromGivenShowtime() {
+        List<Seance> seances = prepareListOfSeances();
+        LocalDate day = seances.get(0).getStartDateTime().toLocalDate(); //19.05.2022
+
+        List<Interval> expected = createExpectedIntervalsList(seances);
+        List<Interval> actual = seanceService.collectIntervalsOfSeances(seances, day);
+
+        Assertions.assertEquals(expected, actual);
+
+    }
+
+    private List<Interval> createExpectedIntervalsList(List<Seance> seances) {
+        Interval one = new Interval(seances.get(0).getStartDateTime(), seances.get(0).getEndDateTime());
+        Interval two = new Interval(seances.get(2).getStartDateTime(), seances.get(2).getEndDateTime());
+
+        return new ArrayList<>(Arrays.asList(one, two));
     }
 
     @Test
@@ -111,6 +131,7 @@ public class SeanceServiceTest {
                         any(Pageable.class));
         Assertions.assertEquals(expectedPage, actualPage);
     }
+
     @Test
     @ExtendWith(MockitoExtension.class)
     void shouldReturnSeanceFoundById() {
@@ -126,9 +147,8 @@ public class SeanceServiceTest {
     void shouldThrowExceptionIfSeanceWithNoFreePlacesGiven() {
         expected.setFreePlaces(0);
 
-        assertThrows(NoFreePlacesException.class, () -> {
-            seanceService.decrementFreePlacesQuantity(expected);
-        });
+        assertThrows(NoFreePlacesException.class, () ->
+                seanceService.decrementFreePlacesQuantity(expected));
     }
 
     @Test
@@ -136,9 +156,5 @@ public class SeanceServiceTest {
         expected.setFreePlaces(5);
         assertTrue(seanceService.hasFreePlaces(expected));
     }
-
-
-
-
 
 }

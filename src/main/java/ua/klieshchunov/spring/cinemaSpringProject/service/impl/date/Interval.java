@@ -1,7 +1,11 @@
 package ua.klieshchunov.spring.cinemaSpringProject.service.impl.date;
 
-import java.time.LocalDateTime;
+import lombok.EqualsAndHashCode;
 
+import java.time.LocalDateTime;
+import java.util.Objects;
+
+@EqualsAndHashCode
 public class Interval {
     public LocalDateTime beginning;
     public LocalDateTime end;
@@ -10,6 +14,5 @@ public class Interval {
         this.beginning = beginning;
         this.end = end;
     }
-
 
 }
