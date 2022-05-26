@@ -123,7 +123,11 @@ public class AdminShowtimeController {
     }
 
     @DeleteMapping("/{id}")
-    public String deleteShowtime(@PathVariable("id") int id) {
-        return "adminPanel/showtimes/index";
+    public String deleteShowtime(@PathVariable("id") int id,
+                                 Model model) {
+        Showtime showtime = showtimeService.findShowtimeById(id);
+        showtimeService.deleteShowtime(showtime);
+
+        return "redirect:/admin/showtimes/";
     }
 }

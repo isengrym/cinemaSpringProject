@@ -37,13 +37,21 @@
           <td th:text="${showtime.ticketPrice}">90</td>
           <td th:text="${showtime.getStartDateTime().toLocalDate() + ' ' + showtime.getStartDateTime().toLocalTime()}">12.05.2022 10:00</td>
           <td th:text="${showtime.freePlaces}">75</td>
+
           <td class="text-center"><a class='btn btn-info btn-xs' href="#">
             <span class="glyphicon glyphicon-edit"></span> <span th:text="#{button.edit}"></span></a>
           </td>
 
-          <td class="text-center"><a class="btn btn-danger btn-xs" href="#">
-            <span class="glyphicon glyphicon-remove"></span> <span th:text="#{button.delete}"></span></a>
+          <td class="text-center">
+            <form th:method="DELETE" th:action="@{/admin/showtimes/{id}(id=${showtime.id})}">
+              <button th:data-confirm-delete="#{button.confirmText}"
+                      onclick="return confirm(this.getAttribute('data-confirm-delete'))"
+                      class="command-button btn btn-danger btn-xs" type="submit">
+                <span class="glyphicon glyphicon-remove"></span> <span th:text="#{button.delete}"></span>
+              </button>
+            </form>
           </td>
+
         </tr>
       </table>
     </div>

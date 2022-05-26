@@ -49,7 +49,11 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public void addMovie(Movie movie) {
-        System.out.println(movie);
         movieRepository.save(movie);
+    }
+
+    @Override
+    public void deleteMovie(Movie movie) {
+        movieRepository.delete(movie);
     }
 }

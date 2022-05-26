@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -29,23 +30,14 @@ public class AdminUserController {
     public String getUsers(@RequestParam(defaultValue = "0") Integer pageNum,
                             @RequestParam(defaultValue = "15") Integer pageSize,
                             Model model) {
+        User user = getUserFromContext();
+
         Pageable pageable = PageRequest.of(pageNum, pageSize);
         Page<User> page = userService.findAllUsersPaginatedAndSorted(pageable);
 
+        model.addAttribute("currentUser", user);
         userModelFiller.fillModelForPaginatedItems(page, model);
 
-        return "adminPanel/users/index";
-    }
-
-
-    @GetMapping("/new")
-    public String newUserPage() {
-        return "adminPanel/users/new";
-    }
-
-
-    @PostMapping("/new")
-    public String addUser() {
         return "adminPanel/users/index";
     }
 
@@ -60,7 +52,18 @@ public class AdminUserController {
     }
 
     @DeleteMapping("/{id}")
-    public String deleteUser(@PathVariable("id") int id) {
-        return "adminPanel/users/index";
+    public String deleteUser(@PathVariable("id") int id,
+                             Model model) {
+        User user = userService.getUserById(id);
+        System.out.println(user);
+
+        userService.deleteUser(user);
+
+        return "redirect:/admin/users";
+    }
+
+    private User getUserFromContext() {
+        final String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        return userService.getUserByEmail(userEmail);
     }
 }

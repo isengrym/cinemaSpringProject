@@ -15,6 +15,9 @@ import javax.transaction.Transactional;
 @Repository
 public interface UserRepository extends CrudRepository<User, Integer> {
     boolean existsByEmail(@Param("email") String email);
+
+    User getUserById(int id);
+
     User getUserByEmail(@Param("email") String email);
 
     @NonNull

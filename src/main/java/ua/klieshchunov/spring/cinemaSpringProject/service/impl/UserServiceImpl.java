@@ -33,18 +33,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User getUserById(int id) {
+        return userRepository.getUserById(id);
+    }
+
+    @Override
     public User getUserByEmail(String email) {
         return userRepository.getUserByEmail(email);
     }
 
     @Override
     @Transactional
-    public boolean createUser(User user) {
+    public void createUser(User user) {
         user.setRole(ApplicationUserRole.USER);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
 
-        return true;
     }
 
     @Override

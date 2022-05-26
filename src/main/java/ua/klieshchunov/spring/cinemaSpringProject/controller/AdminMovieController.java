@@ -84,6 +84,9 @@ public class AdminMovieController {
 
     @DeleteMapping("/{id}")
     public String deleteMovie(@PathVariable("id") int id) {
-        return "adminPanel/movies/index";
+        Movie movie = movieService.findMovieById(id);
+
+        movieService.deleteMovie(movie);
+        return "redirect:/admin/movies";
     }
 }

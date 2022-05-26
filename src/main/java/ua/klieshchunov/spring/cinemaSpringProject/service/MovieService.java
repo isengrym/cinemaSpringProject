@@ -13,4 +13,5 @@ public interface MovieService {
     Page<Movie> findAllMoviesPaginatedAndSorted(Pageable pageable);
     Movie findMovieById(int movieId);
     void addMovie(Movie movie);
+    void deleteMovie(Movie movie);
 }

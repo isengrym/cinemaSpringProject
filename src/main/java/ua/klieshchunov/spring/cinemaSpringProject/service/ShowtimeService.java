@@ -23,4 +23,5 @@ public interface ShowtimeService {
     boolean hasAlreadyEnded(Showtime showtime);
     void decrementFreePlacesQuantity(Showtime showtime) throws NoFreePlacesException;
     void addShowtime(Showtime showtime);
+    void deleteShowtime(Showtime showtime);
 }

@@ -132,4 +132,9 @@ public class ShowtimeServiceImpl implements ShowtimeService {
     public void addShowtime(Showtime showtime) {
         showtimeRepository.save(showtime);
     }
+
+    @Override
+    public void deleteShowtime(Showtime showtime) {
+        showtimeRepository.delete(showtime);
+    }
 }

@@ -7,7 +7,8 @@ import ua.klieshchunov.spring.cinemaSpringProject.model.entity.User;
 
 public interface UserService {
     boolean userWithSuchEmailExists(String email);
-    boolean createUser(User user);
+    void createUser(User user);
+    User getUserById(int id);
     User getUserByEmail(String email);
     boolean isCorrectPassword(String password, User userFromDb);
     void updateUser(User userFromDb);

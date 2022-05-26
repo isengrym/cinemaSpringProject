@@ -151,6 +151,8 @@ a {
 }
 
 .action-button h4 {
+    color: #525252;
+    font-size: 15px;
     margin-bottom: 0px;
     margin-top: 13px;
 }
@@ -162,6 +164,11 @@ a {
 .submit-button {
     float: left;
 }
+
+.submit-button h4 {
+    margin-top: 0;
+}
+
 .decline-button {
     float: right;
     margin-right: 5px;
