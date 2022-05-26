@@ -8,8 +8,8 @@ import java.util.List;
 
 public interface MovieService {
     List<Movie> findAllMovies();
-    List<Movie> findMoviesWithSeances();
-    Page<Movie> findMoviesWithSeancesPaginatedAndSorted(Pageable pageable);
+    List<Movie> findMoviesWithShowtimes();
+    Page<Movie> findMoviesWithShowtimesPaginatedAndSorted(Pageable pageable);
     Page<Movie> findAllMoviesPaginatedAndSorted(Pageable pageable);
     Movie findMovieById(int movieId);
     void addMovie(Movie movie);

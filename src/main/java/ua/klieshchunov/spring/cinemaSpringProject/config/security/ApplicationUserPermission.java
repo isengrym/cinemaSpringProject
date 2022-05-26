@@ -5,8 +5,8 @@ public enum ApplicationUserPermission {
     USER_WRITE("user:write"),
     MOVIE_READ("movie:read"),
     MOVIE_WRITE("movie:write"),
-    SEANCE_READ("seance:read"),
-    SEANCE_WRITE("seance:write"),
+    SHOWTIME_READ("showtime:read"),
+    SHOWTIME_WRITE("showtime:write"),
     TICKET_READ("ticket:read"),
     TICKET_WRITE("ticket:write");
 

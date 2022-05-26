@@ -1,40 +1,40 @@
-.seance-item {
+.showtime-item {
     background-color: #f5f5f5;
     font-size: 16px;
-    padding: 0px;
+    padding: 0;
     color: #414141;
     margin-top: 40px;
 }
 
-.seance-item .left-side {
+.showtime-item .left-side {
     padding: 0;
 }
 
-.seance-page-title {
+.showtime-page-title {
     float: left;
     margin-left: -15px;
     color: black;
 }
-.seance-item .right-side a {
+.showtime-item .right-side a {
     text-decoration: none;
     color: black;
 }
 
-.seance-item .right-side h3 {
+.showtime-item .right-side h3 {
     margin-top: 10px;
     font-size: 28px;
     font-weight: 600;
 }
 
-.seance-item .right-side h5 span{
+.showtime-item .right-side h5 span{
     color: rgba(10, 10, 10, 0.36);
 }
-.seance-item .right-side h5 {
+.showtime-item .right-side h5 {
     font-size: 18px;
 }
 
 
-.seance-item .action-button {
+.showtime-item .action-button {
     padding-left: 15px;
     padding-right: 15px;
     padding-top: 7px;
@@ -45,10 +45,10 @@
     color: white;
     transition: 0.15s;
 }
-.seance-item .action-button:hover {
+.showtime-item .action-button:hover {
     transform: scale(1.04);
 }
-.seance-item .add-seance h3{
+.showtime-item .add-showtime h3{
     margin-top: 95px;
 }
 
@@ -79,7 +79,7 @@
 
 
 @media screen and (max-width: 1200px){
-    .seance-page-title {
+    .showtime-page-title {
         text-align: center;
     }
     .sorting-block {

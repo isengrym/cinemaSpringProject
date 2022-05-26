@@ -1,26 +1,24 @@
 package ua.klieshchunov.spring.cinemaSpringProject.model.entity;
 
 import lombok.*;
-import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotEmpty;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Objects;
 
 @Entity
-@Table(name = "seances")
+@Table(name = "showtime")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class Seance {
+public class Showtime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="seance_id")
+    @Column(name="showtime_id")
     private int id;
 
     @ManyToOne(optional = false, cascade = CascadeType.REFRESH)
@@ -43,19 +41,22 @@ public class Seance {
     public LocalDateTime getStartDateTime() {
         return LocalDateTime.ofEpochSecond(this.startDateEpochSeconds, 0, ZoneOffset.UTC);
     }
+
     public LocalDateTime getEndDateTime() {
         LocalDateTime startTime = getStartDateTime();
         return startTime.plusMinutes(this.movie.getDuration());
     }
+
     public boolean isExpired() {
         return LocalDateTime.now().isAfter(getStartDateTime());
     }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Seance seance = (Seance) o;
-        return id == seance.id;
+        Showtime showtime = (Showtime) o;
+        return id == showtime.id;
     }
 
     @Override

@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="https://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title th:text="#{admin.seances}">Admin seances list</title>
+  <title th:text="#{admin.showtimes}">Admin showtimes list</title>
 
   <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
   <link th:href="@{/css/style.css}" rel="stylesheet" />
@@ -18,8 +18,8 @@
     <div class="row col-lg-12 custyle">
       <table class="table table-striped custab">
         <thead>
-        <h2 class="headline" style="margin-bottom: 20px" th:text="#{admin.seances}"></h2>
-        <a th:href="@{/admin/seances/new}" class="btn btn-primary btn-xs pull-right"><b>+</b> <span th:text="#{admin.addSeance}"></span></a>
+        <h2 class="headline" style="margin-bottom: 20px" th:text="#{admin.showtimes}"></h2>
+        <a th:href="@{/admin/showtimes/new}" class="btn btn-primary btn-xs pull-right"><b>+</b> <span th:text="#{admin.addShowtime}"></span></a>
         <tr>
           <th>ID</th>
           <th>Movie</th>
@@ -31,12 +31,12 @@
         </tr>
         </thead>
 
-        <tr th:each="seance : ${seances}" th:href="@{seances/{id}(id=${seance.id})}">
-          <td th:text="${seance.id}">1</td>
-          <td th:text="${seance.movie.title}">Uncharted</td>
-          <td th:text="${seance.ticketPrice}">90</td>
-          <td th:text="${seance.getStartDateTime().toLocalDate() + ' ' + seance.getStartDateTime().toLocalTime()}">12.05.2022 10:00</td>
-          <td th:text="${seance.freePlaces}">75</td>
+        <tr th:each="showtime : ${showtimes}" th:href="@{showtimes/{id}(id=${showtime.id})}">
+          <td th:text="${showtime.id}">1</td>
+          <td th:text="${showtime.movie.title}">Uncharted</td>
+          <td th:text="${showtime.ticketPrice}">90</td>
+          <td th:text="${showtime.getStartDateTime().toLocalDate() + ' ' + showtime.getStartDateTime().toLocalTime()}">12.05.2022 10:00</td>
+          <td th:text="${showtime.freePlaces}">75</td>
           <td class="text-center"><a class='btn btn-info btn-xs' href="#">
             <span class="glyphicon glyphicon-edit"></span> <span th:text="#{button.edit}"></span></a>
           </td>

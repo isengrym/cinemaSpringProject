@@ -38,7 +38,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                     .authorizeRequests()
                     .antMatchers("/profile/**").hasAnyRole(USER.name(), ADMIN.name(), MANAGER.name())
-                    .antMatchers("/seances/{\\d+}/ticket/**").hasAnyRole(USER.name(), ADMIN.name(), MANAGER.name())
+                    .antMatchers("/showtimes/{\\d+}/ticket/**").hasAnyRole(USER.name(), ADMIN.name(), MANAGER.name())
                     .antMatchers(HttpMethod.POST,"/admin/users/**").hasAnyRole(ADMIN.name())
                     .antMatchers(HttpMethod.PUT,"/admin/users/**").hasAnyRole(ADMIN.name())
                     .antMatchers(HttpMethod.DELETE,"/admin/users/**").hasAnyRole(ADMIN.name())
@@ -68,7 +68,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+    protected void configure(AuthenticationManagerBuilder auth) {
         auth.authenticationProvider(daoAuthenticationProvider());
     }
 

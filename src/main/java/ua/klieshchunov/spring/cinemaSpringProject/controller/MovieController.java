@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import ua.klieshchunov.spring.cinemaSpringProject.controller.util.ModelFiller;
 import ua.klieshchunov.spring.cinemaSpringProject.dto.PaginationDto;
 import ua.klieshchunov.spring.cinemaSpringProject.model.entity.Movie;
-import ua.klieshchunov.spring.cinemaSpringProject.model.entity.Seance;
+import ua.klieshchunov.spring.cinemaSpringProject.model.entity.Showtime;
 import ua.klieshchunov.spring.cinemaSpringProject.service.MovieService;
-import ua.klieshchunov.spring.cinemaSpringProject.service.SeanceService;
+import ua.klieshchunov.spring.cinemaSpringProject.service.ShowtimeService;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -26,15 +26,15 @@ import java.util.Map;
 @RequestMapping("movies")
 public class MovieController {
     private final MovieService movieService;
-    private final SeanceService seanceService;
+    private final ShowtimeService showtimeService;
     private final ModelFiller<Movie> movieModelFiller;
 
     @Autowired
     public MovieController(MovieService movieService,
-                           SeanceService seanceService,
+                           ShowtimeService showtimeService,
                            @Qualifier("movieModelFiller") ModelFiller<Movie> modelFiller) {
         this.movieService = movieService;
-        this.seanceService = seanceService;
+        this.showtimeService = showtimeService;
         this.movieModelFiller = modelFiller;
     }
 
@@ -50,7 +50,7 @@ public class MovieController {
         if (Boolean.parseBoolean(showInactive))
             page = movieService.findAllMoviesPaginatedAndSorted(pageable);
         else
-            page = movieService.findMoviesWithSeancesPaginatedAndSorted(pageable);
+            page = movieService.findMoviesWithShowtimesPaginatedAndSorted(pageable);
 
 
         PaginationDto paginationDto = new PaginationDto();
@@ -65,11 +65,11 @@ public class MovieController {
     @GetMapping("/{id}")
     public String getSpecificMovie(@PathVariable("id") int id, Model model) {
         Movie movie = movieService.findMovieById(id);
-        List<Seance> seances = seanceService.findAllFutureSeancesForMovie(movie);
-        Map<LocalDate, List<Seance>> seancesByDates = seanceService.collectSeancesByDate(seances);
+        List<Showtime> showtimes = showtimeService.findAllFutureShowtimesForMovie(movie);
+        Map<LocalDate, List<Showtime>> showtimesByDates = showtimeService.collectShowtimesByDate(showtimes);
 
         model.addAttribute("movie", movie);
-        model.addAttribute("seancesByDates", seancesByDates);
+        model.addAttribute("showtimesByDates", showtimesByDates);
         return "movies/show";
     }
 }

@@ -2,9 +2,9 @@
 <html lang="en" xmlns:th="https://www.thymeleaf.org">
     <head>
         <meta charset="UTF-8">
-        <title th:text="#{seances.title}"></title>
+        <title th:text="#{showtimes.title}"></title>
         <link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-        <link th:href="@{/css/seances.css}" rel="stylesheet" />
+        <link th:href="@{/css/showtimes.css}" rel="stylesheet" />
         <link th:href="@{/css/style.css}" rel="stylesheet" />
     </head>
     <body>
@@ -16,8 +16,8 @@
 
         <div class="col-lg-8">
 
-            <div class="seance-page-title col-xs-12 col-sm-12 col-md-12 col-lg-4">
-                <h2 class="headline" th:text="#{seances.title}"></h2>
+            <div class="showtime-page-title col-xs-12 col-sm-12 col-md-12 col-lg-4">
+                <h2 class="headline" th:text="#{showtimes.title}"></h2>
             </div>
 
             <div class="sorting-block col-xs-12 col-sm-12 col-md-12 col-lg-8">
@@ -46,41 +46,41 @@
                         selectElement = document.querySelector('#select3');
                         orderOutput = selectElement.value;
 
-                        var src = "/seances?sortBy=" + sortingOutput + "&sortOrder=" + orderOutput + "&movieId=" + movie;
+                        var src = "/showtimes?sortBy=" + sortingOutput + "&sortOrder=" + orderOutput + "&movieId=" + movie;
 
                         window.location.href = src;
                     }
                 </script>
             </div>
 
-            <div th:if="${#lists.isEmpty(seances)}" class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                <h2 class="headline" th:text="#{movie.noSeances}"></h2>
+            <div th:if="${#lists.isEmpty(showtimes)}" class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <h2 class="headline" th:text="#{movie.noShowtimes}"></h2>
             </div>
 
-            <div th:each="seance : ${seances}">
+            <div th:each="showtime : ${showtimes}">
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    <a th:href="@{/movies/{id}(id=${seance.movie.id})}">
-                        <div class="seance-item row">
+                    <a th:href="@{/movies/{id}(id=${showtime.movie.id})}">
+                        <div class="showtime-item row">
                             <div class="left-side col-xs-12 col-sm-3 col-md-3 col-lg-3">
-                                <img th:src="${seance.movie.imagePath}" alt="" width="170" height="257">
+                                <img th:src="${showtime.movie.imagePath}" alt="" width="170" height="257">
                             </div>
                             <div class="right-side col-xs-12 col-sm-8 col-md-8 col-lg-8">
-                                <h3 th:text="${seance.movie.title}"></h3>
+                                <h3 th:text="${showtime.movie.title}"></h3>
                                 <h5>
                                     <span th:text="#{movieItem.startTime}"></span>
-                                    <br th:text="${seance.getStartDateTime().toLocalDate()
-                                    + ' ' + seance.getStartDateTime().toLocalTime()}">
+                                    <br th:text="${showtime.getStartDateTime().toLocalDate()
+                                    + ' ' + showtime.getStartDateTime().toLocalTime()}">
                                 </h5>
                                 <h5>
                                     <span th:text="#{movieItem.endTime}"></span>
-                                    <br th:text="${seance.getEndDateTime().toLocalDate()
-                                    + ' ' + seance.getEndDateTime().toLocalTime()}">
+                                    <br th:text="${showtime.getEndDateTime().toLocalDate()
+                                    + ' ' + showtime.getEndDateTime().toLocalTime()}">
                                 </h5>
                                 <h5>
                                     <span th:text="#{movieItem.freePlaces}"></span>
-                                    <br th:text="${seance.freePlaces}">
+                                    <br th:text="${showtime.freePlaces}">
                                 </h5>
-                                <a th:href="@{/seances/{id}(id=${seance.id})}">
+                                <a th:href="@{/showtimes/{id}(id=${showtime.id})}">
                                     <button th:text="#{ticket.buy}" class="action-button">
                                     </button>
                                 </a>
@@ -96,7 +96,7 @@
 
         <div th:if="${totalPages>1}" class="page-number-block col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <a class="page-number-link" th:each="number : ${#numbers.sequence(1,totalPages)}"
-               th:href="@{/seances?pageNum={num}&sortBy={sortBy}&sortOrder={sortOrder}&movieId={movieId}
+               th:href="@{/showtimes?pageNum={num}&sortBy={sortBy}&sortOrder={sortOrder}&movieId={movieId}
                (num=${number-1}, sortBy=${sortBy}, sortOrder=${sortOrder}, movieId=${movieId})}">
                 <p class="page-number-item" th:text="${number}"></p>
             </a>

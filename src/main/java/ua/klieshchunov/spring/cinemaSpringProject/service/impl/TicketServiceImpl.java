@@ -5,7 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import ua.klieshchunov.spring.cinemaSpringProject.model.entity.Seance;
+import ua.klieshchunov.spring.cinemaSpringProject.model.entity.Showtime;
 import ua.klieshchunov.spring.cinemaSpringProject.model.entity.Ticket;
 import ua.klieshchunov.spring.cinemaSpringProject.model.entity.User;
 import ua.klieshchunov.spring.cinemaSpringProject.model.repository.TicketRepository;
@@ -32,8 +32,8 @@ public class TicketServiceImpl implements TicketService{
     }
 
     @Override
-    public List<Ticket> findAllTicketsForSeance(Seance seance) {
-        return ticketRepository.findAllTicketsBySeance(seance);
+    public List<Ticket> findAllTicketsForShowtime(Showtime showtime) {
+        return ticketRepository.findAllTicketsByShowtime(showtime);
     }
 
     @Override

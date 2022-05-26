@@ -6,8 +6,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
-import ua.klieshchunov.spring.cinemaSpringProject.model.entity.Seance;
 import ua.klieshchunov.spring.cinemaSpringProject.model.entity.User;
 
 import javax.transaction.Transactional;
@@ -17,8 +17,9 @@ public interface UserRepository extends CrudRepository<User, Integer> {
     boolean existsByEmail(@Param("email") String email);
     User getUserByEmail(@Param("email") String email);
 
+    @NonNull
     @Override
-    <S extends User> S save(S user);
+    <S extends User> S save(@NonNull S user);
 
     @Modifying
     @Transactional

@@ -26,15 +26,15 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public List<Movie> findMoviesWithSeances() {
+    public List<Movie> findMoviesWithShowtimes() {
         int currentTime = CurrentTime.get();
-        return movieRepository.findMoviesWithSeances(currentTime);
+        return movieRepository.findMoviesWithShowtimes(currentTime);
     }
 
     @Override
-    public Page<Movie> findMoviesWithSeancesPaginatedAndSorted(Pageable pageable) {
+    public Page<Movie> findMoviesWithShowtimesPaginatedAndSorted(Pageable pageable) {
         int currentTime = CurrentTime.get();
-        return movieRepository.findMoviesWithSeances(currentTime, pageable);
+        return movieRepository.findMoviesWithShowtimesPaginated(currentTime, pageable);
     }
 
     @Override

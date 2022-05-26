@@ -30,19 +30,19 @@
                 <div class="bottom-block">
 
                     <div class="col-sm-12 col-md-12 col-lg-5">
-                        <h2 th:if="${!seancesByDates.isEmpty()}" th:text="#{movie.seances}" class="seances-headline"></h2>
-                        <h2 th:if="${seancesByDates.isEmpty()}" th:text="#{movie.noSeances}" class="seances-headline"></h2>
+                        <h2 th:if="${!showtimesByDates.isEmpty()}" th:text="#{movie.showtimes}" class="showtimes-headline"></h2>
+                        <h2 th:if="${showtimesByDates.isEmpty()}" th:text="#{movie.noShowtimes}" class="showtimes-headline"></h2>
 
-                        <div th:each="date : ${seancesByDates}">
+                        <div th:each="date : ${showtimesByDates}">
                             <div class="day-item">
                                 <h5>
                                     <span th:text="${date.key.getDayOfMonth()}"></span>
                                     <span th:text="#{${date.key.getMonth()}}"></span>
                                 </h5>
 
-                                <div style="display: inline" th:each="seance : ${date.value}">
-                                    <a th:href="@{/seances/{id}(id=${seance.id})}" type="button">
-                                        <button th:text="${seance.getStartDateTime().toLocalTime().toString()}"></button>
+                                <div style="display: inline" th:each="showtime : ${date.value}">
+                                    <a th:href="@{/showtimes/{id}(id=${showtime.id})}" type="button">
+                                        <button th:text="${showtime.getStartDateTime().toLocalTime().toString()}"></button>
                                     </a>
                                 </div>
 

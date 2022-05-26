@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <link th:href="@{/css/ticketPage.css}" rel="stylesheet" />
-        <title th:text="#{seances.title}"></title>
+        <title th:text="#{showtimes.title}"></title>
     </head>
     <body>
 <!--        <div th:replace="/include/header :: header"></div>-->
@@ -12,7 +12,7 @@
             <div class="card cardLeft">
                 <h1 th:text="#{header.title}"></h1>
                 <div class="title">
-                    <h2 th:text="${seance.movie.title}"></h2>
+                    <h2 th:text="${showtime.movie.title}"></h2>
                     <span th:text="#{ticket.movie}"></span>
                 </div>
                 <div class="name">
@@ -20,8 +20,8 @@
                     <span th:text="#{ticket.name}"></span>
                 </div>
                 <div class="time">
-                    <h2 th:text="${seance.getStartDateTime().toLocalDate()
-                                    + ' ' + seance.getStartDateTime().toLocalTime()}">
+                    <h2 th:text="${showtime.getStartDateTime().toLocalDate()
+                                    + ' ' + showtime.getStartDateTime().toLocalTime()}">
                     </h2>
                     <span th:text="#{ticket.dateTime}"></span>
                 </div>
@@ -42,7 +42,7 @@
             </div>
 
 
-            <form th:method="POST" th:action="@{/seances/{id}/ticket(id=${seance.id})}" th:object="${ticket}">
+            <form th:method="POST" th:action="@{/showtimes/{id}/ticket(id=${showtime.id})}" th:object="${ticket}">
                 <input type="hidden" name="row" th:value="${rowId}"/>
                 <input type="hidden" name="place" th:value="${placeId}"/>
 
@@ -51,7 +51,7 @@
                 </button>
             </form>
 
-            <a th:href="@{/seances/{id}(id=${seance.id})}">
+            <a th:href="@{/showtimes/{id}(id=${showtime.id})}">
                 <div class="action-button decline-button col-lg-1">
                     <h4 th:text="#{button.decline}"></h4>
                 </div>
