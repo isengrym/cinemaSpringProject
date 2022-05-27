@@ -44,7 +44,7 @@ public class MovieController {
                                Model model) {
 
         Pageable pageable = PageRequest.of(pageNum, pageSize);
-        Page<Movie> page = getPageWithCorrectFilling(showInactive, pageable);
+        Page<Movie> page = getAppropriatePage(showInactive, pageable);
 
         model.addAttribute("showInactive", showInactive);
         movieModelFiller.fillModelForPaginatedItems(page, model);
@@ -52,13 +52,15 @@ public class MovieController {
         return "movies/index";
     }
 
-    private Page<Movie> getPageWithCorrectFilling(String showInactive, Pageable pageable) {
-        Page<Movie> page;
-        if (Boolean.parseBoolean(showInactive))
-            page = movieService.findAllMoviesPaginatedAndSorted(pageable);
-        else
-            page = movieService.findMoviesWithShowtimesPaginatedAndSorted(pageable);
-        return page;
+    private Page<Movie> getAppropriatePage(String showInactiveString, Pageable pageable) {
+        if (showInactive(showInactiveString))
+            return movieService.findAllMoviesPaginatedAndSorted(pageable);
+
+        return movieService.findMoviesWithShowtimesPaginatedAndSorted(pageable);
+    }
+
+    private boolean showInactive(String showInactive) {
+        return Boolean.parseBoolean(showInactive);
     }
 
     @GetMapping("/{id}")

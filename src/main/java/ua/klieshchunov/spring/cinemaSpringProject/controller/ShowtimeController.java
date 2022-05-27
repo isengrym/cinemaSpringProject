@@ -1,5 +1,6 @@
 package ua.klieshchunov.spring.cinemaSpringProject.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,6 +21,7 @@ import ua.klieshchunov.spring.cinemaSpringProject.service.exceptions.TicketAlrea
 
 import java.util.List;
 
+@Slf4j
 @Controller
 @RequestMapping("showtimes")
 public class ShowtimeController {
@@ -55,14 +57,7 @@ public class ShowtimeController {
 
         Sort sort = paginationService.formSort(sortBy, sortOrder);
         Pageable pageable = PageRequest.of(pageNum, pageSize, sort);
-        Page<Showtime> page;
-
-        if (movieId == -1)
-             page = showtimeService.findAllFutureShowtimesPaginatedAndSorted(pageable);
-        else {
-            Movie movie = movieService.findMovieById(movieId);
-            page = showtimeService.findAllFutureShowtimesForMoviePaginatedAndSorted(pageable, movie);
-        }
+        Page<Showtime> page = getAppropriatePage(movieId, pageable);
 
         List<Movie> moviesForFilter = movieService.findMoviesWithShowtimes();
 
@@ -71,6 +66,18 @@ public class ShowtimeController {
         modelFiller.fillModelForPaginatedItems(page, model);
 
         return "showtimes/index";
+    }
+
+    private Page<Showtime> getAppropriatePage(int movieId, Pageable pageable) {
+        if (isParticularMovieId(movieId)) {
+            Movie movie = movieService.findMovieById(movieId);
+            return showtimeService.findAllFutureShowtimesForMoviePaginatedAndSorted(pageable, movie);
+        }
+        return showtimeService.findAllFutureShowtimesPaginatedAndSorted(pageable);
+    }
+
+    private boolean isParticularMovieId(int movieId) {
+        return movieId != -1;
     }
 
     @GetMapping("/{id}")
@@ -112,8 +119,11 @@ public class ShowtimeController {
                                @ModelAttribute("ticket") Ticket ticket) {
 
         Showtime showtime = showtimeService.findShowtimeById(seanceId);
-        if (showtimeService.hasAlreadyEnded(showtime))
+        if (showtimeService.hasAlreadyEnded(showtime)) {
+            log.warn(String.format("Showtime: {'id': '%d'} has already ended. Redirecting..",
+                    seanceId));
             return "redirect:/showtimes/";
+        }
 
         User user = getUserFromContext();
 
@@ -123,10 +133,13 @@ public class ShowtimeController {
         try {
             ticketService.createTicket(ticket);
         } catch (TicketAlreadyExistsException e) {
-            //Log that
+            log.warn(String.format("Ticket: {'showtimeId': '%d', 'row': '%d', 'place': '%d'} " +
+                    "already exists. Redirecting..",
+                    ticket.getShowtime().getId(), ticket.getRow(), ticket.getPlace()));
             return "redirect:/showtimes/" + showtime.getId() + "?error";
         } catch (NoFreePlacesException e) {
-            //Log that
+            log.warn(String.format("Showtime: {'id': '%d'} has no free places. Redirecting..",
+                    ticket.getShowtime().getId()));
             return "showtimes";
         }
 
@@ -135,7 +148,6 @@ public class ShowtimeController {
 
     private User getUserFromContext() {
         final String username = SecurityContextHolder.getContext().getAuthentication().getName();
-
         return userService.getUserByEmail(username);
     }
 

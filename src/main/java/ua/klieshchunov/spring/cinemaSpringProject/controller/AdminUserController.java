@@ -52,11 +52,8 @@ public class AdminUserController {
     }
 
     @DeleteMapping("/{id}")
-    public String deleteUser(@PathVariable("id") int id,
-                             Model model) {
+    public String deleteUser(@PathVariable("id") int id) {
         User user = userService.getUserById(id);
-        System.out.println(user);
-
         userService.deleteUser(user);
 
         return "redirect:/admin/users";

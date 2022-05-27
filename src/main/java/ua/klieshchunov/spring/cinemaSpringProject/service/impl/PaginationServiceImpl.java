@@ -29,7 +29,6 @@ public class PaginationServiceImpl implements PaginationService {
         if (sort.isSorted()) {
             sortOrder = sort.toString().split(":")[1];
             sortOrder = sortOrder.trim();
-            System.out.println(sortOrder);
         }
 
         return sortOrder;

@@ -1,5 +1,6 @@
 package ua.klieshchunov.spring.cinemaSpringProject.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
@@ -20,6 +21,7 @@ import ua.klieshchunov.spring.cinemaSpringProject.utils.UserDetailsImpl;
 
 import javax.validation.Valid;
 
+@Slf4j
 @Controller
 @RequestMapping("profile")
 public class ProfileController {
@@ -75,9 +77,11 @@ public class ProfileController {
                              @ModelAttribute("confirmationPassword") String confirmationPassword) {
         User userFromContext = getUserFromContext();
 
-        if (!userService.isCorrectPassword(confirmationPassword, userFromContext))
+        if (wrongConfirmationPasswordGiven(confirmationPassword, userFromContext)) {
+            log.warn(String.format("Wrong confirmation password given when changing name " +
+                    "for User{'id': '%d'}",userFromContext.getId()));
             bindingResult.rejectValue("password", "error.update.oldPassword");
-
+        }
         if(bindingResult.hasErrors()) return "userPanel/updateName";
 
         userFromContext.setName(userFromForm.getName());
@@ -97,9 +101,11 @@ public class ProfileController {
                                 @ModelAttribute("confirmationPassword") String confirmationPassword) {
         User userFromContext = getUserFromContext();
 
-        if (!userService.isCorrectPassword(confirmationPassword, userFromContext))
+        if (wrongConfirmationPasswordGiven(confirmationPassword, userFromContext)) {
+            log.warn(String.format("Wrong confirmation password given when changing surname " +
+                    "for User{'id': '%d'}",userFromContext.getId()));
             bindingResult.rejectValue("password", "error.update.oldPassword");
-
+        }
         if(bindingResult.hasErrors()) return "userPanel/updateSurname";
 
         userFromContext.setSurname(userFromForm.getSurname());
@@ -119,10 +125,15 @@ public class ProfileController {
                               @ModelAttribute("confirmationPassword") String confirmationPassword) {
         User userFromContext = getUserFromContext();
 
-        if (!userService.isCorrectPassword(confirmationPassword, userFromContext))
+        if (wrongConfirmationPasswordGiven(confirmationPassword, userFromContext)) {
+            log.warn(String.format("Wrong confirmation password given when changing email " +
+                    "for User{'id': '%d'}",userFromContext.getId()));
             bindingResult.rejectValue("password", "error.update.oldPassword");
-        if (userService.userWithSuchEmailExists(userFromForm.getEmail()))
+        }
+        if (userService.userWithSuchEmailExists(userFromForm.getEmail())) {
+            log.warn("User with the same email already exists");
             bindingResult.rejectValue("email", "error.userExists");
+        }
 
         if(bindingResult.hasErrors()) return "userPanel/updateEmail";
 
@@ -143,8 +154,11 @@ public class ProfileController {
                                  @ModelAttribute("confirmationPassword") String confirmationPassword) {
         User userFromContext = getUserFromContext();
 
-        if (!userService.isCorrectPassword(confirmationPassword, userFromContext))
+        if (wrongConfirmationPasswordGiven(confirmationPassword, userFromContext)) {
+            log.warn(String.format("Wrong confirmation password given when changing password " +
+                    "for User{'id': '%d'}",userFromContext.getId()));
             bindingResult.rejectValue("password", "error.update.oldPassword");
+        }
 
         if(bindingResult.hasErrors()) return "userPanel/updatePassword";
 
@@ -153,6 +167,10 @@ public class ProfileController {
         updateUser(userFromContext);
 
         return "redirect:/profile/";
+    }
+
+    private boolean wrongConfirmationPasswordGiven(String confirmationPassword, User userFromContext) {
+        return !userService.isCorrectPassword(confirmationPassword, userFromContext);
     }
 
     private void updateUser(User updatedUser) {

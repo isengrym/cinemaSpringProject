@@ -1,5 +1,6 @@
 package ua.klieshchunov.spring.cinemaSpringProject.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
@@ -18,6 +19,7 @@ import ua.klieshchunov.spring.cinemaSpringProject.service.MovieService;
 import javax.validation.Valid;
 import java.util.List;
 
+@Slf4j
 @Controller
 @RequestMapping("admin/movies")
 public class AdminMovieController {

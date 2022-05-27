@@ -1,5 +1,6 @@
 package ua.klieshchunov.spring.cinemaSpringProject.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
@@ -25,6 +26,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
 
+@Slf4j
 @Controller
 @RequestMapping("admin/showtimes")
 public class AdminShowtimeController {
@@ -78,16 +80,7 @@ public class AdminShowtimeController {
                               Model model) {
         showtime.setFreePlaces(77);
         setDateToShowtime(showtime, dateString);
-
-        List<Interval> busyIntervals = collectBusyIntervalsForDayOfShowtime(showtime);
-        Interval interval = new Interval(showtime.getStartDateTime(), showtime.getEndDateTime());
-
-        if (dateService.isInThePast(showtime.getStartDateTime()))
-            bindingResult.rejectValue("startDateEpochSeconds", "error.pastData");
-        if (dateService.isBefore9amOrAfter10pm(showtime.getStartDateTime()))
-            bindingResult.rejectValue("startDateEpochSeconds", "error.beyondWorkingHours");
-        if (dateService.isCrossingIntervals(interval, busyIntervals))
-            bindingResult.rejectValue("startDateEpochSeconds", "error.collidesOtherShowtimes");
+        validateGivenStartDate(showtime, bindingResult);
 
         if (bindingResult.hasErrors()) {
             List<Movie> movies = movieService.findAllMovies();
@@ -97,6 +90,25 @@ public class AdminShowtimeController {
 
         showtimeService.addShowtime(showtime);
         return "redirect:/admin/showtimes/";
+    }
+
+    private void validateGivenStartDate(Showtime showtime, BindingResult bindingResult) {
+        List<Interval> busyIntervals = collectBusyIntervalsForDayOfShowtime(showtime);
+        Interval interval = new Interval(showtime.getStartDateTime(), showtime.getEndDateTime());
+
+        if (dateService.isInThePast(showtime.getStartDateTime())) {
+            log.debug(String.format("Given date (%d) is already in the past", showtime.getStartDateEpochSeconds()));
+            bindingResult.rejectValue("startDateEpochSeconds", "error.pastData");
+        }
+        if (dateService.isBefore9amOrAfter10pm(showtime.getStartDateTime())) {
+            log.debug(String.format("Given date (%d) is before 9am or after 10pm, " +
+                    "which are not working hours", showtime.getStartDateEpochSeconds()));
+            bindingResult.rejectValue("startDateEpochSeconds", "error.beyondWorkingHours");
+        }
+        if (dateService.isCrossingIntervals(interval, busyIntervals)) {
+            log.debug(String.format("Given date (%d) is crossing another showtime", showtime.getStartDateEpochSeconds()));
+            bindingResult.rejectValue("startDateEpochSeconds", "error.collidesOtherShowtimes");
+        }
     }
 
     private void setDateToShowtime(Showtime showtime, String dateString) {

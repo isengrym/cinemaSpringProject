@@ -1,5 +1,6 @@
 package ua.klieshchunov.spring.cinemaSpringProject.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,6 +13,7 @@ import ua.klieshchunov.spring.cinemaSpringProject.service.UserService;
 
 import javax.validation.Valid;
 
+@Slf4j
 @Controller
 public class SignInSignUpController {
     @Autowired
@@ -31,6 +33,7 @@ public class SignInSignUpController {
         if (bindingResult.hasErrors()) return "common/signUp";
 
         if (userService.userWithSuchEmailExists(user.getEmail())) {
+            log.debug(String.format("User:{'email': '%s'} already exists", user.getEmail()));
             model.addAttribute("userAlreadyExists",true);
             return "common/signUp";
         }
