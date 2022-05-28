@@ -9,9 +9,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import ua.klieshchunov.spring.cinemaSpringProject.config.security.ApplicationUserRole;
 import ua.klieshchunov.spring.cinemaSpringProject.controller.util.ModelFiller;
 import ua.klieshchunov.spring.cinemaSpringProject.model.entity.User;
 import ua.klieshchunov.spring.cinemaSpringProject.service.UserService;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequestMapping("admin/users")
@@ -42,13 +46,34 @@ public class AdminUserController {
     }
 
     @GetMapping("/{id}")
-    public String getUserUpdatePage(@PathVariable("id") int id) {
-        return "adminPanel/user/edit";
+    public String getUserUpdatePage(@PathVariable("id") int id,
+                                    Model model) {
+        List<ApplicationUserRole> roles = new ArrayList<>();
+        User user = new User();
+        user.setId(id);
+        user.setRole(userService.getUserById(id).getRole());
+
+        for (ApplicationUserRole role : ApplicationUserRole.values()) {
+            if (!role.equals(user.getRole())) {
+                roles.add(role);
+            }
+        }
+
+        model.addAttribute("user", user);
+        model.addAttribute("roles", roles);
+
+        return "adminPanel/users/edit";
     }
 
-    @PutMapping("/{id}")
-    public String updateUser(@PathVariable("id") int id) {
-        return "adminPanel/users/index";
+    @PatchMapping("/{id}")
+    public String updateUser(@ModelAttribute("user") User user,
+                             @PathVariable("id") int id) {
+        User currentUser = userService.getUserById(id);
+        currentUser.setRole(user.getRole());
+        System.out.println(currentUser);
+        userService.updateUser(user);
+
+        return "redirect:/admin/users";
     }
 
     @DeleteMapping("/{id}")

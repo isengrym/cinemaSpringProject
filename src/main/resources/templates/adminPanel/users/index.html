@@ -34,10 +34,12 @@
         <td th:text="${user.name}">Name</td>
         <td th:text="${user.surname}">Surname</td>
         <td th:text="${user.email}">email@gmail.com</td>
-        <td th:text="${user.role}">User</td>
+        <td th:text="#{${user.role}}">User</td>
 
-        <td th:if="${user.id != currentUser.id}" class="text-center"><a class='btn btn-info btn-xs' href="#">
-          <span class="glyphicon glyphicon-edit"></span> <span th:text="#{button.edit}"></span></a>
+        <td th:if="${user.id != currentUser.id}" class="text-center">
+          <a class='btn btn-info btn-xs' th:href="@{/admin/users/{id}(id=${user.id})}">
+            <span class="glyphicon glyphicon-edit"></span> <span th:text="#{button.edit}"></span>
+          </a>
         </td>
 
         <td th:if="${user.id != currentUser.id}" class="text-center">

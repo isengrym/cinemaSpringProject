@@ -11,7 +11,7 @@ public interface UserService {
     User getUserById(int id);
     User getUserByEmail(String email);
     boolean isCorrectPassword(String password, User userFromDb);
-    void updateUser(User userFromDb);
+    void updateUser(User user);
     void deleteUser(User user);
     Page<User> findAllUsersPaginatedAndSorted(Pageable pageable);
 }

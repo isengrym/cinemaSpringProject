@@ -70,25 +70,42 @@ public class AdminMovieController {
             return "adminPanel/movies/new";
         }
 
-        movieService.addMovie(movie);
+        movieService.saveMovie(movie);
         return "redirect:/admin/movies/";
     }
 
     @GetMapping("/{id}")
-    public String getMovieUpdatePage(@PathVariable("id") int id) {
+    public String getMovieUpdatePage(@PathVariable("id") int id,
+                                     Model model) {
+        Movie movie = movieService.findMovieById(id);
+        List<Genre> genres = genreService.findAllGenres();
+
+        model.addAttribute("genres", genres);
+        model.addAttribute("movie", movie);
+
         return "adminPanel/movies/edit";
     }
 
-    @PutMapping("/{id}")
-    public String updateMovie(@PathVariable("id") int id) {
-        return "adminPanel/movies/index";
+    @PatchMapping("/{id}")
+    public String updateMovie(@ModelAttribute("movie") @Valid Movie movie,
+                              BindingResult bindingResult,
+                              Model model) {
+
+        if(bindingResult.hasErrors()) {
+            List<Genre> genres = genreService.findAllGenres();
+            model.addAttribute("genres", genres);
+            return "adminPanel/movies/new";
+        }
+
+        movieService.saveMovie(movie);
+        return "redirect:/admin/movies";
     }
 
     @DeleteMapping("/{id}")
     public String deleteMovie(@PathVariable("id") int id) {
         Movie movie = movieService.findMovieById(id);
-
         movieService.deleteMovie(movie);
+
         return "redirect:/admin/movies";
     }
 }

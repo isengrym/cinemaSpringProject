@@ -40,7 +40,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers("/profile/**").hasAnyRole(USER.name(), ADMIN.name(), MANAGER.name())
                     .antMatchers("/showtimes/{\\d+}/ticket/**").hasAnyRole(USER.name(), ADMIN.name(), MANAGER.name())
                     .antMatchers(HttpMethod.POST,"/admin/users/**").hasAnyRole(ADMIN.name())
-                    .antMatchers(HttpMethod.PUT,"/admin/users/**").hasAnyRole(ADMIN.name())
+                    .antMatchers(HttpMethod.PATCH,"/admin/users/**").hasAnyRole(ADMIN.name())
                     .antMatchers(HttpMethod.DELETE,"/admin/users/**").hasAnyRole(ADMIN.name())
                     .antMatchers("/admin/**").hasAnyRole(ADMIN.name(), MANAGER.name())
                     .antMatchers("/**", "/css/*", "/js/*").permitAll()
