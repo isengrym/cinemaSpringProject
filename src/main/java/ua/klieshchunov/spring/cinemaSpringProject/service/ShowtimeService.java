@@ -2,6 +2,7 @@ package ua.klieshchunov.spring.cinemaSpringProject.service;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import ua.klieshchunov.spring.cinemaSpringProject.dto.ShowtimeDto;
 import ua.klieshchunov.spring.cinemaSpringProject.model.entity.Movie;
 import ua.klieshchunov.spring.cinemaSpringProject.model.entity.Showtime;
 import ua.klieshchunov.spring.cinemaSpringProject.service.exceptions.NoFreePlacesException;
@@ -14,7 +15,7 @@ import java.util.Map;
 public interface ShowtimeService {
     Map<LocalDate,List<Showtime>> collectShowtimesByDate(List<Showtime> showtimes);
     Showtime findShowtimeById(int seanceId);
-    List<Interval> collectIntervalsOfShowtimes(List<Showtime> showtimes, LocalDate day);
+    List<Interval> collectIntervals(ShowtimeDto showtimeDto);
     List<Showtime> findAllFutureShowtimes();
     List<Showtime> findAllFutureShowtimesForMovie(Movie movie);
     Page<Showtime> findAllFutureShowtimesForMoviePaginatedAndSorted(Pageable pageable, Movie movie);

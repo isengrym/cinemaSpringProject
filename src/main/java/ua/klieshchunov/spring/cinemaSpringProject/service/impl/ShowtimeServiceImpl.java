@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import ua.klieshchunov.spring.cinemaSpringProject.dto.ShowtimeDto;
 import ua.klieshchunov.spring.cinemaSpringProject.model.entity.Movie;
 import ua.klieshchunov.spring.cinemaSpringProject.model.entity.Showtime;
 import ua.klieshchunov.spring.cinemaSpringProject.model.repository.ShowtimeRepository;
@@ -56,7 +57,23 @@ public class ShowtimeServiceImpl implements ShowtimeService {
     }
 
     @Override
-    public List<Interval> collectIntervalsOfShowtimes(List<Showtime> showtimes, LocalDate day) {
+    public List<Interval> collectIntervals(ShowtimeDto showtimeDto) {
+        List<Showtime> showtimes = findAllFutureShowtimes();
+        LocalDate dayOfAddedShowtime = showtimeDto.startDateTimeAfterUpdating.toLocalDate();
+        removeOldShowtimeIfUpdating(showtimeDto, showtimes);
+
+        return collectIntervalsOfShowtimes(showtimes, dayOfAddedShowtime);
+    }
+
+    private void removeOldShowtimeIfUpdating(ShowtimeDto showtimeDto, List<Showtime> showtimes) {
+        if (showtimeDto.isForUpdating) {
+            Showtime showtime = ShowtimeDto.toEntityWithOldStartTime(showtimeDto);
+            showtimes.remove(showtime);
+        }
+    }
+
+
+    private List<Interval> collectIntervalsOfShowtimes(List<Showtime> showtimes, LocalDate day) {
         List<Showtime> seancesForGivenDay = groupShowtimesByGivenDay(showtimes, day);
         List<Interval> busyIntervalsForGivenDay = new ArrayList<>();
         Interval interval;

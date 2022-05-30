@@ -4,10 +4,17 @@ import org.springframework.stereotype.Service;
 import ua.klieshchunov.spring.cinemaSpringProject.service.DateService;
 
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 
 @Service
 public class DateServiceImpl implements DateService {
+    @Override
+    public int convertStringDateToEpoch(String dateString) {
+        LocalDateTime parsedDate = LocalDateTime.parse(dateString);
+        return (int)parsedDate.toEpochSecond(ZoneOffset.UTC);
+    }
+
     @Override
     public boolean isInThePast(LocalDateTime date) {
         return busyBeginsBeforeVerifiable(date, LocalDateTime.now());

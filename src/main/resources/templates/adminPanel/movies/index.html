@@ -56,6 +56,15 @@
 
           </tr>
         </table>
+
+        <div th:if="${totalPages>1}" class="page-number-block col-xs-12 col-sm-12 col-md-12 col-lg-12">
+          <a class="page-number-link" th:each="number : ${#numbers.sequence(1,totalPages)}"
+             th:href="@{/admin/movies?pageNum={num}&sortBy={sortBy}&sortOrder={sortOrder}&movieId={movieId}
+               (num=${number-1}, sortBy=${sortBy}, sortOrder=${sortOrder}, movieId=${movieId})}">
+            <p class="page-number-item" th:text="${number}"></p>
+          </a>
+        </div>
+
       </div>
     </div>
   </body>
