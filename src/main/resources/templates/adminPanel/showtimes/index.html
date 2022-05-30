@@ -38,7 +38,7 @@
           <td th:text="${showtime.getStartDateTime().toLocalDate() + ' ' + showtime.getStartDateTime().toLocalTime()}">12.05.2022 10:00</td>
           <td th:text="${showtime.freePlaces}">75</td>
 
-          <td class="text-center"><a class='btn btn-info btn-xs' href="#">
+          <td class="text-center"><a class='btn btn-info btn-xs' th:href="@{/admin/showtimes/{id}(id=${showtime.id})}">
             <span class="glyphicon glyphicon-edit"></span> <span th:text="#{button.edit}"></span></a>
           </td>
 

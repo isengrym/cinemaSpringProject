@@ -2,9 +2,41 @@
 <html lang="en" xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title th:text="#{admin.editShowtime}"></title>
+    <title th:text="#{admin.editShowtime}"></title>    <link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <link th:href="@{/css/selectInput.css}" rel="stylesheet" />
 </head>
 <body>
+<div th:replace="/include/adminPanelHeader :: adminPanelHeader"></div>
+
+<div class="col-lg-4">
+
+</div>
+<div style="margin-top: 50px" class="col-lg-4">
+    <form th:action="@{/admin/showtimes/{id}(id = ${showtime.id})}" th:object="${showtime}" th:method="PATCH">
+        <input th:field="*{id}" th:value="${showtime.id}" class="form-control" type="hidden"/>
+        <input th:field="*{movie}" th:value="${showtime.movie}" class="form-control" type="hidden"/>
+        <input th:field="*{startDateEpochSeconds}" th:value="${showtime.startDateEpochSeconds}" class="form-control" type="hidden"/>
+        <input th:field="*{freePlaces}" th:value="${showtime.freePlaces}" class="form-control" type="hidden"/>
+
+        <div class="form-group">
+            <label th:text="#{ticket.price}"></label>
+            <input th:field="*{ticketPrice}" th:value="${showtime.ticketPrice}" class="form-control" type="number"/>
+            <div style="color:red" th:if="${#fields.hasErrors('ticketPrice')}" th:errors="*{ticketPrice}"></div>
+        </div>
+
+        <div class="form-group">
+            <label th:text="#{movieItem.startTime}"></label>
+            <input name="dateString" th:value="${showtime.getStartDateTime()}" class="form-control" type="datetime-local"/>
+            <div style="color:red" th:if="${#fields.hasErrors('startDateEpochSeconds')}" th:errors="*{startDateEpochSeconds}"></div>
+        </div>
+
+        <button type="submit" class="btn btn-black" th:text="#{edit.save}"></button>
+
+    </form>
+</div>
+<div class="col-lg-4">
+
+</div>
 
 </body>
 </html>

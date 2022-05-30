@@ -78,9 +78,10 @@ public class AdminShowtimeController {
                               BindingResult bindingResult,
                               @ModelAttribute("dateString") String dateString,
                               Model model) {
+        boolean isUpdating = false;
         showtime.setFreePlaces(77);
         setDateToShowtime(showtime, dateString);
-        validateGivenStartDate(showtime, bindingResult);
+        validateGivenDateTime(showtime, bindingResult, dateString, isUpdating);
 
         if (bindingResult.hasErrors()) {
             List<Movie> movies = movieService.findAllMovies();
@@ -92,19 +93,63 @@ public class AdminShowtimeController {
         return "redirect:/admin/showtimes/";
     }
 
-    private void validateGivenStartDate(Showtime showtime, BindingResult bindingResult) {
-        List<Interval> busyIntervals = collectBusyIntervalsForDayOfShowtime(showtime);
+    @GetMapping("/{id}")
+    public String getShowtimeUpdatePage(@PathVariable("id") int id,
+                                        Model model) {
+        Showtime showtime = showtimeService.findShowtimeById(id);
+        List<Movie> movies = movieService.findAllMovies();
+        model.addAttribute("showtime", showtime);
+        model.addAttribute("movies", movies);
+
+        return "adminPanel/showtimes/edit";
+    }
+
+    @PatchMapping("/{id}")
+    public String updateShowtime(@PathVariable("id") int id,
+                                 @ModelAttribute("showtime") @Valid Showtime showtime,
+                                 BindingResult bindingResult,
+                                 @ModelAttribute("dateString") String dateString) {
+        boolean isUpdating = true;
+        validateGivenDateTime(showtime, bindingResult, dateString, isUpdating);
+
+        if (bindingResult.hasErrors())
+            return "adminPanel/showtimes/edit";
+
+        showtimeService.addShowtime(showtime);
+        return "redirect:/admin/showtimes";
+    }
+
+    private void validateGivenDateTime(Showtime showtime, BindingResult bindingResult, String dateString, boolean isUpdating) {
+        addBindingResIfIsInThePast(showtime, bindingResult);
+        addBindingResIfIsBefore9amOrAfter10pm(showtime, bindingResult);
+
+        List<Interval> busyIntervals = collectBusyIntervalsForDayOfShowtime(showtime, isUpdating);
+
+        if (isUpdating)
+            setDateToShowtime(showtime, dateString);
+
         Interval interval = new Interval(showtime.getStartDateTime(), showtime.getEndDateTime());
 
+        addBindingResIfIsCrossingIntervals(showtime, interval, busyIntervals, bindingResult);
+    }
+
+
+    private void addBindingResIfIsInThePast(Showtime showtime, BindingResult bindingResult) {
         if (dateService.isInThePast(showtime.getStartDateTime())) {
             log.debug(String.format("Given date (%d) is already in the past", showtime.getStartDateEpochSeconds()));
             bindingResult.rejectValue("startDateEpochSeconds", "error.pastData");
         }
+    }
+
+    private void addBindingResIfIsBefore9amOrAfter10pm(Showtime showtime, BindingResult bindingResult) {
         if (dateService.isBefore9amOrAfter10pm(showtime.getStartDateTime())) {
             log.debug(String.format("Given date (%d) is before 9am or after 10pm, " +
                     "which are not working hours", showtime.getStartDateEpochSeconds()));
             bindingResult.rejectValue("startDateEpochSeconds", "error.beyondWorkingHours");
         }
+    }
+
+    private void addBindingResIfIsCrossingIntervals(Showtime showtime, Interval interval, List<Interval> busyIntervals, BindingResult bindingResult) {
         if (dateService.isCrossingIntervals(interval, busyIntervals)) {
             log.debug(String.format("Given date (%d) is crossing another showtime", showtime.getStartDateEpochSeconds()));
             bindingResult.rejectValue("startDateEpochSeconds", "error.collidesOtherShowtimes");
@@ -117,29 +162,26 @@ public class AdminShowtimeController {
         showtime.setStartDateEpochSeconds(epochSecondsDate);
     }
 
-
-    private List<Interval> collectBusyIntervalsForDayOfShowtime(Showtime showtime) {
-        List<Showtime> showtimes = showtimeService.findAllFutureShowtimes();
+    private List<Interval> collectBusyIntervalsForDayOfShowtime(Showtime showtime, boolean isUpdating) {
+        List<Showtime> showtimes = getShowtimes(showtime, isUpdating);
         LocalDate dayOfAddedShowtime = showtime.getStartDateTime().toLocalDate();
         return showtimeService.collectIntervalsOfShowtimes(showtimes, dayOfAddedShowtime);
     }
 
-    @GetMapping("/{id}")
-    public String getShowtimeUpdatePage(@PathVariable("id") int id) {
-        return "adminPanel/showtimes/edit";
-    }
+    private List<Showtime> getShowtimes(Showtime showtime, boolean isUpdating) {
+        List<Showtime> showtimes = showtimeService.findAllFutureShowtimes();
+        if (isUpdating)
+            showtimes.remove(showtime);
 
-    @PutMapping("/{id}")
-    public String updateShowtime(@PathVariable("id") int id) {
-        return "adminPanel/showtimes/index";
+        return showtimes;
     }
 
     @DeleteMapping("/{id}")
-    public String deleteShowtime(@PathVariable("id") int id,
-                                 Model model) {
+    public String deleteShowtime(@PathVariable("id") int id) {
         Showtime showtime = showtimeService.findShowtimeById(id);
         showtimeService.deleteShowtime(showtime);
 
         return "redirect:/admin/showtimes/";
     }
+
 }

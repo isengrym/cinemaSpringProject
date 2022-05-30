@@ -74,9 +74,9 @@ public class ShowtimeServiceImpl implements ShowtimeService {
 
     private List<Showtime> groupShowtimesByGivenDay(List<Showtime> showtimes, LocalDate day) {
         return showtimes.stream()
-                .filter(seance -> seance.getStartDateTime().getYear() == day.getYear())
-                .filter(seance -> seance.getStartDateTime().getMonth() == day.getMonth())
-                .filter(seance -> seance.getStartDateTime().getDayOfMonth() == day.getDayOfMonth())
+                .filter(showtime -> showtime.getStartDateTime().getYear() == day.getYear())
+                .filter(showtime -> showtime.getStartDateTime().getMonth() == day.getMonth())
+                .filter(showtime -> showtime.getStartDateTime().getDayOfMonth() == day.getDayOfMonth())
                 .collect(Collectors.toList());
     }
 
