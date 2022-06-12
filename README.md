@@ -13,12 +13,8 @@ Written on Java using such frameworks as: Spring Core, Spring Boot, Spring Secur
 
 
 (Still in progress)
-- Most of admin features
-- Import/export of data in json
-- Statistics page
 - More interaction with already booked tickets. 
 - Comment section for movies
-- Loging and testing
 
 DB schema
 
