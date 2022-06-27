@@ -11,11 +11,6 @@ Written on Java using such frameworks as: Spring Core, Spring Boot, Spring Secur
 
 - Admin user gets permission to access admin panel, where he can add and edit new movies\showtimes\genres\users and delete those, which already exist.
 
-
-(Still in progress)
-- More interaction with already booked tickets. 
-- Comment section for movies
-
 DB schema
 
 ![image](https://user-images.githubusercontent.com/82778074/170499744-0cdf1802-d923-4185-96b8-489b85fc6f1b.png)
@@ -41,7 +36,7 @@ Login page (unregistered user is sent here, if he tries to book a ticket)
 Profile page
 ![image](https://user-images.githubusercontent.com/82778074/170500939-d2df817a-a2de-464b-8b66-e33ff082a6e1.png)
 
-Admin panel (in progress)
+Admin panel
 ![image](https://user-images.githubusercontent.com/82778074/170501024-cf9753cc-a3b9-418b-b234-1d2151e59205.png)
 
 
