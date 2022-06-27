@@ -73,7 +73,7 @@ public class ShowtimeServiceImpl implements ShowtimeService {
     }
 
 
-    private List<Interval> collectIntervalsOfShowtimes(List<Showtime> showtimes, LocalDate day) {
+    public List<Interval> collectIntervalsOfShowtimes(List<Showtime> showtimes, LocalDate day) {
         List<Showtime> seancesForGivenDay = groupShowtimesByGivenDay(showtimes, day);
         List<Interval> busyIntervalsForGivenDay = new ArrayList<>();
         Interval interval;

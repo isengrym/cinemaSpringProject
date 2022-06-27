@@ -26,7 +26,7 @@ public class Showtime {
 
     private Movie movie;
 
-    @Column(name="start_date_seconds")
+    @Column(name="start_time")
     @Min(1653508592) //Soundtrack 2 My Life - Kid Cudi
     private Integer startDateEpochSeconds;
 
