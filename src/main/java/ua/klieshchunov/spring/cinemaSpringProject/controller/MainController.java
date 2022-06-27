@@ -11,5 +11,5 @@ public class MainController {
         return "common/main";
     }
     @GetMapping("/admin")
-    public String getAdminPage() { return "adminPanel/statistics"; }
+    public String getAdminPage() { return "redirect:/admin/movies"; }
 }
