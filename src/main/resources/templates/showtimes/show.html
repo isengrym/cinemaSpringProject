@@ -16,7 +16,7 @@
                 <h5 th:text="${row}"></h5>
 
                 <div th:each="place : ${#numbers.sequence(1,11)}" th:remove="tag" th:with="hallIndex = ${(row - 1) * 11 + place}">
-                        <a th:if="${hallMap.get(hallIndex) == null}" th:href="@{/showtimes/{id}/ticket?rowId={row}&placeId={place}(id=${showtime.id}, row=${row}, place=${place})}">
+                        <a th:if="${hallMap.get(hallIndex) == null}" th:href="@{/showtimes/{id}/ticket?rowId={row}&placeId={place}&purchase=true(id=${showtime.id}, row=${row}, place=${place})}">
                             <div class="seat-object seat-object-active" th:row-id="${row}" th:seat-id="${place}">
                                 <p th:text="${place}"></p>
                             </div>

@@ -19,41 +19,43 @@
             <h3 class="headline" th:text="#{profile.tickets}"></h3>
 
                 <div th:each="ticket : ${tickets}" class="ticket-item">
-                    <div class="left-side">
-                            <a th:if="${ticket.showtime.isExpired()} == false" th:href="@{/showtimes/{id}(id=${ticket.showtime.id})}">
-                                <img class="ticket-image" th:src="${ticket.showtime.movie.imagePath}" alt="">
+                        <div class="left-side">
+                                <a th:if="${ticket.showtime.isExpired()} == false" th:href="@{/showtimes/{id}(id=${ticket.showtime.id})}">
+                                    <img class="ticket-image" th:src="${ticket.showtime.movie.imagePath}" alt="">
+                                </a>
+
+                                <a th:if="${ticket.showtime.isExpired()} == true" th:href="@{/movies/{id}(id=${ticket.showtime.movie.id})}">
+                                    <img class="ticket-image" th:src="${ticket.showtime.movie.imagePath}" alt="">
+                                </a>
+                        </div>
+
+                        <div class="right-side">
+                            <a th:href="@{/showtimes/{id}/ticket?rowId={row}&placeId={place}(id=${ticket.showtime.id}, row=${ticket.row}, place=${ticket.place})}">
+                                <h6 class="ticket-expired ticket-info ticket-title"
+                                    th:if="${ticket.showtime.isExpired()} == true"
+                                    th:text="${ticket.showtime.movie.title} + '(' + #{ticket.expired} + ')'">
+                                </h6>
+
+                                <h6 class="ticket-info ticket-title" th:if="${ticket.showtime.isExpired()} == false"
+                                    th:text="${ticket.showtime.movie.title}">
+                                </h6>
+                                <h6 class="ticket-info"
+                                    th:text="#{ticket.when} + ': ' +
+                                    ${ticket.showtime.getStartDateTime().toLocalDate()} + ' ' +
+                                    ${ticket.showtime.getStartDateTime().toLocalTime()}">
+                                </h6>
+                                <h6 class="ticket-info"
+                                    th:text="#{ticket.row} + ': ' + ${ticket.row}">
+                                </h6>
+                                <h6 class="ticket-info"
+                                    th:text="#{ticket.place} + ': ' + ${ticket.place}">
+                                </h6>
+                                <h6 class="ticket-info"
+                                    th:text="#{ticket.price} + ': ' + ${ticket.showtime.ticketPrice} +'₴'">
+                                </h6>
                             </a>
+                        </div>
 
-                            <a th:if="${ticket.showtime.isExpired()} == true">
-                                <img class="ticket-image" th:src="${ticket.showtime.movie.imagePath}" alt="">
-                            </a>
-                    </div>
-
-                    <div class="right-side">
-
-                        <h6 class="ticket-expired ticket-info ticket-title"
-                            th:if="${ticket.showtime.isExpired()} == true"
-                            th:text="${ticket.showtime.movie.title} + '(' + #{ticket.expired} + ')'">
-                        </h6>
-
-                        <h6 class="ticket-info ticket-title" th:if="${ticket.showtime.isExpired()} == false"
-                            th:text="${ticket.showtime.movie.title}">
-                        </h6>
-                        <h6 class="ticket-info"
-                            th:text="#{ticket.when} + ': ' +
-                            ${ticket.showtime.getStartDateTime().toLocalDate()} + ' ' +
-                            ${ticket.showtime.getStartDateTime().toLocalTime()}">
-                        </h6>
-                        <h6 class="ticket-info"
-                            th:text="#{ticket.row} + ': ' + ${ticket.row}">
-                        </h6>
-                        <h6 class="ticket-info"
-                            th:text="#{ticket.place} + ': ' + ${ticket.place}">
-                        </h6>
-                        <h6 class="ticket-info"
-                            th:text="#{ticket.price} + ': ' + ${ticket.showtime.ticketPrice} +'₴'">
-                        </h6>
-                    </div>
                 </div>
 
             <div th:if="${totalPages>1}" class="page-number-block col-xs-12 col-sm-12 col-md-12 col-lg-12">

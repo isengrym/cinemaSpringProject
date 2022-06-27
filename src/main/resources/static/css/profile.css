@@ -70,4 +70,11 @@ body {
     width: 100px;
 }
 
+.ticket-item .right-side a {
+    color: #000000;
+
+}
+.ticket-item .right-side a:hover {
+    text-decoration: none;
+}
 

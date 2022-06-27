@@ -6,7 +6,6 @@
         <title th:text="#{showtimes.title}"></title>
     </head>
     <body>
-<!--        <div th:replace="/include/header :: header"></div>-->
 
         <div class="cardWrap">
             <div class="card cardLeft">
@@ -41,21 +40,23 @@
 
             </div>
 
+            <div th:if="${param.purchase}">
+                <form th:method="POST" th:action="@{/showtimes/{id}/ticket(id=${showtime.id})}" th:object="${ticket}">
+                    <input type="hidden" name="row" th:value="${rowId}"/>
+                    <input type="hidden" name="place" th:value="${placeId}"/>
 
-            <form th:method="POST" th:action="@{/showtimes/{id}/ticket(id=${showtime.id})}" th:object="${ticket}">
-                <input type="hidden" name="row" th:value="${rowId}"/>
-                <input type="hidden" name="place" th:value="${placeId}"/>
-
-                <button class="action-button submit-button col-lg-1" type="submit" style="border: none;">
+                    <button class="action-button submit-button col-lg-1" type="submit" style="border: none;">
                         <h4 th:text="#{button.confirm}"></h4>
-                </button>
-            </form>
+                    </button>
+                </form>
 
-            <a th:href="@{/showtimes/{id}(id=${showtime.id})}">
-                <div class="action-button decline-button col-lg-1">
-                    <h4 th:text="#{button.decline}"></h4>
-                </div>
-            </a>
+                <a th:href="@{/showtimes/{id}(id=${showtime.id})}">
+                    <div class="action-button decline-button col-lg-1">
+                        <h4 th:text="#{button.decline}"></h4>
+                    </div>
+                </a>
+            </div>
+
 
         </div>
 
